@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             PotyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "James Bond",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -29,19 +29,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
+//Aca vamos a escribir una funcion, en vez de componentes. Necesitan los @Composable
+//Declaramos funciones usando fun y sus argumentso
+// El = del Greeting con modifier es el valor default
+//Los big 3 de Koitling; named parameters, defaiult parameters y tralinglambdas
+//By es delegado
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = "Hola $name! Bienvenido al MI6.", //Parametros con nombnre
         modifier = modifier
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true) //Para qe sea preview
 @Composable
 fun GreetingPreview() {
     PotyTheme {
-        Greeting("Android")
+        Greeting("James Bond")
     }
 }
