@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="green_light">#025939</color>
-    <color name="green_medium">#001713</color>
-    <color name="purple_dark">#001E18</color>
+    <color name="green_medium">#001E18</color>
+    <color name="green_dark">#001713</color>
     <color name="grey_light">#DFDFDF</color>
     <color name="grey_dark">#181818</color>
     <color name="black">#F0000000</color>

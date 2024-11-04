@@ -52,6 +52,21 @@ class MainActivity : ComponentActivity() {
 //Las funciones deben ser inedpendientes
 //Las funciones no deben tener efecttos secundarios
 //
+
+@Preview(showBackground = true)
+@Composable
+fun WelcomeScreenPreview(){
+    WelcomeScreen()
+}
+@Composable
+fun WelcomeScreen(){
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ){
+
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun HelloUserPreview(){
@@ -82,6 +97,7 @@ fun HelloUser(){
 fun CounterScreen(){
     var counter by rememberSaveable { mutableStateOf(1) }
     CounterDisplay(counter, {v -> counter = v})
+
 }
 
 @Preview(showBackground = true)
@@ -118,7 +134,7 @@ fun CounterIncrement(
 @Preview(showBackground = true)
 @Composable
 fun DataCardPReview(){
-    DataCard()
+    PotyTheme{DataCard()}
 }
 
 @Composable
@@ -126,7 +142,7 @@ fun DataCard(){
     var expanded by remember {mutableStateOf(false)}
     val extraPadding = if (expanded) 48.dp else 0.dp
     Surface(
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.tertiary,
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
     ){
         Row (modifier = Modifier.padding(24.dp)){
