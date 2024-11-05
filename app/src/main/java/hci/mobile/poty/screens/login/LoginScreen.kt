@@ -1,4 +1,5 @@
 package hci.mobile.poty.screens.landing
+import androidx.compose.material3.LocalTextStyle
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -49,9 +50,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-
 import androidx.constraintlayout.compose.Visibility
 
+//@TODO: Modularizar
 
 @Composable
 fun LoginScreen() {
@@ -100,9 +101,11 @@ fun LoginScreen() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(50.dp))
-                            .height(40.dp)
+                            .height(56.dp)
                             .border(BorderStroke(1.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(50.dp)),
-                        singleLine = true
+                        singleLine = true,
+                        textStyle = LocalTextStyle.current.copy(color = Color.Black), // Force text color
+
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -126,10 +129,11 @@ fun LoginScreen() {
                                 )
                             }
                         },
+                        textStyle = LocalTextStyle.current.copy(color = Color.Black), // Force text color
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(50.dp))
-                            .height(40.dp)
+                            .height(56.dp)
                             .border(BorderStroke(1.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(50.dp)),
                         singleLine = true
                     )
