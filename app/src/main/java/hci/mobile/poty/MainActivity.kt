@@ -152,6 +152,7 @@ fun DataCard(){
                 .padding(all = extraPadding)) {
                 Text(text="Check, ")
                 Text(text="Checking")
+
             }
             
             ElevatedButton(
@@ -166,8 +167,9 @@ fun DataCard(){
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hola $name! Bienvenido al MI6.", //Parametros con nombnre
-        modifier = modifier
-    )
+        style = MaterialTheme.typography.bodyLarge,
+
+        )
 }
 
 @Preview(showBackground = true) //Para qe sea preview

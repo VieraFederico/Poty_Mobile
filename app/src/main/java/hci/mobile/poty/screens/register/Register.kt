@@ -119,6 +119,19 @@ fun RegisterScreen() {
                         confirmationCode = newCode
                     }
                 }
+                TextButton(
+                    onClick = {/*Volver atras*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    Text(
+                        text = "Volver para atrás",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+                }
             }
         }
     }
