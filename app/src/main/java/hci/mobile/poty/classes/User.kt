@@ -21,47 +21,47 @@ class User(
         validateCity(city)
     }
 
-    // Name validation: only alphabetic characters and not empty
+    // Validación de nombre: solo caracteres alfabéticos y no vacío
     private fun validateName(name: String) {
-        require(name.isNotEmpty()) { "Name cannot be empty" }
-        require(name.all { it.isLetter() || it.isWhitespace() }) { "Name must contain only letters and spaces" }
+        require(name.isNotEmpty()) { "El nombre no puede estar vacío" }
+        require(name.all { it.isLetter() || it.isWhitespace() }) { "El nombre debe contener solo letras y espacios" }
     }
 
-    // Surname validation: only alphabetic characters and not empty
+    // Validación de apellido: solo caracteres alfabéticos y no vacío
     private fun validateSurname(surname: String) {
-        require(surname.isNotEmpty()) { "Surname cannot be empty" }
-        require(surname.all { it.isLetter() || it.isWhitespace() }) { "Surname must contain only letters and spaces" }
+        require(surname.isNotEmpty()) { "El apellido no puede estar vacío" }
+        require(surname.all { it.isLetter() || it.isWhitespace() }) { "El apellido debe contener solo letras y espacios" }
     }
 
-    // Email validation: basic email format check using regex
+    // Validación de correo electrónico: verificar el formato básico usando regex
     private fun validateEmail(email: String) {
         val emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
         val pattern = Pattern.compile(emailPattern)
-        require(pattern.matcher(email).matches()) { "Invalid email format" }
+        require(pattern.matcher(email).matches()) { "El formato del correo electrónico no es válido" }
     }
 
-    // Birthday validation: check if the date is in the correct format (e.g., "YYYY-MM-DD")
+    // Validación de fecha de nacimiento: verificar si la fecha está en el formato correcto (por ejemplo, "YYYY-MM-DD")
     private fun validateBirthday(birthday: String) {
         val datePattern = "^\\d{4}-\\d{2}-\\d{2}$"
         val pattern = Pattern.compile(datePattern)
-        require(pattern.matcher(birthday).matches()) { "Birthday must be in the format YYYY-MM-DD" }
+        require(pattern.matcher(birthday).matches()) { "La fecha de nacimiento debe estar en el formato YYYY-MM-DD" }
     }
 
-    // Gender validation: ensure gender is either "Male", "Female", or "Other"
+    // Validación de género: asegurarse de que el género sea "Masculino", "Femenino" u "Otro"
     private fun validateGender(gender: String) {
-        val validGenders = setOf("Male", "Female", "Other")
-        require(gender in validGenders) { "Gender must be either 'Male', 'Female', or 'Other'" }
+        val validGenders = setOf("Masculino", "Femenino", "Otro")
+        require(gender in validGenders) { "El género debe ser 'Masculino', 'Femenino' u 'Otro'" }
     }
 
-    // Country validation: ensure it's not empty and contains only letters and spaces
+    // Validación de país: asegurarse de que no esté vacío y contenga solo letras y espacios
     private fun validateCountry(country: String) {
-        require(country.isNotEmpty()) { "Country cannot be empty" }
-        require(country.all { it.isLetter() || it.isWhitespace() }) { "Country must contain only letters and spaces" }
+        require(country.isNotEmpty()) { "El país no puede estar vacío" }
+        require(country.all { it.isLetter() || it.isWhitespace() }) { "El país debe contener solo letras y espacios" }
     }
 
-    // City validation: ensure it's not empty and contains only letters and spaces
+    // Validación de ciudad: asegurarse de que no esté vacío y contenga solo letras y espacios
     private fun validateCity(city: String) {
-        require(city.isNotEmpty()) { "City cannot be empty" }
-        require(city.all { it.isLetter() || it.isWhitespace() }) { "City must contain only letters and spaces" }
+        require(city.isNotEmpty()) { "La ciudad no puede estar vacía" }
+        require(city.all { it.isLetter() || it.isWhitespace() }) { "La ciudad debe contener solo letras y espacios" }
     }
 }

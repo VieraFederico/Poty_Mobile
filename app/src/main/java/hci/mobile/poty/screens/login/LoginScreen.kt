@@ -51,15 +51,16 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.Visibility
+import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.screens.login.LoginEvent
+import hci.mobile.poty.screens.login.LoginViewModel
+import hci.mobile.poty.utils.PasswordFieldWithLabel
+import hci.mobile.poty.utils.TextFieldWithLabel
 
-//@TODO: Modularizar
 
 @Composable
-fun LoginScreen() {
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-
+fun LoginScreen(viewModel: LoginViewModel = viewModel()) {
+    val state by viewModel.state.collectAsState()
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -90,53 +91,28 @@ fun LoginScreen() {
                 Column(
                     modifier = Modifier.padding(15.dp)
                 ) {
-                    Text(
-                        text = "Correo Electronico",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    OutlinedTextField(
-                        value = username,
-                        onValueChange = { username = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(50.dp))
-                            .height(56.dp)
-                            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(50.dp)),
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black), // Force text color
-
+                    TextFieldWithLabel(
+                        label = "Correo Electrónico",
+                        value = state.email,
+                        onValueChange = { email -> viewModel.onEvent(LoginEvent.UpdateEmail(email)) },
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Custom Password TextField
-                    Text(
-                        text = "Contraseña",
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                    PasswordFieldWithLabel(
+                        label = "Contraseña",
+                        value = state.password,
+                        onValueChange = { password -> viewModel.onEvent(LoginEvent.UpdatePassword(password)) }
                     )
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        trailingIcon = {
-                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(
-                                    imageVector = if (passwordVisible) Icons.Filled.Check else Icons.Filled.Clear,
-                                    contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                                )
-                            }
-                        },
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black), // Force text color
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(50.dp))
-                            .height(56.dp)
-                            .border(BorderStroke(1.dp, MaterialTheme.colorScheme.primary), RoundedCornerShape(50.dp)),
-                        singleLine = true
-                    )
+                    if (state.errorMessage.isNotEmpty()) {
+                        Text(
+                            text = state.errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+
                     Text(
                         text = "Olvidé mi Contraseña",
                         style = MaterialTheme.typography.bodyLarge,
@@ -147,26 +123,26 @@ fun LoginScreen() {
 
                 Spacer(modifier = Modifier.height(50.dp))
 
-                // Login Button
-                Column (
+                Column(
                     modifier = Modifier.padding(20.dp)
-                ){
+                ) {
                     Button(
-                        onClick = { /*Iniciar Sesion */ },
+                        onClick = { viewModel.onEvent(LoginEvent.Login) },  // Disparamos el evento de login
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.CenterHorizontally),
+                        enabled = !state.isLoading  // Deshabilitamos el botón si está cargando
                     ) {
                         Text(
-                            text = "Iniciar Sesion",
+                            text = if (state.isLoading) "Cargando..." else "Iniciar Sesión",  // Cambiar texto si está cargando
                             style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onBackground
                         )
                     }
 
                     TextButton(
-                        onClick = {/*Volver atras*/ },
+                        onClick = { /* Volver atrás */ },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -183,6 +159,7 @@ fun LoginScreen() {
         }
     }
 }
+
 
 @Preview
 @Composable

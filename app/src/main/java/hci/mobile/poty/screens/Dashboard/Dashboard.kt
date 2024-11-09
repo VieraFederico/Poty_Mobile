@@ -309,7 +309,7 @@ fun CreditCardView(creditCard: CreditCard) {
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
-            .padding(16.dp)
+            .padding(10.dp)
             .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp)),
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
@@ -352,7 +352,7 @@ fun CreditCardView(creditCard: CreditCard) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(35.dp))
 
 
             Row(
@@ -368,7 +368,7 @@ fun CreditCardView(creditCard: CreditCard) {
 
 
                 Text(
-                    text = "${creditCard.exp}",
+                    text = creditCard.exp,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -404,27 +404,31 @@ fun CardsCarousel(
     creditCards: List<CreditCard>,
     onAddCardClick: (CreditCard) -> Unit
 ) {
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()  // Let LazyRow fill the width
-            .height(220.dp),
-    horizontalArrangement = Arrangement.Center, // Center the items within the row
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(220.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.Center,
 
-    ) {
-        // First item is the EmptyCreditCardView
+            ) {
+            items(creditCards) { creditCard ->
+                CreditCardView(creditCard = creditCard)
+            }
         item {
             EmptyCreditCardView(
                 onAddCardClick = {
                     onAddCardClick(
-                        CreditCard(bank = "New Bank", number = "1122334455667788", owner = "Alice Brown", CVV = "789", exp = "06/26")
+                        CreditCard(
+                            bank = "New Bank",
+                            number = "1122334455667788",
+                            owner = "Alice Brown",
+                            CVV = "789",
+                            exp = "06/26"
+                        )
                     )
                 }
             )
-        }
-
-        // Display each credit card in the list with a fixed size
-        items(creditCards) { creditCard ->
-            CreditCardView(creditCard = creditCard)
         }
     }
 }
