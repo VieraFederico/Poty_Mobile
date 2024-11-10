@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.theme.Black
@@ -134,7 +135,7 @@ fun CompactDateFieldWithLabel(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(50.dp))
-                .height(56.dp)
+                .height(50.dp)
                 .background(Color.Transparent)
                 .border(
                     BorderStroke(1.dp, Black),
@@ -260,4 +261,58 @@ fun PasswordFieldWithLabel(
             }
         )
     }
+}
+
+@Composable
+fun NumberFieldWithLabel(
+    label: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    isPassword: Boolean = false
+) {
+    Text(
+        text = label,
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = Modifier.padding(bottom = 8.dp)
+    )
+
+    var textValue by remember { mutableStateOf(value.toString()) }
+
+    OutlinedTextField(
+        value = textValue,
+        onValueChange = { input ->
+            textValue = input
+
+            // Convert input text to Float if possible
+            val floatValue = input.toFloatOrNull()
+            if (floatValue != null) {
+                onValueChange(floatValue)
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(10.dp))
+            .height(70.dp)
+            .border(
+                BorderStroke(1.dp, Color.Black),
+                RoundedCornerShape(10.dp)
+            ),
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            cursorColor = Color.Black
+        ),
+        textStyle = LocalTextStyle.current.copy(color = Color.Black, fontSize = 30.sp),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        leadingIcon = {
+            Text(
+                text = "$",
+                style = MaterialTheme.typography.labelLarge,
+                color = Color.Black
+            )
+        }
+    )
 }

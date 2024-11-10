@@ -173,6 +173,79 @@ fun CreditCardView(creditCard: CreditCard) {
 }
 
 @Composable
+fun FullCreditCardView(creditCard: CreditCard) {
+    Card(
+        modifier = Modifier
+            .aspectRatio(1.6f)
+            .padding(10.dp)
+            .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp)),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+        ),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(20.dp)
+                .fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                Image(
+                    painter = painterResource(id = R.drawable.poty),
+                    contentDescription = "Poty Logo",
+                    modifier = Modifier.size(35.dp)
+
+                )
+                Text(
+                    text = creditCard.bank,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+            Spacer(modifier = Modifier.height(50.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ){
+                Text(
+                    text = creditCard.number,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+
+            Spacer(modifier = Modifier.height(35.dp))
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween, // Align text to opposite ends
+            ){
+                Text(
+                    text = creditCard.owner,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+
+
+                Text(
+                    text = creditCard.exp,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun CardsCarousel(
     creditCards: List<CreditCard>,
     onAddCardClick: (CreditCard) -> Unit
@@ -203,6 +276,7 @@ fun CardsCarousel(
         }
     }
 }
+
 
 @Preview
 @Composable
