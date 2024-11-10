@@ -2,6 +2,7 @@ package hci.mobile.poty.screens.Dashboard
 
 import androidx.lifecycle.ViewModel
 import hci.mobile.poty.classes.CreditCard
+import hci.mobile.poty.classes.Transaction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -23,5 +24,10 @@ class DashboardViewModel : ViewModel() {
         }
     }
 
+    fun addTransaction(newTransaction: Transaction) {
+        _state.update { currentState ->
+            currentState.copy(transactions = currentState.transactions + newTransaction)
+        }
+    }
     // Any other business logic related to the Dashboard can go here.
 }

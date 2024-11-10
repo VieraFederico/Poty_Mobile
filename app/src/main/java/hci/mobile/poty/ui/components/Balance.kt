@@ -1,5 +1,6 @@
 package hci.mobile.poty.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +24,7 @@ fun BalanceCard(balance: Float, isVisible: Boolean, onToggleVisibility: () -> Un
         Text(text = "Tu Balance", color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (isVisible) {
-                Text(text = "$ $balance", color = White, style = MaterialTheme.typography.titleLarge)
+                Text(text = "$ ${String.format("%.2f", balance)}", color = White, style = MaterialTheme.typography.titleLarge)
             } else {
                 Text(text = "$ ****", color = White, style = MaterialTheme.typography.titleLarge)
             }

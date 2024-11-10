@@ -3,6 +3,7 @@ package hci.mobile.poty.screens.Dashboard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -47,6 +48,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.R
@@ -55,6 +57,9 @@ import hci.mobile.poty.ui.components.BalanceCard
 import hci.mobile.poty.ui.components.CardsCarousel
 import java.time.LocalTime
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.ui.components.BottomNavBar
+import hci.mobile.poty.ui.components.TransactionHistory
+import hci.mobile.poty.ui.components.spendingCard
 
 
 @Preview
@@ -70,6 +75,7 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel()) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
+            bottomBar = { BottomNavBar { } },
         ) { innerPadding ->
             Column(
                 modifier = Modifier
@@ -77,17 +83,37 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel()) {
                     .padding(innerPadding),
                 verticalArrangement = Arrangement.Top
             ) {
-                Card(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                        .weight(1f)
                 ) {
-                    Greeting(state.userName)
-                    BalanceCard(balance = state.balance, isVisible = state.isBalanceVisible, onToggleVisibility = { viewModel.toggleBalanceVisibility() })
+                    // Background image
+                    Image(
+                        painter = painterResource(id = R.drawable.background_scaffolding),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    // Top Card with content on top of the image
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.Transparent // Set to transparent to let image show through
+                        ),
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Greeting(state.userName)
+                            BalanceCard(
+                                balance = state.balance,
+                                isVisible = state.isBalanceVisible,
+                                onToggleVisibility = { viewModel.toggleBalanceVisibility() }
+                            )
+                        }
+                    }
                 }
 
                 Card(
@@ -101,7 +127,9 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel()) {
                     elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
                 ) {
                     Row (
-                        modifier = Modifier.padding(10.dp).fillMaxWidth(),
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
 
                     ) {
@@ -129,7 +157,9 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel()) {
                             contentDescription = "Mi CVU"
                         )
                     }
+                    spendingCard(spent = state.spent)
                     CardsCarousel(creditCards = state.creditCards, onAddCardClick = { newCard -> viewModel.addCreditCard(newCard) })
+                    TransactionHistory(transactions = state.transactions)
                 }
             }
         }
