@@ -277,7 +277,7 @@ fun FullCreditCardView(creditCard: CreditCard) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween, // Align text to opposite ends
+                horizontalArrangement = Arrangement.SpaceBetween, 
             ){
                 Text(
                     text = creditCard.owner,
@@ -379,7 +379,6 @@ fun CardsCarousel(
 fun PaymentCardsCarouselPreview() {
     val (selectedCard, setSelectedCard) = remember { mutableStateOf<CreditCard?>(null) }
 
-    // Create a list of sample credit cards for preview
     val creditCards = remember {
         mutableStateListOf(
             CreditCard(bank = "Banco Royale", number = "1234567812345678", owner = "Le Chiffre", CVV = "123", exp = "12/24"),
@@ -393,7 +392,7 @@ fun PaymentCardsCarouselPreview() {
             selectedCard = null,
             onCardSelected = {setSelectedCard(it) },
             onAddCardClick = { newCard ->
-                creditCards.add(newCard) // Add a new card to the list
+                creditCards.add(newCard)
             }
         )
     }
