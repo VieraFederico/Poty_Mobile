@@ -1,8 +1,10 @@
 package hci.mobile.poty.classes
 
+import java.util.UUID
 import java.util.regex.Pattern
 
 data class CreditCard(
+    val id: String = UUID.randomUUID().toString(),
     val bank: String,
     val number: String,
     val owner: String,

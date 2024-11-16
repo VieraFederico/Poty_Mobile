@@ -1,6 +1,8 @@
 package hci.mobile.poty.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +50,12 @@ fun CreditCardViewPreview(){
         exp = "03/60"
     )
     PotyTheme {
-        CreditCardView(creditCard)
+        CreditCardView(
+            creditCard = creditCard,
+            isSelected = false,
+            onCardClick = {
+            }
+        )
     }
 }
 
@@ -100,16 +108,28 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
     }
 }
 @Composable
-fun CreditCardView(creditCard: CreditCard) {
+fun CreditCardView(
+    creditCard: CreditCard,
+    isSelected: Boolean = false,
+    onCardClick: (CreditCard) -> Unit
+) {
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
             .padding(10.dp)
-            .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp)),
+            .shadow(
+                elevation = if (isSelected) 16.dp else 8.dp,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { onCardClick(creditCard) },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary,
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+            else
+                MaterialTheme.colorScheme.primary,
         ),
+        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.onPrimary) else null
     ) {
         Column(
             modifier = Modifier
@@ -125,7 +145,6 @@ fun CreditCardView(creditCard: CreditCard) {
                     painter = painterResource(id = R.drawable.poty),
                     contentDescription = "Poty Logo",
                     modifier = Modifier.size(35.dp)
-
                 )
                 Text(
                     text = creditCard.bank,
@@ -141,26 +160,23 @@ fun CreditCardView(creditCard: CreditCard) {
                 verticalAlignment = Alignment.CenterVertically,
             ){
                 Text(
-                    text = "${creditCard.maskedCardNumber()}",
+                    text = creditCard.maskedCardNumber(),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
             Spacer(modifier = Modifier.height(35.dp))
-
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween, // Align text to opposite ends
+                horizontalArrangement = Arrangement.SpaceBetween,
             ){
                 Text(
                     text = creditCard.owner,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
-
 
                 Text(
                     text = creditCard.exp,
@@ -171,6 +187,7 @@ fun CreditCardView(creditCard: CreditCard) {
         }
     }
 }
+
 
 @Composable
 fun FullCreditCardView(creditCard: CreditCard) {
@@ -246,10 +263,14 @@ fun FullCreditCardView(creditCard: CreditCard) {
 }
 
 @Composable
-fun CardsCarousel(
+fun PaymentCardsCarousel(
     creditCards: List<CreditCard>,
+    selectedCard: CreditCard? = null,
+    onCardSelected: (CreditCard) -> Unit,
     onAddCardClick: (CreditCard) -> Unit
 ) {
+    val (selectedCardId, setSelectedCardId) = remember { mutableStateOf<String?>(null) }
+
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -258,7 +279,11 @@ fun CardsCarousel(
         horizontalArrangement = Arrangement.Center
     ) {
         items(creditCards) { creditCard ->
-            CreditCardView(creditCard = creditCard)
+            CreditCardView(
+                creditCard = creditCard,
+                isSelected = selectedCard?.id == creditCard.id,
+                onCardClick = { onCardSelected(creditCard) }
+            )
         }
         item {
             EmptyCreditCardView(
@@ -277,10 +302,47 @@ fun CardsCarousel(
     }
 }
 
+@Composable
+fun CardsCarousel(
+    creditCards: List<CreditCard>,
+    onAddCardClick: (CreditCard) -> Unit
+) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(220.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        items(creditCards) { creditCard ->
+            CreditCardView(
+                creditCard = creditCard,
+                isSelected = TODO(),
+                onCardClick = TODO()
+            )
+        }
+        item {
+            EmptyCreditCardView(
+                onAddCardClick = {
+                    val newCard = CreditCard(
+                        bank = "New Bank",
+                        number = "1122334455667788",
+                        owner = "Alice Brown",
+                        CVV = "789",
+                        exp = "06/26"
+                    )
+                    onAddCardClick(newCard)
+                }
+            )
+        }
+    }
+}
 
 @Preview
 @Composable
-fun CardsCarouselPreview() {
+fun PaymentCardsCarouselPreview() {
+    val (selectedCard, setSelectedCard) = remember { mutableStateOf<CreditCard?>(null) }
+
     // Create a list of sample credit cards for preview
     val creditCards = remember {
         mutableStateListOf(
@@ -290,8 +352,10 @@ fun CardsCarouselPreview() {
     }
 
     PotyTheme {
-        CardsCarousel(
+        PaymentCardsCarousel(
             creditCards = creditCards,
+            selectedCard = null,
+            onCardSelected = {setSelectedCard(it) },
             onAddCardClick = { newCard ->
                 creditCards.add(newCard) // Add a new card to the list
             }

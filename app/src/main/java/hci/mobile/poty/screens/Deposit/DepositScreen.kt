@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.CardsCarousel
+import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
@@ -128,9 +129,15 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
                 ) {
                         Spacer(modifier = Modifier.height(60.dp))
 
-                        CardsCarousel(
+                        PaymentCardsCarousel(
                             creditCards = state.creditCards,
-                            onAddCardClick = { newCard -> viewModel.addCreditCard(newCard) }
+                            selectedCard = state.selectedCard,
+                            onCardSelected = { selectedCard ->
+                                viewModel.onCardSelect(selectedCard)
+                            },
+                            onAddCardClick = { newCard ->
+                                viewModel.addCreditCard(newCard)
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(50.dp))
