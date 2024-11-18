@@ -1,4 +1,4 @@
-package hci.mobile.poty.screens.Dashboard
+package hci.mobile.poty.screens.dashboard
 
 import androidx.lifecycle.ViewModel
 import hci.mobile.poty.classes.CreditCard

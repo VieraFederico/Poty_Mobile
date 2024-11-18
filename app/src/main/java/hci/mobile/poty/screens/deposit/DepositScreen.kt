@@ -1,4 +1,4 @@
-package hci.mobile.poty.screens.Deposit
+package hci.mobile.poty.screens.deposit
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +35,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.CardsCarousel
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White

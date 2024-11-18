@@ -1,4 +1,4 @@
-package hci.mobile.poty.screens.Deposit
+package hci.mobile.poty.screens.deposit
 
 import androidx.compose.runtime.mutableStateListOf
 import hci.mobile.poty.classes.CreditCard

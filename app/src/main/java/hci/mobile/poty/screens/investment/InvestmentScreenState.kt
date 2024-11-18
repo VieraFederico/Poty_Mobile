@@ -1,4 +1,4 @@
-package hci.mobile.poty.screens.Investment
+package hci.mobile.poty.screens.investment
 
 import hci.mobile.poty.classes.Transaction
 

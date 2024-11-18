@@ -37,13 +37,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
 import hci.mobile.poty.classes.CreditCard
-import hci.mobile.poty.screens.AddCard.AddCardScreenViewModel
-import hci.mobile.poty.screens.login.LoginEvent
 import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.CreditCardView
 import hci.mobile.poty.ui.components.FullCreditCardView
 import hci.mobile.poty.ui.theme.GreenDark
-import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.CompactDateFieldWithLabel
