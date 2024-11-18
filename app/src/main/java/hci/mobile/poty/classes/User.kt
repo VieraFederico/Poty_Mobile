@@ -7,18 +7,18 @@ class User(
     val surname: String,
     val email: String,
     val birthday: String,
-    val gender: String,
+    /*val gender: String,
     val country: String,
-    val city: String,
+    val city: String,*/
 ) {
     init {
         validateName(name)
         validateSurname(surname)
         validateEmail(email)
         validateBirthday(birthday)
-        validateGender(gender)
+        /*validateGender(gender)
         validateCountry(country)
-        validateCity(city)
+        validateCity(city)*/
     }
 
     // Validación de nombre: solo caracteres alfabéticos y no vacío
@@ -40,13 +40,15 @@ class User(
         require(pattern.matcher(email).matches()) { "El formato del correo electrónico no es válido" }
     }
 
-    // Validación de fecha de nacimiento: verificar si la fecha está en el formato correcto (por ejemplo, "YYYY-MM-DD")
     private fun validateBirthday(birthday: String) {
-        val datePattern = "^\\d{4}-\\d{2}-\\d{2}$"
+        val datePattern = "^\\d{2}/\\d{2}/\\d{4}$"
         val pattern = Pattern.compile(datePattern)
-        require(pattern.matcher(birthday).matches()) { "La fecha de nacimiento debe estar en el formato YYYY-MM-DD" }
+        require(pattern.matcher(birthday).matches()) {
+            "La fecha de nacimiento debe estar en el formato DD/MM/YYYY"
+        }
     }
 
+/*
     // Validación de género: asegurarse de que el género sea "Masculino", "Femenino" u "Otro"
     private fun validateGender(gender: String) {
         val validGenders = setOf("Masculino", "Femenino", "Otro")
@@ -63,5 +65,5 @@ class User(
     private fun validateCity(city: String) {
         require(city.isNotEmpty()) { "La ciudad no puede estar vacía" }
         require(city.all { it.isLetter() || it.isWhitespace() }) { "La ciudad debe contener solo letras y espacios" }
-    }
+    }*/
 }

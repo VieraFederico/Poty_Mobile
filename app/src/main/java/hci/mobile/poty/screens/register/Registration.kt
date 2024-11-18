@@ -86,18 +86,6 @@ fun RegistrationScreen(
                         errorMessage = state.errorMessage
                     )
                     2 -> StepTwo(
-                        name = state.name,
-                        surname = state.surname,
-                        gender = state.gender,
-                        country = state.country,
-                        city = state.city,
-                        onGenderChange = { viewModel.onEvent(RegistrationEvent.UpdateGender(it)) },
-                        onCountryChange = { viewModel.onEvent(RegistrationEvent.UpdateCountry(it)) },
-                        onCityChange = { viewModel.onEvent(RegistrationEvent.UpdateCity(it)) },
-                        onNext = { viewModel.onEvent(RegistrationEvent.NextStep) },
-                        errorMessage = state.errorMessage
-                    )
-                    3 -> StepThree(
                         email = state.email,
                         password = state.password,
                         onEmailChange = { viewModel.onEvent(RegistrationEvent.UpdateEmail(it)) },
@@ -105,7 +93,7 @@ fun RegistrationScreen(
                         onNext = { viewModel.onEvent(RegistrationEvent.NextStep) },
                         errorMessage = state.errorMessage
                     )
-                    4 -> StepFour(
+                    3 -> StepThree(
                         confirmationCode = state.confirmationCode,
                         email = state.email,
                         onConfirmationCodeChange = { viewModel.onEvent(RegistrationEvent.UpdateConfirmationCode(it)) },
@@ -199,79 +187,6 @@ fun StepOne(
 
 @Composable
 fun StepTwo(
-    name: String,
-    surname: String,
-    gender: String,
-    country: String,
-    city: String,
-    onGenderChange: (String) -> Unit,
-    onCountryChange: (String) -> Unit,
-    onCityChange: (String) -> Unit,
-    onNext: () -> Unit,
-    errorMessage: String
-) {
-    var localGender by remember { mutableStateOf(gender) }
-    var localCity by remember { mutableStateOf(city) }
-    var localCountry by remember { mutableStateOf(country) }
-
-    Column(modifier = Modifier.padding(start=15.dp, end=15.dp,bottom=15.dp)) {
-        Text(
-            text = "¡Contamos sobre vos, $name $surname!",
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 10.dp)
-                .align(Alignment.CenterHorizontally)
-        )
-        TextFieldWithLabel(
-            label = "Genero",
-            value = localGender,
-            onValueChange = {
-                localGender = it
-                onGenderChange(it)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextFieldWithLabel(
-            label = "Pais",
-            value = localCountry,
-            onValueChange = {
-                localCountry = it
-                onCountryChange(it)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextFieldWithLabel(
-            label = "Ciudad",
-            value = localCity,
-            onValueChange = {
-                localCity = it
-                onCityChange(it)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { onNext() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
-        }
-
-        if (errorMessage.isNotEmpty()) {
-            ErrorMessage(message = errorMessage)
-        }
-    }
-}
-
-@Composable
-fun StepThree(
     email: String,
     password: String,
     onEmailChange: (String) -> Unit,
@@ -337,7 +252,7 @@ fun StepThree(
 
 
 @Composable
-fun StepFour(
+fun StepThree(
     confirmationCode: String,
     email: String,
     onConfirmationCodeChange: (String) -> Unit,

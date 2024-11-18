@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-// RegistrationViewModel.kt
 class RegistrationViewModel : ViewModel() {
     private val _state = MutableStateFlow(RegistrationState())
     val state = _state.asStateFlow()
@@ -21,9 +20,6 @@ class RegistrationViewModel : ViewModel() {
             is RegistrationEvent.UpdateEmail -> updateEmail(event.email)
             is RegistrationEvent.UpdatePassword -> updatePassword(event.password)
             is RegistrationEvent.UpdateBirthday -> updateBirthday(event.birthday)
-            is RegistrationEvent.UpdateGender -> updateGender(event.gender)
-            is RegistrationEvent.UpdateCountry -> updateCountry(event.country)
-            is RegistrationEvent.UpdateCity -> updateCity(event.city)
             is RegistrationEvent.UpdateConfirmationCode -> UpdateConfirmationCode(event.confirmationCode)
             RegistrationEvent.NextStep -> validateAndMoveToNextStep()
             RegistrationEvent.PreviousStep -> moveToPreviousStep()
@@ -50,7 +46,7 @@ class RegistrationViewModel : ViewModel() {
     private fun updateBirthday(birthday: String) {
         _state.update { it.copy(birthday = birthday, errorMessage = "") }
     }
-
+/*
     private fun updateGender(gender: String) {
         _state.update { it.copy(gender = gender, errorMessage = "") }
     }
@@ -61,7 +57,7 @@ class RegistrationViewModel : ViewModel() {
 
     private fun updateCity(city: String) {
         _state.update { it.copy(city = city, errorMessage = "") }
-    }
+    }*/
 
     private fun UpdateConfirmationCode(confirmationCode: String) {
         _state.update { it.copy(confirmationCode = confirmationCode, errorMessage = "") }
@@ -88,15 +84,13 @@ class RegistrationViewModel : ViewModel() {
         }
     }
 
-
     private fun validateStepTwo() {
         try {
             with(_state.value) {
-                require(gender.isNotEmpty()) { "Por favor, seleccione un género." }
-                require(country.isNotEmpty()) { "Por favor, ingrese un país." }
-                require(city.isNotEmpty()) { "Por favor, ingrese una ciudad." }
+                require(email.isNotEmpty()) { "Por favor, ingrese un correo electrónico válido." }
+                require(password.isNotEmpty()) { "Por favor, ingrese una contraseña válida." }
             }
-            submitRegistration()
+            _state.update { it.copy(currentStep = 3, errorMessage = "") }
         } catch (e: IllegalArgumentException) {
             _state.update { it.copy(errorMessage = e.message ?: "Error de validación") }
         }
@@ -105,10 +99,10 @@ class RegistrationViewModel : ViewModel() {
     private fun validateStepThree() {
         try {
             with(_state.value) {
-                require(email.isNotEmpty()) { "Por favor, ingrese un correo electrónico válido." }
-                require(password.isNotEmpty()) { "Por favor, ingrese una contraseña válida." }
+                require(confirmationCode.isNotEmpty()) { "Por favor, ingrese el código de confirmación." }
+                require(confirmationCode.length == 6) { "El código de confirmación debe tener 6 dígitos." }
             }
-            _state.update { it.copy(currentStep = 3, errorMessage = "") }
+            submitRegistration()
         } catch (e: IllegalArgumentException) {
             _state.update { it.copy(errorMessage = e.message ?: "Error de validación") }
         }
@@ -130,9 +124,9 @@ class RegistrationViewModel : ViewModel() {
                     surname = _state.value.surname,
                     email = _state.value.email,
                     birthday = _state.value.birthday,
-                    gender = _state.value.gender,
+                   /* gender = _state.value.gender,
                     country = _state.value.country,
-                    city = _state.value.city
+                    city = _state.value.city*/
                 )
 
                 // Aquí irían las llamadas a tu API o repositorio

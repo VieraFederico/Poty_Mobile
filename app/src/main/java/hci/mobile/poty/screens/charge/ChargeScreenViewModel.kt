@@ -35,14 +35,20 @@ class ChargeScreenViewModel : ViewModel() {
 
 
     private fun handleNextStep() {
-        if (_state.value.isAmountValid) {
-            generatePaymentLink()
-        } else {
-            _state.update {
-                it.copy(error = "El monto ingresado no es válido.")
+        _state.update { currentState ->
+            when (currentState.currentStep) {
+                ChargeStep.AMOUNT -> {
+                    if (currentState.isAmountValid) {
+                        currentState.copy(currentStep = ChargeStep.LINK)
+                    } else {
+                        currentState.copy(error = "El monto ingresado no es válido.")
+                    }
+                }
+                ChargeStep.LINK -> currentState
             }
         }
     }
+
 
     private fun handleBack() {
         _state.update { currentState ->

@@ -35,17 +35,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
-import hci.mobile.poty.screens.register.RegistrationEvent
-import hci.mobile.poty.screens.register.StepOne
-import hci.mobile.poty.screens.register.StepTwo
 import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.CardsCarousel
-import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
-import hci.mobile.poty.utils.ErrorMessage
-import hci.mobile.poty.utils.NumberFieldWithLabel
 import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 
@@ -134,7 +127,11 @@ fun DepositScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenView
                 ) {
 
                     when (state.currentStep) {
-                        ChargeStep.AMOUNT -> StepOne()
+                        ChargeStep.AMOUNT -> StepOne(
+                            amount = state.amount,
+                            onAmountChanged = {viewModel.onEvent(ChargeScreenEvent.AmountChanged(it))},
+                            NextStepClicked = {ChargeScreenEvent.NextStepClicked}
+                        )
                         ChargeStep.LINK -> StepTwo()
                     }
                 }
@@ -145,9 +142,9 @@ fun DepositScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenView
 
 @Composable
 fun StepOne(
-    /*amount: String,
+    amount: String,
     onAmountChanged: (String) -> Unit,
-    NextStepClicked: () -> Unit*/
+    NextStepClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -160,7 +157,7 @@ fun StepOne(
             text = "Por favor, ingrese la cantidad a cobrar",
             style = MaterialTheme.typography.bodyLarge,
         )
-        /*ThickTextFieldWithLabel(
+        ThickTextFieldWithLabel(
             value = amount,
             onValueChange = { newValue ->
                 onAmountChanged(newValue)
@@ -175,7 +172,7 @@ fun StepOne(
         ) {
             Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
         }
-*/
+
     }
 
 
