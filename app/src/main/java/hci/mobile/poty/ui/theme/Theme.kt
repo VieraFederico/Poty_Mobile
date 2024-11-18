@@ -56,7 +56,13 @@ fun PotyTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+        typography = Typography
+    ) {
+        // Asegúrate de envolver el contenido en un Surface
+        androidx.compose.material3.Surface(
+            color = MaterialTheme.colorScheme.background // Fondo del tema
+        ) {
+            content()
+        }
+    }
 }

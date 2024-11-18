@@ -1,3 +1,5 @@
+package hci.mobile.poty.screens.addCard
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -146,7 +148,7 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                                 bank = "Banco Royale", //TODO:Cambiar Cuando nos den la API
                                 number = state.number,
                                 owner = state.owner,
-                                CVV = state.cvv,
+                                cvv = state.cvv,
                                 exp = state.exp
                             )
                         )

@@ -17,14 +17,14 @@ data class DashboardState(
             bank = "Banco Royale",
             number = "1234567812345678",
             owner = "Le Chiffre",
-            CVV = "123",
+            cvv = "123",
             exp = "12/24"
         ),
         CreditCard(
             bank = "Banco Quantum",
             number = "8765432187654321",
             owner = "Dominic Greene",
-            CVV = "456",
+            cvv = "456",
             exp = "08/25"
         )
     ),
