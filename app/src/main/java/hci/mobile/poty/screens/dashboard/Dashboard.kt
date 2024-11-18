@@ -46,10 +46,16 @@ import hci.mobile.poty.ui.components.spendingCard
 @Preview
 @Composable
 fun DashboardPreview(){
-    Dashboard()
+    Dashboard(
+        onNavigateToCharge = {},
+        onNavigateToDeposit = {}
+    )
 }
 @Composable
-fun Dashboard(viewModel: DashboardViewModel = viewModel()) {
+fun Dashboard(viewModel: DashboardViewModel = viewModel(),
+              onNavigateToCharge: () -> Unit, // Callback para ir a ChargeScreen
+              onNavigateToDeposit: () -> Unit // Callback para ir a DepositScreen
+     ) {
     val state by viewModel.state.collectAsState()  // Collect state from ViewModel
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
@@ -115,13 +121,13 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel()) {
 
                     ) {
                         DashboardButton(
-                            onClick = {},
+                            onClick = {onNavigateToDeposit()},
                             iconResId = R.drawable.corner_right_down,
                             contentDescription = "Ingresar"
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                         DashboardButton(
-                            onClick = {},
+                            onClick = {onNavigateToCharge()},
                             iconResId = R.drawable.dollar_sign,
                             contentDescription = "Cobrar"
                         )

@@ -13,6 +13,9 @@ class RegistrationViewModel : ViewModel() {
     private val _state = MutableStateFlow(RegistrationState())
     val state = _state.asStateFlow()
 
+    private val _isRegistrationSuccessful = MutableStateFlow(false)
+    val isRegistrationSuccessful = _isRegistrationSuccessful.asStateFlow()
+
     fun onEvent(event: RegistrationEvent) {
         when (event) {
             is RegistrationEvent.UpdateName -> updateName(event.name)
@@ -107,22 +110,21 @@ class RegistrationViewModel : ViewModel() {
             try {
                 _state.update { it.copy(isLoading = true) }
 
+                // Aquí irían las llamadas a tu API o repositorio
+                // Simulamos un registro exitoso
                 val user = User(
                     name = _state.value.name,
                     surname = _state.value.surname,
                     email = _state.value.email,
-                    birthday = _state.value.birthday,
-                   /* gender = _state.value.gender,
-                    country = _state.value.country,
-                    city = _state.value.city*/
+                    birthday = _state.value.birthday
                 )
 
-                // Aquí irían las llamadas a tu API o repositorio
-                // userRepository.register(user)
+                // TODO: Llamar al repositorio/API para registrar al usuario
 
                 _state.update { it.copy(isLoading = false, errorMessage = "") }
-                // Navegar a la siguiente pantalla o mostrar éxito
 
+                // Indicar que el registro fue exitoso
+                _isRegistrationSuccessful.value = true
             } catch (e: Exception) {
                 _state.update {
                     it.copy(
