@@ -277,7 +277,7 @@ fun FullCreditCardView(creditCard: CreditCard) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween, 
+                horizontalArrangement = Arrangement.SpaceBetween,
             ){
                 Text(
                     text = creditCard.owner,
@@ -345,16 +345,16 @@ fun CardsCarousel(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .height(220.dp),
+            .height(240.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         items(creditCards) { creditCard ->
             CreditCardView(
                 creditCard = creditCard,
-                isSelected = TODO(),
-                onCardClick = TODO(),
-                onDeleteCard = TODO()
+                isSelected = false,
+                onCardClick = {},
+                onDeleteCard = {}
             )
         }
         item {
@@ -391,6 +391,28 @@ fun PaymentCardsCarouselPreview() {
             creditCards = creditCards,
             selectedCard = null,
             onCardSelected = {setSelectedCard(it) },
+            onAddCardClick = { newCard ->
+                creditCards.add(newCard)
+            }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CardsCarouselPreview() {
+    val (selectedCard, setSelectedCard) = remember { mutableStateOf<CreditCard?>(null) }
+
+    val creditCards = remember {
+        mutableStateListOf(
+            CreditCard(bank = "Banco Royale", number = "1234567812345678", owner = "Le Chiffre", CVV = "123", exp = "12/24"),
+            CreditCard(bank = "Banco Quantum", number = "8765432187654321", owner = "Dominic Greene", CVV = "456", exp = "08/25")
+        )
+    }
+
+    PotyTheme {
+        CardsCarousel(
+            creditCards = creditCards,
             onAddCardClick = { newCard ->
                 creditCards.add(newCard)
             }

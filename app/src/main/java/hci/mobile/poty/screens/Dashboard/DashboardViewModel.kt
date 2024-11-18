@@ -29,5 +29,4 @@ class DashboardViewModel : ViewModel() {
             currentState.copy(transactions = currentState.transactions + newTransaction)
         }
     }
-    // Any other business logic related to the Dashboard can go here.
 }

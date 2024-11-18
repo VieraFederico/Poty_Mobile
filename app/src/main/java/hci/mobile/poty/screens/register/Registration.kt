@@ -40,6 +40,7 @@ import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.TextFieldWithLabel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.utils.CompactDateFieldWithLabel
+import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 @Composable
 fun RegistrationScreen(
@@ -333,25 +334,7 @@ fun StepThree(
 }
 
 
-@Composable
-fun ThickTextFieldWithLabel(value: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {
 
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(50.dp))
-            .height(90.dp)
-            .border(
-                BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                RoundedCornerShape(50.dp)
-            ),
-        singleLine = true,
-        textStyle = LocalTextStyle.current.copy(color = Color.Black),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
-    )
-}
 
 @Composable
 fun StepFour(

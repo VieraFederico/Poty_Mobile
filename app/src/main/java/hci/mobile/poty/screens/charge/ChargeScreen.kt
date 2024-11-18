@@ -1,15 +1,16 @@
+package hci.mobile.poty.screens.charge
+import ChargeScreenViewModel
+import hci.mobile.poty.screens.Deposit.DepositScreenViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -34,27 +35,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
-import hci.mobile.poty.classes.CreditCard
-import hci.mobile.poty.screens.AddCard.AddCardScreenViewModel
-import hci.mobile.poty.screens.login.LoginEvent
+import hci.mobile.poty.screens.register.RegistrationEvent
+import hci.mobile.poty.screens.register.StepOne
+import hci.mobile.poty.screens.register.StepTwo
 import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.CreditCardView
-import hci.mobile.poty.ui.components.FullCreditCardView
+import hci.mobile.poty.ui.components.CardsCarousel
+import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.theme.GreenDark
-import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
-import hci.mobile.poty.utils.CompactDateFieldWithLabel
-import hci.mobile.poty.utils.TextFieldWithLabel
+import hci.mobile.poty.utils.ErrorMessage
+import hci.mobile.poty.utils.NumberFieldWithLabel
+import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 
 @Preview
 @Composable
-fun AddCardScreenPreview(){
-    AddCardScreen()
+fun DepositScreenPreview(){
+    DepositScreen()
 }
 @Composable
-fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenViewModel() }) {
+fun DepositScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenViewModel() }) {
     val state by viewModel.state.collectAsState()
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
@@ -74,8 +75,7 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                         .fillMaxWidth()
                         .weight(1f),
 
-                ) {
-                    // Background image
+                    ) {
                     Image(
                         painter = painterResource(id = R.drawable.background_scaffolding),
                         contentDescription = null,
@@ -112,14 +112,9 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                                 .fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
-                            ){
+                        ) {
                             Text(
-                                text="Agregar Nueva",
-                                style = MaterialTheme.typography.titleSmallSemiBold,
-                                color = White
-                            )
-                            Text(
-                                text="Tarjeta",
+                                text = "Cobrar",
                                 style = MaterialTheme.typography.titleSmallSemiBold,
                                 color = White
                             )
@@ -137,87 +132,58 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomEnd = 0.dp, bottomStart = 0.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(15.dp)
-                    ) {
 
-                        FullCreditCardView(
-                            creditCard = CreditCard(
-                                bank = "Banco Royale", //TODO:Cambiar Cuando nos den la API
-                                number = state.number,
-                                owner = state.owner,
-                                CVV = state.cvv,
-                                exp = state.exp
-                            )
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        TextFieldWithLabel(
-                            label = "Número de Tarjeta",
-                            value = state.number,
-                            onValueChange = { viewModel.onNumberChange(it) },
-                            maxLength = 16
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        TextFieldWithLabel(
-                            label = "Nombre del Responsable",
-                            value = state.owner,
-                            onValueChange = { viewModel.onOwnerChange(it) }
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row() {
-                            Column(modifier = Modifier.weight(1f)) {
-                                TextFieldWithLabel(
-                                    label = "CVV",
-                                    value = state.cvv,
-                                    onValueChange = { viewModel.onCVVChange(it) },
-                                    maxLength = 3
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Column(modifier = Modifier.weight(1f)) {
-                                CompactDateFieldWithLabel(
-                                    label = "Fecha de Venc.",
-                                    value = state.exp,
-                                    onValueChange = { viewModel.onExpDateChange(it) }
-                                )
-                            }
-                        }
-
-                        state.errorMessage?.let {
-                            Text(
-                                text = it,
-                                color = Color.Red,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Button(
-                            onClick = { viewModel.onAddCardClick() },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                                .align(Alignment.CenterHorizontally),
-                        ) {
-                            Text(
-                                text = "Agregar Tarjeta",
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        }
+                    when (state.currentStep) {
+                        ChargeStep.AMOUNT -> StepOne()
+                        ChargeStep.LINK -> StepTwo()
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun StepOne(
+    /*amount: String,
+    onAmountChanged: (String) -> Unit,
+    NextStepClicked: () -> Unit*/
+) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = "Por favor, ingrese la cantidad a cobrar",
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        /*ThickTextFieldWithLabel(
+            value = amount,
+            onValueChange = { newValue ->
+                onAmountChanged(newValue)
+            }
+        )
+
+        Button(
+            onClick = { NextStepClicked() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+        }
+*/
+    }
+
+
+}
+
+
+
+@Composable
+fun StepTwo(){
+
 }

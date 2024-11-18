@@ -69,7 +69,13 @@ fun ErrorMessage(message: String) {
 }
 
 @Composable
-fun TextFieldWithLabel(label: String, value: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {
+fun TextFieldWithLabel(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    isPassword: Boolean = false,
+    maxLength: Int? = null
+) {
     Text(
         text = label,
         style = MaterialTheme.typography.bodyLarge,
@@ -77,7 +83,12 @@ fun TextFieldWithLabel(label: String, value: String, onValueChange: (String) -> 
     )
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = { newValue ->
+            // If maxLength is set, truncate the input
+            if (maxLength == null || newValue.length <= maxLength) {
+                onValueChange(newValue)
+            }
+        },
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(50.dp))
@@ -88,17 +99,17 @@ fun TextFieldWithLabel(label: String, value: String, onValueChange: (String) -> 
             ),
         singleLine = true,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = Black,        // Set text color when focused
-            unfocusedTextColor = Black,      // Set text color when unfocused
-            focusedContainerColor = Color.Transparent, // Background color when focused
-            unfocusedContainerColor = Color.Transparent, // Background color when unfocused
+            focusedTextColor = Black,
+            unfocusedTextColor = Black,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
             cursorColor = Black
         ),
         textStyle = LocalTextStyle.current.copy(color = Black), // Force text color
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-
     )
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -314,5 +325,25 @@ fun NumberFieldWithLabel(
                 color = Color.Black
             )
         }
+    )
+}
+
+@Composable
+fun ThickTextFieldWithLabel(value: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(50.dp))
+            .height(90.dp)
+            .border(
+                BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                RoundedCornerShape(50.dp)
+            ),
+        singleLine = true,
+        textStyle = LocalTextStyle.current.copy(color = Color.Black),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
     )
 }
