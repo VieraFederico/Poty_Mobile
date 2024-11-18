@@ -8,7 +8,7 @@ data class CreditCard(
     val bank: String,
     val number: String,
     val owner: String,
-    val CVV: String,
+    val cvv: String,
     val exp: String,
 ){
     // Mask the credit card number to only show the last four digits
@@ -29,7 +29,7 @@ data class CreditCard(
 
     // Validate CVV (basic check for 3 digits)
     fun isValidCVV(): Boolean {
-        return CVV.length == 3 && CVV.all { it.isDigit() }
+        return cvv.length == 3 && cvv.all { it.isDigit() }
     }
 
     // Validate expiration date (MM/YY format)

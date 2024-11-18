@@ -1,6 +1,6 @@
 package hci.mobile.poty.ui.components
 
-import android.annotation.SuppressLint
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

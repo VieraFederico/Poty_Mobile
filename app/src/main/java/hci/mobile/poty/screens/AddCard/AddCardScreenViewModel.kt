@@ -54,7 +54,7 @@ class AddCardScreenViewModel : ViewModel() {
             bank = _state.value.bank,
             number = _state.value.number,
             owner = _state.value.owner,
-            CVV = _state.value.cvv,
+            cvv = _state.value.cvv,
             exp = _state.value.exp
         )
 
