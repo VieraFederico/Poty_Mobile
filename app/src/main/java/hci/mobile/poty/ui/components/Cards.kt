@@ -52,7 +52,7 @@ fun CreditCardViewPreview(){
         bank = "Banco Royale",
         number = "1234567812345678",
         owner = "James Bond",
-        CVV = "007",
+        cvv = "007",
         exp = "03/60"
     )
     PotyTheme {
@@ -327,7 +327,7 @@ fun PaymentCardsCarousel(
                         bank = "New Bank",
                         number = "1122334455667788",
                         owner = "Alice Brown",
-                        CVV = "789",
+                        cvv = "789",
                         exp = "06/26"
                     )
                     onAddCardClick(newCard)
@@ -364,7 +364,7 @@ fun CardsCarousel(
                         bank = "New Bank",
                         number = "1122334455667788",
                         owner = "Alice Brown",
-                        CVV = "789",
+                        cvv = "789",
                         exp = "06/26"
                     )
                     onAddCardClick(newCard)
@@ -381,8 +381,8 @@ fun PaymentCardsCarouselPreview() {
 
     val creditCards = remember {
         mutableStateListOf(
-            CreditCard(bank = "Banco Royale", number = "1234567812345678", owner = "Le Chiffre", CVV = "123", exp = "12/24"),
-            CreditCard(bank = "Banco Quantum", number = "8765432187654321", owner = "Dominic Greene", CVV = "456", exp = "08/25")
+            CreditCard(bank = "Banco Royale", number = "1234567812345678", owner = "Le Chiffre", cvv = "123", exp = "12/24"),
+            CreditCard(bank = "Banco Quantum", number = "8765432187654321", owner = "Dominic Greene", cvv = "456", exp = "08/25")
         )
     }
 
