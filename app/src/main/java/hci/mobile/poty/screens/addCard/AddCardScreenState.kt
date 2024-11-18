@@ -1,4 +1,4 @@
-package hci.mobile.poty.screens.AddCard
+package hci.mobile.poty.screens.addCard
 
 data class AddCardScreenState(
     val bank: String = "",

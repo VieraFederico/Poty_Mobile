@@ -1,4 +1,4 @@
-package hci.mobile.poty.screens.Investment
+package hci.mobile.poty.screens.investment
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

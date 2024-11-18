@@ -1,12 +1,10 @@
-package hci.mobile.poty.screens.Deposit
+package hci.mobile.poty.screens.deposit
 
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import hci.mobile.poty.classes.CreditCard
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class DepositScreenViewModel : ViewModel() {
 
