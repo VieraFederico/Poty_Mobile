@@ -5,6 +5,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
+import android.content.Intent
+import android.net.Uri
+import androidx.core.content.ContextCompat.startActivity
+import hci.mobile.poty.classes.ChargeForm;
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import androidx.core.content.ContextCompat
 
 class ChargeScreenViewModel : ViewModel() {
 
@@ -12,82 +20,94 @@ class ChargeScreenViewModel : ViewModel() {
     val state = _state.asStateFlow()
 
     fun onEvent(event: ChargeScreenEvent) {
-        when {
-            event is ChargeScreenEvent.AmountChanged -> updateAmount(event.amount)
-            event == ChargeScreenEvent.NextStepClicked -> handleNextStep()
-            event == ChargeScreenEvent.BackClicked -> handleBack()
-            event == ChargeScreenEvent.GenerateNewLink -> generatePaymentLink()
-            event == ChargeScreenEvent.ShareLink -> shareLink()
-            event == ChargeScreenEvent.CopyLink -> copyLinkToClipboard()
-            
+        when(event){
+            is ChargeScreenEvent.UpdateAmount -> updateAmount(event.amount)
+            is ChargeScreenEvent.GenerateNewLink -> generatePaymentLink()
+            is ChargeScreenEvent.ShareLink -> event.context?.let { shareLink(it) }
+            is ChargeScreenEvent.CopyLink -> event.context?.let { copyLinkToClipboard(it) }
+            ChargeScreenEvent.NextStep -> validateAndMoveToNextStep()
+            ChargeScreenEvent.PreviousStep -> moveToPreviousStep()
+            else -> {}
+        }
+    }
+
+    private fun validateAndMoveToNextStep() {
+        try{
+            with(_state.value){
+                require(amount.isNotEmpty() && amount.toDouble() > 0) {"Por favor, ingrese un monto válido."}
+            }
+            _state.update { it.copy(currentStep = 2, errorMessage = "") }
+        } catch (e: IllegalArgumentException) {
+            _state.update { it.copy(errorMessage = e.message ?: "Error de validación") }
+        }
+    }
+
+    private fun moveToPreviousStep() {
+        if (_state.value.currentStep > 1) {
+            _state.update { it.copy(currentStep = it.currentStep - 1, errorMessage = "") }
         }
     }
 
     private fun updateAmount(newAmount: String) {
-        val isValid = newAmount.toFloatOrNull()?.let { it > 0 } == true // Validar si es un float válido y positivo
+        val isValid = newAmount.toFloatOrNull()?.let { it > 0 } == true
         _state.update {
             it.copy(
                 amount = newAmount,
-                isAmountValid = isValid
             )
         }
     }
 
 
-    private fun handleNextStep() {
-        _state.update { currentState ->
-            when (currentState.currentStep) {
-                ChargeStep.AMOUNT -> {
-                    if (currentState.isAmountValid) {
-                        currentState.copy(currentStep = ChargeStep.LINK)
-                    } else {
-                        currentState.copy(error = "El monto ingresado no es válido.")
-                    }
-                }
-                ChargeStep.LINK -> currentState
-            }
-        }
-    }
-
-
-    private fun handleBack() {
-        _state.update { currentState ->
-            when (currentState.currentStep) {
-                ChargeStep.LINK -> currentState.copy(
-                    currentStep = ChargeStep.AMOUNT,
-                    generatedLink = ""
-                )
-                ChargeStep.AMOUNT -> currentState // No action needed
-            }
-        }
-    }
-
     private fun generatePaymentLink() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             try {
-                val generatedLink = "poty.app/pay/${UUID.randomUUID()}"
+                val amount = _state.value.amount
+                require(amount.isNotEmpty() && amount.toDouble() > 0) { "Por favor, ingrese un monto válido." }
+
+                val generatedLink = "poty.app/pay/${UUID.randomUUID()}?amount=$amount"
+
                 _state.update {
                     it.copy(
-                        currentStep = ChargeStep.LINK,
                         generatedLink = generatedLink,
                         isLoading = false,
-                        error = null
+                        errorMessage = ""
                     )
                 }
             } catch (e: Exception) {
                 _state.update {
-                    it.copy(isLoading = false, error = "Error al generar el enlace.")
+                    it.copy(isLoading = false, errorMessage = "Error al generar el enlace. ${e.message}")
                 }
             }
         }
     }
 
-    private fun shareLink() {
-        // Implement share logic
+
+    fun shareLink(context: Context) {
+        val link = _state.value.generatedLink
+        if (link.isNotEmpty()) {
+            val intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, link)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(intent, "Compartir enlace")
+            shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(shareIntent)
+        } else {
+            _state.update { it.copy(errorMessage = "No hay enlace para compartir") }
+        }
     }
 
-    private fun copyLinkToClipboard() {
-        // Implement clipboard copy logic
+    fun copyLinkToClipboard(context: Context) {
+        val link = _state.value.generatedLink
+        if (link.isNotEmpty()) {
+            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            val clip = ClipData.newPlainText("payment_link", link)
+            clipboard?.setPrimaryClip(clip)
+            _state.update { it.copy(errorMessage = "Enlace copiado al portapapeles") }
+        } else {
+            _state.update { it.copy(errorMessage = "No hay enlace para copiar") }
+        }
     }
 }

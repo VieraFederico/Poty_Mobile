@@ -4,14 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -31,10 +34,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
+import hci.mobile.poty.screens.register.RegistrationEvent
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
+import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 @Preview
@@ -122,12 +127,15 @@ fun DepositScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenView
                 ) {
 
                     when (state.currentStep) {
-                        ChargeStep.AMOUNT -> StepOne(
+                        1 -> StepOne(
                             amount = state.amount,
-                            onAmountChanged = {viewModel.onEvent(ChargeScreenEvent.AmountChanged(it))},
-                            NextStepClicked = {ChargeScreenEvent.NextStepClicked}
+                            UpdateAmount = {viewModel.onEvent(ChargeScreenEvent.UpdateAmount(it))},
+                            NextStep = {viewModel.onEvent(ChargeScreenEvent.NextStep)},
+                            errorMessage = state.errorMessage
                         )
-                        ChargeStep.LINK -> StepTwo()
+                        2 -> StepTwo(
+
+                        )
                     }
                 }
             }
@@ -138,8 +146,9 @@ fun DepositScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenView
 @Composable
 fun StepOne(
     amount: String,
-    onAmountChanged: (String) -> Unit,
-    NextStepClicked: () -> Unit
+    UpdateAmount: (String) -> Unit,
+    NextStep: () -> Unit,
+    errorMessage: String
 ) {
     Column(
         modifier = Modifier
@@ -152,22 +161,27 @@ fun StepOne(
             text = "Por favor, ingrese la cantidad a cobrar",
             style = MaterialTheme.typography.bodyLarge,
         )
+        Spacer(modifier = Modifier.height(16.dp))
+
         ThickTextFieldWithLabel(
             value = amount,
             onValueChange = { newValue ->
-                onAmountChanged(newValue)
+                UpdateAmount(newValue)
             }
         )
+        Spacer(modifier = Modifier.height(30.dp))
 
         Button(
-            onClick = { NextStepClicked() },
+            onClick = { NextStep() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
             Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
         }
-
+        if (errorMessage.isNotEmpty()) {
+            ErrorMessage(message = errorMessage)
+        }
     }
 
 
@@ -177,5 +191,8 @@ fun StepOne(
 
 @Composable
 fun StepTwo(){
-
+    Text(
+        text = "STEP 2",
+        style = MaterialTheme.typography.bodyLarge,
+    )
 }

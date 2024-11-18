@@ -46,18 +46,6 @@ class RegistrationViewModel : ViewModel() {
     private fun updateBirthday(birthday: String) {
         _state.update { it.copy(birthday = birthday, errorMessage = "") }
     }
-/*
-    private fun updateGender(gender: String) {
-        _state.update { it.copy(gender = gender, errorMessage = "") }
-    }
-
-    private fun updateCountry(country: String) {
-        _state.update { it.copy(country = country, errorMessage = "") }
-    }
-
-    private fun updateCity(city: String) {
-        _state.update { it.copy(city = city, errorMessage = "") }
-    }*/
 
     private fun UpdateConfirmationCode(confirmationCode: String) {
         _state.update { it.copy(confirmationCode = confirmationCode, errorMessage = "") }

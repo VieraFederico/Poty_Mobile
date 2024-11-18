@@ -1,22 +1,18 @@
+import android.content.Context
+
 data class ChargeScreenState(
-    val currentStep: ChargeStep = ChargeStep.AMOUNT,
+    val currentStep: Int = 1,
     val amount: String = "",
-    val isAmountValid: Boolean = false,
     val generatedLink: String = "",
     val isLoading: Boolean = false,
-    val error: String? = null
+    val errorMessage: String = "",
 )
 
-enum class ChargeStep {
-    AMOUNT,
-    LINK
-}
-
 sealed class ChargeScreenEvent {
-    data class AmountChanged(val amount: String) : ChargeScreenEvent()
-    object NextStepClicked : ChargeScreenEvent()
-    object BackClicked : ChargeScreenEvent()
+    data class UpdateAmount(val amount: String) : ChargeScreenEvent()
+    object NextStep : ChargeScreenEvent()
+    object PreviousStep : ChargeScreenEvent()
     object GenerateNewLink : ChargeScreenEvent()
-    object ShareLink : ChargeScreenEvent()
-    object CopyLink : ChargeScreenEvent()
+    data class ShareLink(val context: Context?) : ChargeScreenEvent()
+    data class CopyLink(val context: Context?) : ChargeScreenEvent()
 }
