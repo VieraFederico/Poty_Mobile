@@ -22,16 +22,16 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    private fun updateEmail(email: String) {
+    fun updateEmail(email: String) {
         _state.update { it.copy(email = email, errorMessage = "") }
     }
 
-    private fun updatePassword(password: String) {
+    fun updatePassword(password: String) {
         _state.update { it.copy(password = password, errorMessage = "") }
     }
 
     // Valida los campos y realiza el login
-    private fun validateAndLogin() {
+    fun validateAndLogin() {
         try {
             // Validación de los campos
             require(_state.value.email.isNotEmpty()) { "Por favor, ingrese un correo electrónico válido." }
@@ -39,6 +39,7 @@ class LoginViewModel : ViewModel() {
 
             // Si pasa la validación, inicia sesión
             loginUser()
+
         } catch (e: IllegalArgumentException) {
             // Si hay un error en la validación, muestra el mensaje de error
             _state.value = _state.value.copy(errorMessage = e.message ?: "Error de validación")
