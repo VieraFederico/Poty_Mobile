@@ -34,12 +34,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
-import hci.mobile.poty.screens.register.RegistrationEvent
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.ErrorMessage
+import hci.mobile.poty.utils.NumberFieldWithLabel
 import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 @Preview
@@ -107,7 +107,7 @@ fun ChargeScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenViewM
                             verticalArrangement = Arrangement.Center,
                         ) {
                             Text(
-                                text = "Cobrar",
+                                text = "Cobrar Dinero",
                                 style = MaterialTheme.typography.titleSmallSemiBold,
                                 color = White
                             )
@@ -154,22 +154,16 @@ fun StepOne(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text(
-            text = "Por favor, ingrese la cantidad a cobrar",
-            style = MaterialTheme.typography.bodyLarge,
+
+        NumberFieldWithLabel(
+            label = "Monto a cobrar",
+            value = amount.toFloatOrNull() ?: 0f,
+            onValueChange = { newValue -> UpdateAmount(newValue.toString()) }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        ThickTextFieldWithLabel(
-            value = amount,
-            onValueChange = { newValue ->
-                UpdateAmount(newValue)
-            }
-        )
-        Spacer(modifier = Modifier.height(30.dp))
 
         Button(
             onClick = { NextStep() },

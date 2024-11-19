@@ -116,7 +116,8 @@ fun TextFieldWithLabel(
 fun CompactDateFieldWithLabel(
     label: String,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    showCalendar: Boolean = true
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
@@ -136,11 +137,13 @@ fun CompactDateFieldWithLabel(
             onValueChange = { },
             readOnly = true,
             trailingIcon = {
-                IconButton(onClick = { showDatePicker = true }) {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = "Select date"
-                    )
+                if (showCalendar) { // Show the calendar icon only if showCalendar is true
+                    IconButton(onClick = { showDatePicker = true }) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "Select date"
+                        )
+                    }
                 }
             },
             modifier = Modifier
@@ -162,7 +165,7 @@ fun CompactDateFieldWithLabel(
             singleLine = true
         )
 
-        if (showDatePicker) {
+        if (showCalendar && showDatePicker) { // Show the DatePicker dialog only if showCalendar is true
             Dialog(onDismissRequest = { showDatePicker = false }) {
                 Card(
                     modifier = Modifier
@@ -222,6 +225,7 @@ fun CompactDateFieldWithLabel(
     }
 }
 
+
 private fun convertMillisToDate(millis: Long): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return formatter.format(Date(millis))
@@ -277,7 +281,7 @@ fun PasswordFieldWithLabel(
 @Composable
 fun NumberFieldWithLabel(
     label: String,
-    value: Float,
+    value: Float = 0.0f,
     onValueChange: (Float) -> Unit,
     isPassword: Boolean = false
 ) {
@@ -287,16 +291,15 @@ fun NumberFieldWithLabel(
         modifier = Modifier.padding(bottom = 8.dp)
     )
 
-    var textValue by remember { mutableStateOf(value.toString()) }
+
+    var textValue by remember { mutableStateOf(if (value == 0.0f) "" else value.toString()) }
 
     OutlinedTextField(
         value = textValue,
         onValueChange = { input ->
-            textValue = input
-
-            // Convert input text to Float if possible
-            val floatValue = input.toFloatOrNull()
-            if (floatValue != null) {
+            if (input.isEmpty() || input.matches(Regex("^[0-9]*\\.?[0-9]*$"))) {
+                textValue = input
+                val floatValue = input.toFloatOrNull() ?: 0.0f
                 onValueChange(floatValue)
             }
         },
@@ -309,6 +312,12 @@ fun NumberFieldWithLabel(
                 RoundedCornerShape(10.dp)
             ),
         singleLine = true,
+        placeholder = {
+            Text(
+                text = "Por ejemplo: 100.15",
+                style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray)
+            )
+        },
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.Black,
@@ -327,6 +336,9 @@ fun NumberFieldWithLabel(
         }
     )
 }
+
+
+
 
 @Composable
 fun ThickTextFieldWithLabel(value: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {

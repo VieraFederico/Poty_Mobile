@@ -108,7 +108,7 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
                             verticalArrangement = Arrangement.Center,
                         ) {
                             Text(
-                                text = "Ingresar",
+                                text = "Ingresar Dinero",
                                 style = MaterialTheme.typography.titleSmallSemiBold,
                                 color = White
                             )
@@ -143,9 +143,10 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
 
                         Column(
                             modifier = Modifier.padding(15.dp)
+
                         ) {
                         NumberFieldWithLabel(
-                            label = "Cantidad",
+                            label = "Monto a ingresar",
                             value = state.number,
                             onValueChange = { newValue ->
                                 viewModel.onNumberChange(newValue)

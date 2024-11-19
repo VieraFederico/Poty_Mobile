@@ -169,6 +169,18 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Row() {
+                            Column(modifier = Modifier.weight(1.5f)) {
+                                CompactDateFieldWithLabel(
+                                    label = "Fecha de Venc. (MM/AA)",
+                                    value = state.exp,
+                                    showCalendar = false,
+                                    onValueChange = { viewModel.onExpDateChange(it) }
+                                )
+                            }
+
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
                             Column(modifier = Modifier.weight(1f)) {
                                 TextFieldWithLabel(
                                     label = "CVV",
@@ -178,15 +190,6 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                                 )
                             }
 
-                            Spacer(modifier = Modifier.width(8.dp))
-
-                            Column(modifier = Modifier.weight(1f)) {
-                                CompactDateFieldWithLabel(
-                                    label = "Fecha de Venc.",
-                                    value = state.exp,
-                                    onValueChange = { viewModel.onExpDateChange(it) }
-                                )
-                            }
                         }
 
                         state.errorMessage?.let {

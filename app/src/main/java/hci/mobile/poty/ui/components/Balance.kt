@@ -21,7 +21,7 @@ import hci.mobile.poty.ui.theme.White
 @Composable
 fun BalanceCard(balance: Float, isVisible: Boolean, onToggleVisibility: () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-        Text(text = "Tu Balance", color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
+        Text(text = "Balance", color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (isVisible) {
                 Text(text = "$ ${String.format("%.2f", balance)}", color = White, style = MaterialTheme.typography.titleLarge)

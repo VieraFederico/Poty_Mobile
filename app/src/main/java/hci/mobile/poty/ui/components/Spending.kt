@@ -45,7 +45,7 @@ fun spendingCard(spent: Float){
             ),
         ) {
             Text(
-                text = "Tus Gastos",
+                text = "Gastos",
                 color = White,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = 10.dp,start = 10.dp,bottom = 5.dp)

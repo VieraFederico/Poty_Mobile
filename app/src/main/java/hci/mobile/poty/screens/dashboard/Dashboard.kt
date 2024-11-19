@@ -141,7 +141,7 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel(),
                         DashboardButton(
                             onClick = {},
                             iconResId = R.drawable.user,
-                            contentDescription = "Mi CVU"
+                            contentDescription = "CVU"
                         )
                     }
                     spendingCard(spent = state.spent)
