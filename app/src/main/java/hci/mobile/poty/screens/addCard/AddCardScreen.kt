@@ -112,12 +112,7 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                             verticalArrangement = Arrangement.Center,
                             ){
                             Text(
-                                text="Agregar Nueva",
-                                style = MaterialTheme.typography.titleSmallSemiBold,
-                                color = White
-                            )
-                            Text(
-                                text="Tarjeta",
+                                text="Agregar Nueva Tarjeta",
                                 style = MaterialTheme.typography.titleSmallSemiBold,
                                 color = White
                             )
