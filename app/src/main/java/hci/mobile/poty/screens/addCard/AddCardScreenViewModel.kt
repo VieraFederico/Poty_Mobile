@@ -64,6 +64,7 @@ class AddCardScreenViewModel : ViewModel() {
             !card.isValidCardNumber() -> "Número de tarjeta inválido. Debe tener 16 dígitos."
             !card.isValidCVV() -> "CVV inválido. Debe tener 3 dígitos."
             !card.isValidExpDate() -> "Fecha de vencimiento inválida. Usa el formato MM/AA."
+
             else -> null
         }
 
