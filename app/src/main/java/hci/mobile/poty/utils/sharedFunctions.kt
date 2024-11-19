@@ -68,13 +68,16 @@ fun ErrorMessage(message: String) {
     }
 }
 
+
+
 @Composable
 fun TextFieldWithLabel(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false,
-    maxLength: Int? = null
+    maxLength: Int? = null,
+    regex: Regex? = null
 ) {
     Text(
         text = label,
@@ -84,8 +87,7 @@ fun TextFieldWithLabel(
     OutlinedTextField(
         value = value,
         onValueChange = { newValue ->
-            // If maxLength is set, truncate the input
-            if (maxLength == null || newValue.length <= maxLength) {
+            if ((regex == null || regex.matches(newValue)) && (maxLength == null || newValue.length <= maxLength)) {
                 onValueChange(newValue)
             }
         },
@@ -105,10 +107,11 @@ fun TextFieldWithLabel(
             unfocusedContainerColor = Color.Transparent,
             cursorColor = Black
         ),
-        textStyle = LocalTextStyle.current.copy(color = Black), // Force text color
+        textStyle = LocalTextStyle.current.copy(color = Black),
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
     )
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -155,7 +155,8 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                             label = "Número de Tarjeta",
                             value = state.number,
                             onValueChange = { viewModel.onNumberChange(it) },
-                            maxLength = 16
+                            maxLength = 16,
+                            regex = Regex("^\\d{0,16}\$")
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
