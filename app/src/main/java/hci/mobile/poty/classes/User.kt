@@ -7,9 +7,6 @@ class User(
     val surname: String,
     val email: String,
     val birthday: String,
-    /*val gender: String,
-    val country: String,
-    val city: String,*/
 ) {
     init {
         validateName(name)
