@@ -113,7 +113,7 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenVi
                             verticalArrangement = Arrangement.Center,
                         ){
                             Text(
-                                text="Envios",
+                                text="Enviar Dinero",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = White
                             )

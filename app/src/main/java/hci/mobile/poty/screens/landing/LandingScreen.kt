@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
+import hci.mobile.poty.ui.theme.GreenLight
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.titleLargeItalic
 
@@ -62,8 +63,8 @@ fun LandingScreen(
                         .aspectRatio(1f)
                         .padding( end = 50.dp)
                 )
-                Spacer(modifier = Modifier.height(150.dp))
-                Column (modifier = Modifier.padding(start= 20.dp)){
+                Spacer(modifier = Modifier.height(80.dp))
+                Column (modifier = Modifier.padding(start= 15.dp)){
                     Row() {
                         Text(
                             text = "Con Poty",
@@ -100,6 +101,8 @@ fun LandingScreen(
                         )
                     }
                 }
+
+
                 Column (modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 30.dp)){
                     Button(
                         onClick = { onNavigateToLogin() },
@@ -117,12 +120,12 @@ fun LandingScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     Button(
                         onClick = { onNavigateToRegister() },
                         colors = ButtonDefaults.elevatedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
+                            containerColor = GreenLight,
                         ),
                         elevation = ButtonDefaults.elevatedButtonElevation(defaultElevation = 4.dp),
                         shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp)),

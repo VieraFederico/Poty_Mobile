@@ -140,13 +140,11 @@ fun CompactDateFieldWithLabel(
             onValueChange = { },
             readOnly = true,
             trailingIcon = {
-                if (showCalendar) { // Show the calendar icon only if showCalendar is true
-                    IconButton(onClick = { showDatePicker = true }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Select date"
-                        )
-                    }
+                IconButton(onClick = { showDatePicker = true }) {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Select date"
+                    )
                 }
             },
             modifier = Modifier
