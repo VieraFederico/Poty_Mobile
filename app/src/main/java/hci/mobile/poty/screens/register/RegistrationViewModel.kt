@@ -118,12 +118,13 @@ class RegistrationViewModel : ViewModel() {
                 )
 
                 // Aquí irían las llamadas a tu API o repositorio
-                // userRepository.register(user)
+
 
                 _state.update { it.copy(isLoading = false, errorMessage = "") }
                 // Navegar a la siguiente pantalla o mostrar éxito
 
             } catch (e: Exception) {
+
                 _state.update {
                     it.copy(
                         isLoading = false,
