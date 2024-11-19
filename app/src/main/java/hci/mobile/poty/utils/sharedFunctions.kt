@@ -168,7 +168,7 @@ fun CompactDateFieldWithLabel(
             singleLine = true
         )
 
-        if (showCalendar && showDatePicker) { // Show the DatePicker dialog only if showCalendar is true
+        if (showDatePicker) {
             Dialog(onDismissRequest = { showDatePicker = false }) {
                 Card(
                     modifier = Modifier
