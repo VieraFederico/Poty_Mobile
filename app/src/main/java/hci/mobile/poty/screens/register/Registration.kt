@@ -177,7 +177,7 @@ fun StepOne(
         Spacer(modifier = Modifier.height(16.dp))
 
         CompactDateFieldWithLabel(
-            label = "Fecha de Nac.",
+            label = "Fecha de Nacimiento (DD/MM/AAAA)",
             value = localBirthDate,
             onValueChange = {
                 localBirthDate = it
@@ -246,7 +246,7 @@ fun StepTwo(
             isPassword = true
         )
 
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = { onNext() },

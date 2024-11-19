@@ -8,6 +8,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
+
 
 class RegistrationViewModel : ViewModel() {
     private val _state = MutableStateFlow(RegistrationState())
@@ -62,18 +66,52 @@ class RegistrationViewModel : ViewModel() {
         }
     }
 
+
     private fun validateStepOne() {
         try {
             with(_state.value) {
                 require(name.isNotEmpty()) { "Por favor, ingrese un nombre válido." }
                 require(surname.isNotEmpty()) { "Por favor, ingrese un apellido válido." }
                 require(birthday.isNotEmpty()) { "Por favor, ingrese una fecha de nacimiento válida." }
+                require(isValidDate(birthday)) { "Por favor, ingrese una fecha de nacimiento válida en formato DD/MM/AAAA." }
+                require(!isFutureDate(birthday)) { "Por favor, ingresar una fecha anterior o igual a la actual." }
             }
             _state.update { it.copy(currentStep = 2, errorMessage = "") }
         } catch (e: IllegalArgumentException) {
             _state.update { it.copy(errorMessage = e.message ?: "Error de validación") }
         }
     }
+
+    private fun isFutureDate(date: String): Boolean {
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        return try {
+            val parsedDate = LocalDate.parse(date, formatter)
+            parsedDate.isAfter(LocalDate.now())
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+private fun isValidDate(date: String): Boolean {
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    return try {
+        val parts = date.split("/")
+        if (parts.size != 3) return false
+
+        val day = parts[0].toIntOrNull() ?: return false
+        val month = parts[1].toIntOrNull() ?: return false
+        val year = parts[2].toIntOrNull() ?: return false
+
+        if (parts[0].length != 2 || parts[1].length != 2 || parts[2].length != 4) return false
+
+        val parsedDate = LocalDate.of(year, month, day)
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
+
 
     private fun validateStepTwo() {
         try {

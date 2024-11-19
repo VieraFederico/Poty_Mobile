@@ -44,6 +44,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -53,6 +54,7 @@ import hci.mobile.poty.R
 import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
+import java.time.LocalDate
 import java.util.*
 
 @Composable
@@ -114,6 +116,11 @@ fun TextFieldWithLabel(
 
 
 
+fun isValidDate(input: String): Boolean {
+    val regex = Regex("^\\d{0,2}(/\\d{0,2}(/\\d{0,4})?)?\$")
+    return regex.matches(input)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompactDateFieldWithLabel(
@@ -135,9 +142,13 @@ fun CompactDateFieldWithLabel(
         )
 
         OutlinedTextField(
-            value = selectedDate,
-            onValueChange = { },
-            readOnly = true,
+            value = value,
+            onValueChange = { newValue ->
+                if (isValidDate(newValue)) {
+                    onValueChange(newValue)
+                }
+            },
+            readOnly = false,
             trailingIcon = {
                 IconButton(onClick = { showDatePicker = true }) {
                     Icon(
@@ -211,6 +222,7 @@ fun CompactDateFieldWithLabel(
                                 onClick = {
                                     datePickerState.selectedDateMillis?.let {
                                         onValueChange(convertMillisToDate(it))
+
                                         showDatePicker = false
                                     }
                                 }
@@ -238,7 +250,6 @@ fun PasswordFieldWithLabel(
     onValueChange: (String) -> Unit,
     isPassword: Boolean = true
 ) {
-    // Estado para manejar la visibilidad de la contraseña
     var isPasswordVisible by remember { mutableStateOf(false) }
 
     Column {
