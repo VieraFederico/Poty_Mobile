@@ -45,10 +45,10 @@ import hci.mobile.poty.utils.ThickTextFieldWithLabel
 @Preview
 @Composable
 fun DepositScreenPreview(){
-    DepositScreen()
+    ChargeScreen()
 }
 @Composable
-fun DepositScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenViewModel() }) {
+fun ChargeScreen(viewModel: ChargeScreenViewModel = remember { ChargeScreenViewModel() }) {
     val state by viewModel.state.collectAsState()
 
     PotyTheme(darkTheme = true, dynamicColor = false) {

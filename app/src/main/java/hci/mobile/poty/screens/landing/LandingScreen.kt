@@ -29,11 +29,17 @@ import hci.mobile.poty.ui.theme.titleLargeItalic
 @Preview
 @Composable
 fun LandingScreenPreview(){
-    LandingScreen()
+    LandingScreen(
+        onNavigateToLogin = {},
+        onNavigateToRegister = {}
+    )
 }
+
 @Composable
 fun LandingScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToRegister: () -> Unit
 ) {
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
@@ -96,7 +102,7 @@ fun LandingScreen(
                 }
                 Column (modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 30.dp)){
                     Button(
-                        onClick = { /* Inicar Sesion? */ },
+                        onClick = { onNavigateToLogin() },
                         colors = ButtonDefaults.elevatedButtonColors(
                             containerColor = Color.White, // Fondo blanco
                         ),
@@ -114,7 +120,7 @@ fun LandingScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Button(
-                        onClick = { /* Registrarse? */ },
+                        onClick = { onNavigateToRegister() },
                         colors = ButtonDefaults.elevatedButtonColors(
                             containerColor = MaterialTheme.colorScheme.secondary,
                         ),

@@ -44,9 +44,19 @@ import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 @Composable
 fun RegistrationScreen(
-    viewModel: RegistrationViewModel = viewModel()
+    viewModel: RegistrationViewModel = viewModel(),
+    onRegisterSuccess: () -> Unit, // Esto puede llevar al Dashboard
+    onNavigateToLogin: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val isRegistrationSuccessful by viewModel.isRegistrationSuccessful.collectAsState()
+
+    // Si el registro es exitoso, navega al Dashboard o Login
+    LaunchedEffect(isRegistrationSuccessful) {
+        if (isRegistrationSuccessful) {
+            onRegisterSuccess()
+        }
+    }
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
@@ -100,7 +110,6 @@ fun RegistrationScreen(
                         onSubmit = { viewModel.onEvent(RegistrationEvent.Submit) },
                         errorMessage = state.errorMessage
                     )
-
                 }
 
                 if (state.isLoading) {
@@ -109,23 +118,27 @@ fun RegistrationScreen(
                     )
                 }
 
-                TextButton(
-                    onClick = { viewModel.onEvent(RegistrationEvent.PreviousStep) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .align(Alignment.CenterHorizontally)
-                ) {
-                    Text(
-                        text = "Volver para atrás",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                if (state.currentStep > 1) {
+                    TextButton(
+                        onClick = { viewModel.onEvent(RegistrationEvent.PreviousStep) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                        Text(
+                            text = "Volver para atrás",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                 }
             }
         }
     }
 }
+
+
 
 @Composable
 fun StepOne(
@@ -313,5 +326,8 @@ fun StepThree(
 @Preview
 @Composable
 fun RegisterScreenPreview() {
-    RegistrationScreen()
+    RegistrationScreen(
+        onRegisterSuccess = {},
+        onNavigateToLogin = {}
+    )
 }
