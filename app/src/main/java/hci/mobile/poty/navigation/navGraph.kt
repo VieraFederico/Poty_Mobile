@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import hci.mobile.poty.api.WalletApiManager
 import hci.mobile.poty.screens.dashboard.Dashboard
 import hci.mobile.poty.screens.landing.LandingScreen
 import hci.mobile.poty.screens.login.LoginScreen
@@ -13,7 +14,7 @@ import hci.mobile.poty.screens.charge.ChargeScreen
 import hci.mobile.poty.screens.deposit.DepositScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController) {
+fun AppNavGraph(navController: NavHostController, walletApiManager: WalletApiManager) {
     NavHost(
         navController = navController,
         startDestination = Routes.LANDING // Ruta inicial
@@ -37,6 +38,7 @@ fun AppNavGraph(navController: NavHostController) {
         // Pantalla de registro
         composable(route = Routes.REGISTER) {
             RegistrationScreen(
+                walletApiManager = walletApiManager,
                 onRegisterSuccess = { navController.navigate(Routes.DASHBOARD) },
                 onNavigateToLogin = { navController.navigate(Routes.LOGIN) }
             )

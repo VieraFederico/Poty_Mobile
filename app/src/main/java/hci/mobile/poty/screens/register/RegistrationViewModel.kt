@@ -1,15 +1,20 @@
 package hci.mobile.poty.screens.register
 
+import UserRegistration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import hci.mobile.poty.classes.User
+import hci.mobile.poty.api.WalletApiManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 
-class RegistrationViewModel : ViewModel() {
+class RegistrationViewModel(
+    private val walletApiManager: WalletApiManager
+) : ViewModel() {
     private val _state = MutableStateFlow(RegistrationState())
     val state = _state.asStateFlow()
 
@@ -110,29 +115,42 @@ class RegistrationViewModel : ViewModel() {
             try {
                 _state.update { it.copy(isLoading = true) }
 
-                // Aquí irían las llamadas a tu API o repositorio
-                // Simulamos un registro exitoso
-                val user = User(
-                    name = _state.value.name,
-                    surname = _state.value.surname,
+                val userRegistration = UserRegistration(
+                    firstName = _state.value.name,
+                    lastName = _state.value.surname,
                     email = _state.value.email,
-                    birthday = _state.value.birthday
+                    password = _state.value.password,
+                    birthDate = _state.value.birthday
                 )
 
-                // Aquí irían las llamadas a tu API o repositorio
+                val response = walletApiManager.walletApi.registerUser(userRegistration).execute()
 
-                // TODO: Llamar al repositorio/API para registrar al usuario
+                if (response.isSuccessful) {
+                    _state.update { it.copy(isLoading = false, errorMessage = "") }
+                    _isRegistrationSuccessful.value = true
+                } else {
+                    throw HttpException(response)
+                }
 
-                _state.update { it.copy(isLoading = false, errorMessage = "") }
-
-                // Indicar que el registro fue exitoso
-                _isRegistrationSuccessful.value = true
-            } catch (e: Exception) {
-
+            } catch (e: HttpException) {
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = e.message ?: "Error durante el registro"
+                        errorMessage = "Error en el servidor: ${e.message()}"
+                    )
+                }
+            } catch (e: IOException) {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = "Error de red: Verifica tu conexión a internet."
+                    )
+                }
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = e.message ?: "Ocurrió un error inesperado"
                     )
                 }
             }

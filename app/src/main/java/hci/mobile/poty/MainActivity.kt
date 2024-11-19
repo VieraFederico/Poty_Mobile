@@ -6,25 +6,32 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
+import hci.mobile.poty.api.WalletApiManager
 import hci.mobile.poty.navigation.AppNavGraph
 import hci.mobile.poty.ui.theme.PotyTheme
 
+
 class MainActivity : ComponentActivity() {
+    private val walletApiManager = WalletApiManager(baseUrl = "http://10.0.2.2:8080/")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PotyApp()
+            PotyApp(walletApiManager = walletApiManager)
         }
     }
+
 }
 
 @Composable
-fun PotyApp() {
+fun PotyApp(walletApiManager: WalletApiManager) {
     PotyTheme {
         val navController = rememberNavController()
-        AppNavGraph(navController = navController)
+        AppNavGraph(navController = navController, walletApiManager = walletApiManager)
     }
 }
+
 
 //Aca vamos a escribir una funcion, en vez de componentes. Necesitan los @Composable
 //Declaramos funciones usando fun y sus argumentso

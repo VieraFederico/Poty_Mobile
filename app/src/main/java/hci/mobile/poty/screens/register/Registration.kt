@@ -1,10 +1,8 @@
 package hci.mobile.poty.screens.register
-import androidx.compose.foundation.BorderStroke
+
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,34 +21,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.theme.PotyTheme
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.draw.clip
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.layout.ContentScale
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.TextFieldWithLabel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.api.WalletApiManager
 import hci.mobile.poty.utils.CompactDateFieldWithLabel
 import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 @Composable
 fun RegistrationScreen(
-    viewModel: RegistrationViewModel = viewModel(),
-    onRegisterSuccess: () -> Unit, // Esto puede llevar al Dashboard
+    walletApiManager: WalletApiManager, // Recibe el WalletApiManager directamente
+    onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
+    val viewModel: RegistrationViewModel = rememberSaveable {
+        RegistrationViewModel(walletApiManager)
+    }
     val state by viewModel.state.collectAsState()
     val isRegistrationSuccessful by viewModel.isRegistrationSuccessful.collectAsState()
 
-    // Si el registro es exitoso, navega al Dashboard o Login
+
     LaunchedEffect(isRegistrationSuccessful) {
         if (isRegistrationSuccessful) {
             onRegisterSuccess()
@@ -328,6 +324,7 @@ fun StepThree(
 fun RegisterScreenPreview() {
     RegistrationScreen(
         onRegisterSuccess = {},
-        onNavigateToLogin = {}
+        onNavigateToLogin = {},
+        walletApiManager = WalletApiManager()
     )
 }
