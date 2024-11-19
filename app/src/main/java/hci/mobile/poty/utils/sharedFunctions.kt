@@ -119,8 +119,7 @@ fun TextFieldWithLabel(
 fun CompactDateFieldWithLabel(
     label: String,
     value: String,
-    onValueChange: (String) -> Unit,
-    showCalendar: Boolean = true
+    onValueChange: (String) -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()

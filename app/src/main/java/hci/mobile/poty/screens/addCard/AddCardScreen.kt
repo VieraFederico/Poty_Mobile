@@ -169,7 +169,6 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                                 CompactDateFieldWithLabel(
                                     label = "Fecha de Venc. (MM/AA)",
                                     value = state.exp,
-                                    showCalendar = false,
                                     onValueChange = { viewModel.onExpDateChange(it) }
                                 )
                             }
