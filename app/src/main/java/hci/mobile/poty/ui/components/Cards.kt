@@ -131,6 +131,7 @@ fun CreditCardView(
                 elevation = if (isSelected) 16.dp else 8.dp,
                 shape = RoundedCornerShape(12.dp)
             )
+            .fillMaxWidth()
             .clickable { onCardClick(creditCard) },
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -143,7 +144,7 @@ fun CreditCardView(
     ) {
         Column(
             modifier = Modifier
-                .padding(20.dp)
+                .padding(10.dp)
                 .fillMaxWidth()
         ) {
             Row(
@@ -162,19 +163,20 @@ fun CreditCardView(
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.width(120.dp))
+                Spacer(modifier = Modifier.width(100.dp))
 
                 IconButton(onClick = { dropdownExpanded = true }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More Options"
+                        contentDescription = "More Options",
+                        tint = White
                     )
                 }
             }
 
 
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -345,7 +347,7 @@ fun CardsCarousel(
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp),
+            .height(220.dp),
         contentPadding = PaddingValues(horizontal = 16.dp),
         horizontalArrangement = Arrangement.Center
     ) {

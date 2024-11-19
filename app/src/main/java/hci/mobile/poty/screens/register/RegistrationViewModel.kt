@@ -110,6 +110,8 @@ class RegistrationViewModel : ViewModel() {
             try {
                 _state.update { it.copy(isLoading = true) }
 
+
+
                 // Aquí irían las llamadas a tu API o repositorio
                 // Simulamos un registro exitoso
                 val user = User(
