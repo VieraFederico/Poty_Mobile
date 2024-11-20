@@ -30,7 +30,6 @@ fun BottomNavBar(
     val isTablet = when (windowSizeClass) {
         WindowSizeClass.MediumTablet,
         WindowSizeClass.MediumTabletLandscape -> true
-
         else -> false
     }
 
@@ -114,8 +113,11 @@ fun BottomNavBar(
     }
 }
 
-//@Preview
-//@Composable
-//fun BottomNavBarPreview(){
-//    PotyTheme { BottomNavBar {  } }
-//}
+
+@Preview(showBackground = true, widthDp = 750, heightDp = 1200)
+@Composable
+fun BottomNavBarPreview() {
+    PotyTheme {
+        BottomNavBar(onNavigate = { }, mockWindowSizeClass = WindowSizeClass.MediumTablet)
+    }
+}

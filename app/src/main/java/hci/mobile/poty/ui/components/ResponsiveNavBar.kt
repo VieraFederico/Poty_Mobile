@@ -39,7 +39,7 @@ fun ResponsiveNavBar(
         // Use BottomNavBar
         Scaffold(
             bottomBar = {
-                BottomNavBar(onNavigate = onNavigate)
+                BottomNavBar(onNavigate = onNavigate, mockWindowSizeClass = windowSizeClass)
             },
             content = { innerPadding ->
                 Box(modifier = Modifier.padding(innerPadding)) {
