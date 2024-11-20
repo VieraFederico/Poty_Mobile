@@ -1,5 +1,6 @@
 package hci.mobile.poty.screens.payment
 
+import CardResponse
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,14 +17,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,10 +40,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
+import hci.mobile.poty.ui.components.BalanceCard
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.components.RecipientCard
 import hci.mobile.poty.ui.theme.GreenDark
+import hci.mobile.poty.ui.theme.GreenLight
+import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.labelLargeLite
 import hci.mobile.poty.ui.theme.titleMediumLite
@@ -188,11 +196,18 @@ fun StepOne(
 fun StepTwo(
     number: Float,
     onNumberChange: (Float) -> Unit,
+    creditCards: List<CardResponse>,
+    selectedCard: CardResponse? = null,
+    onCardSelected: (CardResponse) -> Unit,
+    paymentMethod: String,
+    onNavigateToAddCard: () -> Unit,
+    onDeleteCard: (Int) -> Unit,
     onSubmit: () -> Unit,
     errorMessage: String,
-
 ) {
     var localNumber by remember { mutableStateOf(number) }
+    var localSelectedCard by remember { mutableStateOf(selectedCard) }
+    var localselectedOption by remember { mutableStateOf("Tarjeta") }
 
     Column(
         modifier = Modifier
@@ -210,6 +225,23 @@ fun StepTwo(
         )
 
 
+        SelectOptionTextButton(
+            selectedOption = localselectedOption,
+            onOptionSelected = { localselectedOption = it }
+        )
+        if(localselectedOption=="Tarjeta"){
+            PaymentCardsCarousel(
+                creditCards = creditCards,
+                selectedCard = localSelectedCard,
+                onCardSelected = onCardSelected,
+                onNavigateToAddCard = onNavigateToAddCard,
+                onDeleteCard = onDeleteCard
+            )
+        }
+        else{
+
+            
+        }
         Button(
             onClick = { onSubmit() },
             modifier = Modifier
@@ -223,4 +255,52 @@ fun StepTwo(
             ErrorMessage(message = errorMessage)
         }
     }
+}
+
+@Composable
+fun SelectOptionTextButton(
+    selectedOption: String,
+    onOptionSelected: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        TextButton(
+            onClick = { onOptionSelected("Tarjeta") },
+            modifier = Modifier.padding(end = 8.dp)
+        ) {
+            Text(
+                text = "Tarjeta",
+                color = if (selectedOption == "Tarjeta") GreenLight else GreyLight
+            )
+        }
+
+        TextButton(
+            onClick = { onOptionSelected("Balance") },
+            modifier = Modifier.padding(start = 8.dp)
+        ) {
+            Text(
+                text = "Balance",
+                color = if (selectedOption == "Balance") GreenLight else GreyLight
+            )
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun SelectOptionButtonPreview() {
+    var selectedOption by remember { mutableStateOf("Tarjeta") }
+
+    SelectOptionTextButton(
+        selectedOption = selectedOption,
+        onOptionSelected = { selectedOption = it }
+    )
+
+    // Mostrar algo basado en la opción seleccionada
+    Text("Opción seleccionada: $selectedOption")
 }
