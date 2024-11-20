@@ -42,8 +42,8 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 fun AddCardScreen(
     viewModel: AddCardScreenViewModel = remember { AddCardScreenViewModel() },
     mockWindowSizeClass: WindowSizeClass? = null,
-     onNavigateToDashboard: () -> Unit) 
- {
+    onNavigateToDashboard: () -> Unit
+) {
     val state by viewModel.state.collectAsState()
     viewModel.onAddCardSuccess = onNavigateToDashboard
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
@@ -63,12 +63,8 @@ fun AddCardScreen(
                 if (isLandscape) {
                     Row(
                         modifier = Modifier
-                            .fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    IconButton(
-                        onClick = { onNavigateToDashboard() },
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     ) {
                         HeaderSection(
                             modifier = Modifier
@@ -307,7 +303,7 @@ fun FormSection(
 )
 @Composable
 fun MediumPhonePortraitPreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumPhone)
+    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumPhone, onNavigateToDashboard = {})
 }
 
 @Preview(
@@ -317,7 +313,7 @@ fun MediumPhonePortraitPreview() {
 )
 @Composable
 fun MediumPhoneLandscapePreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape)
+    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape, onNavigateToDashboard = {})
 }
 
 @Preview(
@@ -327,7 +323,7 @@ fun MediumPhoneLandscapePreview() {
 )
 @Composable
 fun MediumTabletPortraitPreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumTablet)
+    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumTablet,  onNavigateToDashboard = {})
 }
 
 @Preview(
@@ -337,5 +333,5 @@ fun MediumTabletPortraitPreview() {
 )
 @Composable
 fun MediumTabletLandscapePreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape)
+    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape,  onNavigateToDashboard = {})
 }
