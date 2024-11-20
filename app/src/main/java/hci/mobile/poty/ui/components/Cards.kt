@@ -302,56 +302,6 @@ fun FullCreditCardView(creditCard: CreditCard) {
         }
     }
 }
-/*
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun PaymentCardsCarousel(
-    creditCards: List<CardResponse>,
-    selectedCard: CardResponse? = null,
-    onCardSelected: (CardResponse) -> Unit,
-    onNavigateToAddCard: () -> Unit,
-    onDeleteCard: (Int) -> Unit
-) {
-    val allItems = creditCards + null
-
-    val pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { allItems.size }
-    )
-
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.collect { page ->
-            val selectedItem = allItems.getOrNull(page)
-            if (selectedItem != null) {
-                onCardSelected(selectedItem)
-            }
-        }
-    }
-
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(220.dp),
-        contentPadding = PaddingValues(start = 15.dp, end = 30.dp)
-
-    ) { page ->
-        val item = allItems[page]
-        if (item != null) {
-            CreditCardView(
-                Card = item,
-                isSelected = selectedCard?.id == item.id,
-                onCardClick = { onCardSelected(item) },
-                onDeleteCard = {}
-            )
-        } else {
-            EmptyCreditCardView(
-                onAddCardClick = {onNavigateToAddCard}
-            )
-        }
-    }
-}*/
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -361,7 +311,8 @@ fun PaymentCardsCarousel(
     onCardSelected: (CardResponse) -> Unit,
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit,
-    windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone
+    windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone,
+    modifier: Modifier = Modifier
 ) {
     val allItems = creditCards + null
 
@@ -388,14 +339,14 @@ fun PaymentCardsCarousel(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(220.dp),
         contentAlignment = Alignment.Center
     ) {
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .height(220.dp),
             contentPadding = contentPadding // Apply dynamic padding here
