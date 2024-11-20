@@ -6,29 +6,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.rememberNavController
-import hci.mobile.poty.api.WalletApiManager
 import hci.mobile.poty.navigation.AppNavGraph
 import hci.mobile.poty.ui.theme.PotyTheme
 
 
 class MainActivity : ComponentActivity() {
-    private val walletApiManager = WalletApiManager(baseUrl = "http://10.0.2.2:8080/")
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PotyApp(walletApiManager = walletApiManager)
+            PotyApp()
         }
     }
 
 }
 
 @Composable
-fun PotyApp(walletApiManager: WalletApiManager) {
+fun PotyApp() {
     PotyTheme {
         val navController = rememberNavController()
-        AppNavGraph(navController = navController, walletApiManager = walletApiManager)
+        AppNavGraph(navController = navController)
     }
 }
 

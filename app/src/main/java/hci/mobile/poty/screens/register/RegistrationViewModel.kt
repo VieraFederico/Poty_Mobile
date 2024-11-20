@@ -12,9 +12,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 
-class RegistrationViewModel(
-    private val walletApiManager: WalletApiManager
-) : ViewModel() {
+class RegistrationViewModel() : ViewModel() {
     private val _state = MutableStateFlow(RegistrationState())
     val state = _state.asStateFlow()
 

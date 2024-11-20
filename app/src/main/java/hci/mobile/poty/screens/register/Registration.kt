@@ -27,23 +27,20 @@ import hci.mobile.poty.R
 import hci.mobile.poty.ui.theme.PotyTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+
 import androidx.compose.ui.layout.ContentScale
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.TextFieldWithLabel
-import hci.mobile.poty.api.WalletApiManager
+
 import hci.mobile.poty.utils.CompactDateFieldWithLabel
 import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 @Composable
 fun RegistrationScreen(
-    walletApiManager: WalletApiManager, // Recibe el WalletApiManager directamente
     onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    val viewModel: RegistrationViewModel = rememberSaveable {
-        RegistrationViewModel(walletApiManager)
-    }
+    val viewModel = remember { RegistrationViewModel() }
     val state by viewModel.state.collectAsState()
     val isRegistrationSuccessful by viewModel.isRegistrationSuccessful.collectAsState()
 
@@ -324,7 +321,6 @@ fun StepThree(
 fun RegisterScreenPreview() {
     RegistrationScreen(
         onRegisterSuccess = {},
-        onNavigateToLogin = {},
-        walletApiManager = WalletApiManager()
+        onNavigateToLogin = {}
     )
 }

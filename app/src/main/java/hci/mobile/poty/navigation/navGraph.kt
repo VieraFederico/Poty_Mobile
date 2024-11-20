@@ -14,7 +14,7 @@ import hci.mobile.poty.screens.charge.ChargeScreen
 import hci.mobile.poty.screens.deposit.DepositScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController, walletApiManager: WalletApiManager) {
+fun AppNavGraph(navController: NavHostController, ) {
     NavHost(
         navController = navController,
         startDestination = Routes.LANDING // Ruta inicial
@@ -38,7 +38,6 @@ fun AppNavGraph(navController: NavHostController, walletApiManager: WalletApiMan
         // Pantalla de registro
         composable(route = Routes.REGISTER) {
             RegistrationScreen(
-                walletApiManager = walletApiManager,
                 onRegisterSuccess = { navController.navigate(Routes.DASHBOARD) },
                 onNavigateToLogin = { navController.navigate(Routes.LOGIN) }
             )
