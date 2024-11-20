@@ -152,7 +152,7 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel(),
                         creditCards = state.creditCards,
                         selectedCard = null,
                         onCardSelected = { },
-                        onNavigateToAddCard = { /* Para Sangui :) */ },
+                        onNavigateToAddCard = { onNavigateToAddCard() },
                         onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) }
                     )
 

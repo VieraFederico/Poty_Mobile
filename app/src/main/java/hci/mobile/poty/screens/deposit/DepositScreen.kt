@@ -140,7 +140,7 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
                             creditCards = state.creditCards,
                             selectedCard = state.selectedCard,
                             onCardSelected = {card -> viewModel.onCardSelect(card)},
-                            onNavigateToAddCard = { /* Para Sangui :) */ },
+                            onNavigateToAddCard = {onNavigateToAddCard() },
                             onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) }
                         )
 
