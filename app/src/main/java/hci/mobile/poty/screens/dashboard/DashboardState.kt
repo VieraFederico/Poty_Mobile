@@ -1,5 +1,6 @@
 package hci.mobile.poty.screens.dashboard
 
+import CardResponse
 import androidx.compose.runtime.mutableStateListOf
 import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.classes.Transaction
@@ -12,20 +13,20 @@ data class DashboardState(
     val balance: Float = 12750.60f,
     val spent: Float = 6451f,
     val isBalanceVisible: Boolean = true,
-    val creditCards: List<CreditCard> = mutableStateListOf(
-        CreditCard(
-            bank = "Banco Royale",
+    val creditCards: List<CardResponse> = mutableStateListOf(
+        CardResponse(
+            id = 1,
             number = "1234567812345678",
-            owner = "Le Chiffre",
-            cvv = "123",
-            exp = "12/24"
+            type = "Crédito",
+            fullName = "James Bond",
+            expirationDate = "12/24"
         ),
-        CreditCard(
-            bank = "Banco Quantum",
+        CardResponse(
+            id = 2,
             number = "8765432187654321",
-            owner = "Dominic Greene",
-            cvv = "456",
-            exp = "08/25"
+            type = "Débito",
+            fullName = "James Bond",
+            expirationDate = "08/25"
         )
     ),
     val transactions: List<Transaction> = mutableStateListOf(

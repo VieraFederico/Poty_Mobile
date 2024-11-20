@@ -1,5 +1,6 @@
 package hci.mobile.poty.screens.deposit
 
+import CardResponse
 import androidx.lifecycle.ViewModel
 import hci.mobile.poty.classes.CreditCard
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,15 +39,20 @@ class DepositScreenViewModel : ViewModel() {
             }
         }
     }
-    fun addCreditCard(newCard: CreditCard) {
+
+    fun onCardSelect(card: CardResponse) {
+        _state.value = _state.value.copy(selectedCard = card)
+    }
+
+    fun addCreditCard(newCard: CardResponse) {
         _state.update { currentState ->
             currentState.copy(creditCards = currentState.creditCards + newCard)
         }
     }
-
-    fun onCardSelect(card: CreditCard) {
+    fun deleteCreditCard(cardId: Int) {
         _state.update { currentState ->
-            currentState.copy(selectedCard = card)
+            currentState.copy(creditCards = currentState.creditCards.filter { it.id != cardId })
         }
     }
+
 }

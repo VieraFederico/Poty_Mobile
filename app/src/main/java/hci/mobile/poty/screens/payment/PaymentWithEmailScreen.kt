@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,24 +35,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
-import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.FullCreditCardView
+import hci.mobile.poty.ui.components.PaymentCardsCarousel
+import hci.mobile.poty.ui.components.RecipientCard
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.labelLargeLite
-import hci.mobile.poty.ui.theme.titleSmallSemiBold
-import hci.mobile.poty.utils.CompactDateFieldWithLabel
+import hci.mobile.poty.ui.theme.titleMediumLite
+import hci.mobile.poty.utils.ErrorMessage
+import hci.mobile.poty.utils.NumberFieldWithLabel
 import hci.mobile.poty.utils.TextFieldWithLabel
-
 
 @Preview
 @Composable
-fun PaymentScreenPreview(){
-    PaymentScreen()
+fun PaymentWithEmailScreenPreview(){
+    PaymentWithEmailScreen()
 }
 @Composable
-fun PaymentScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenViewModel() }) {
+fun PaymentWithEmailScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenViewModel() }) {
     //val state by viewModel.state.collectAsState()
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
@@ -116,6 +115,11 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenVi
                                 style = MaterialTheme.typography.titleMedium,
                                 color = White
                             )
+                            Text(
+                                text="Por Correo Electronico",
+                                style = MaterialTheme.typography.titleMediumLite,
+                                color = White
+                            )
                         }
                     }
                 }
@@ -133,67 +137,90 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenVi
                     Column(
                         modifier = Modifier.padding(15.dp)
                     ) {
-                        Spacer(modifier = Modifier.height(16.dp))
 
-                        Button(
-                            onClick = { },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                                .align(Alignment.CenterHorizontally),
-                            shape = RoundedCornerShape(15.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = "Enviar por ",
-                                    style = MaterialTheme.typography.labelLargeLite,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                                Text(
-                                    text = "Link de Pago",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
-
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Button(
-                            onClick = { },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp)
-                                .align(Alignment.CenterHorizontally),
-                            shape = RoundedCornerShape(15.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    text = "Enviar por ",
-                                    style = MaterialTheme.typography.labelLargeLite,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                                Text(
-                                    text = "Correo Electronico",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(60.dp))
-
-                        Text(
-                            text = "Envios Recientes"
-                        )
 
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun StepOne(
+    email: String,
+    onEmailChange: (String) -> Unit,
+    onNext: () -> Unit,
+    errorMessage: String
+    ) {
+    var localEmail by remember { mutableStateOf(email) }
+
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        TextFieldWithLabel(
+            label = "Ingrese el Correo Electronico al cual desea enviar dinero",
+            value = localEmail,
+            onValueChange = {
+                localEmail = it
+                onEmailChange(it)
+            }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { onNext() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+        }
+        if (errorMessage.isNotEmpty()) {
+            ErrorMessage(message = errorMessage)
+        }
+    }
+}
+
+@Composable
+fun StepTwo(
+    number: Float,
+    onNumberChange: (Float) -> Unit,
+    onSubmit: () -> Unit,
+    errorMessage: String,
+
+) {
+    var localNumber by remember { mutableStateOf(number) }
+
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        NumberFieldWithLabel(
+            label = "Monto a Enviar",
+            value = localNumber,
+            onValueChange = {
+                localNumber = it
+                onNumberChange(it)
+            }
+        )
+
+
+        Button(
+            onClick = { onSubmit() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+        }
+
+        if (errorMessage.isNotEmpty()) {
+            ErrorMessage(message = errorMessage)
         }
     }
 }

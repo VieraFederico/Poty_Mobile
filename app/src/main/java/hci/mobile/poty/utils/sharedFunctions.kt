@@ -150,12 +150,10 @@ fun CompactDateFieldWithLabel(
             },
             readOnly = false,
             trailingIcon = {
-                IconButton(onClick = { showDatePicker = true }) {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = "Select date"
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.DateRange,
+                    contentDescription = "Select date"
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,5 +1,6 @@
 package hci.mobile.poty.ui.components
 
+import CardResponse
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -44,20 +45,28 @@ import hci.mobile.poty.R
 import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import hci.mobile.poty.ui.theme.Black
 
 @Preview
 @Composable
 fun CreditCardViewPreview(){
-    val creditCard = CreditCard(
-        bank = "Banco Royale",
+    val creditCard = CardResponse(
+        id = 7,
         number = "1234567812345678",
-        owner = "James Bond",
-        cvv = "007",
-        exp = "03/60"
+        type = "Credito",
+        fullName = "James Bond",
+        expirationDate = "03/60",
+
     )
     PotyTheme {
         CreditCardView(
-            creditCard = creditCard,
+            Card = creditCard,
             isSelected = false,
             onCardClick = {},
             onDeleteCard = {}
@@ -115,10 +124,10 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
 }
 @Composable
 fun CreditCardView(
-    creditCard: CreditCard,
+    Card: CardResponse,
     isSelected: Boolean = false,
-    onCardClick: (CreditCard) -> Unit,
-    onDeleteCard: (CreditCard) -> Unit
+    onCardClick: (CardResponse) -> Unit,
+    onDeleteCard: (Int) -> Unit
 ) {
 
     var dropdownExpanded by remember { mutableStateOf(false) }
@@ -128,19 +137,13 @@ fun CreditCardView(
             .aspectRatio(1.6f)
             .padding(10.dp)
             .shadow(
-                elevation = if (isSelected) 16.dp else 8.dp,
+                elevation = 8.dp,
                 shape = RoundedCornerShape(12.dp)
             )
             .fillMaxWidth()
-            .clickable { onCardClick(creditCard) },
+            .clickable { onCardClick(Card) },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isSelected)
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
-            else
-                MaterialTheme.colorScheme.primary,
-        ),
-        border = if (isSelected) BorderStroke(2.dp, MaterialTheme.colorScheme.onPrimary) else null
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
         Column(
             modifier = Modifier
@@ -158,12 +161,12 @@ fun CreditCardView(
                     modifier = Modifier.size(35.dp)
                 )
                 Text(
-                    text = creditCard.bank,
+                    text = Card.type,
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.width(100.dp))
+                Spacer(modifier = Modifier.width(180.dp))
 
                 IconButton(onClick = { dropdownExpanded = true }) {
                     Icon(
@@ -183,7 +186,7 @@ fun CreditCardView(
                 verticalAlignment = Alignment.CenterVertically,
             ){
                 Text(
-                    text = creditCard.maskedCardNumber(),
+                    text = Card.number,
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -196,13 +199,13 @@ fun CreditCardView(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ){
                 Text(
-                    text = creditCard.owner,
+                    text = Card.fullName,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
                 Text(
-                    text = creditCard.exp,
+                    text = Card.expirationDate,
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -216,7 +219,7 @@ fun CreditCardView(
                     text = { Text("Borrar Tarjeta") },
                     onClick = {
                         dropdownExpanded = false
-                        onDeleteCard(creditCard)
+                        onDeleteCard(Card.id)
                     }
                 )
             }
@@ -298,42 +301,52 @@ fun FullCreditCardView(creditCard: CreditCard) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PaymentCardsCarousel(
-    creditCards: List<CreditCard>,
-    selectedCard: CreditCard? = null,
-    onCardSelected: (CreditCard) -> Unit,
-    onAddCardClick: (CreditCard) -> Unit
+    creditCards: List<CardResponse>,
+    selectedCard: CardResponse? = null,
+    onCardSelected: (CardResponse) -> Unit,
+    onNavigateToAddCard: () -> Unit,
+    onDeleteCard: (Int) -> Unit
 ) {
-    val (selectedCardId, setSelectedCardId) = remember { mutableStateOf<String?>(null) }
+    // Create a list that includes all cards plus the empty card
+    val allItems = creditCards + null // null represents the empty card
+    // Create and remember PagerState
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { allItems.size }
+    )
 
-    LazyRow(
+    // Update selected card when page changes
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            val selectedItem = allItems.getOrNull(page)
+            if (selectedItem != null) {
+                onCardSelected(selectedItem)
+            }
+        }
+    }
+
+    HorizontalPager(
+        state = pagerState,
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        items(creditCards) { creditCard ->
+        contentPadding = PaddingValues(horizontal = 10.dp)
+
+    ) { page ->
+        val item = allItems[page]
+        if (item != null) {
             CreditCardView(
-                creditCard = creditCard,
-                isSelected = selectedCard?.id == creditCard.id,
-                onCardClick = { onCardSelected(creditCard) },
+                Card = item,
+                isSelected = selectedCard?.id == item.id,
+                onCardClick = { onCardSelected(item) },
                 onDeleteCard = {}
             )
-        }
-        item {
+        } else {
             EmptyCreditCardView(
-                onAddCardClick = {
-                    val newCard = CreditCard(
-                        bank = "New Bank",
-                        number = "1122334455667788",
-                        owner = "Alice Brown",
-                        cvv = "789",
-                        exp = "06/26"
-                    )
-                    onAddCardClick(newCard)
-                }
+                onAddCardClick = {onNavigateToAddCard}
             )
         }
     }
@@ -341,8 +354,11 @@ fun PaymentCardsCarousel(
 
 @Composable
 fun CardsCarousel(
-    creditCards: List<CreditCard>,
-    onAddCardClick: (CreditCard) -> Unit
+    creditCards: List<CardResponse>,
+    selectedCard: CardResponse? = null,
+    onCardSelected: (CardResponse) -> Unit,
+    onNavigateToAddCard: () -> Unit,
+    onDeleteCard: (Int) -> Unit
 ) {
     LazyRow(
         modifier = Modifier
@@ -353,7 +369,7 @@ fun CardsCarousel(
     ) {
         items(creditCards) { creditCard ->
             CreditCardView(
-                creditCard = creditCard,
+                Card = creditCard,
                 isSelected = false,
                 onCardClick = {},
                 onDeleteCard = {}
@@ -361,63 +377,39 @@ fun CardsCarousel(
         }
         item {
             EmptyCreditCardView(
-                onAddCardClick = {
-                    val newCard = CreditCard(
-                        bank = "New Bank",
-                        number = "1122334455667788",
-                        owner = "Alice Brown",
-                        cvv = "789",
-                        exp = "06/26"
-                    )
-                    onAddCardClick(newCard)
-                }
+                onAddCardClick = {onNavigateToAddCard}
             )
         }
     }
 }
 
-@Preview
-@Composable
-fun PaymentCardsCarouselPreview() {
-    val (selectedCard, setSelectedCard) = remember { mutableStateOf<CreditCard?>(null) }
-
-    val creditCards = remember {
-        mutableStateListOf(
-            CreditCard(bank = "Banco Royale", number = "1234567812345678", owner = "Le Chiffre", cvv = "123", exp = "12/24"),
-            CreditCard(bank = "Banco Quantum", number = "8765432187654321", owner = "Dominic Greene", cvv = "456", exp = "08/25")
-        )
-    }
-
-    PotyTheme {
-        PaymentCardsCarousel(
-            creditCards = creditCards,
-            selectedCard = null,
-            onCardSelected = {setSelectedCard(it) },
-            onAddCardClick = { newCard ->
-                creditCards.add(newCard)
-            }
-        )
-    }
-}
 
 @Preview
 @Composable
 fun CardsCarouselPreview() {
-    val (selectedCard, setSelectedCard) = remember { mutableStateOf<CreditCard?>(null) }
-
-    val creditCards = remember {
-        mutableStateListOf(
-            CreditCard(bank = "Banco Royale", number = "1234567812345678", owner = "Le Chiffre", cvv = "123", exp = "12/24"),
-            CreditCard(bank = "Banco Quantum", number = "8765432187654321", owner = "Dominic Greene", cvv = "456", exp = "08/25")
+    val creditCards = listOf(
+        CardResponse(
+            id = 1,
+            number = "1234567812345678",
+            type = "Debito",
+            fullName = "Jason Bourne",
+            expirationDate = "09/26"
+        ),
+        CardResponse(
+            id = 2,
+            number = "8765432187654321",
+            type = "Credito",
+            fullName = "Ethan Hunt",
+            expirationDate = "07/27"
         )
-    }
-
+    )
     PotyTheme {
-        CardsCarousel(
+        PaymentCardsCarousel(
             creditCards = creditCards,
-            onAddCardClick = { newCard ->
-                creditCards.add(newCard)
-            }
+            selectedCard = creditCards.firstOrNull(),
+            onCardSelected = {},
+            onNavigateToAddCard = {},
+            onDeleteCard = {}
         )
     }
 }

@@ -1,5 +1,6 @@
 package hci.mobile.poty.screens.dashboard
 
+import CardResponse
 import androidx.lifecycle.ViewModel
 import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.classes.Transaction
@@ -18,9 +19,15 @@ class DashboardViewModel : ViewModel() {
         }
     }
 
-    fun addCreditCard(newCard: CreditCard) {
+    fun addCreditCard(newCard: CardResponse) {
         _state.update { currentState ->
             currentState.copy(creditCards = currentState.creditCards + newCard)
+        }
+    }
+
+    fun deleteCreditCard(cardId: Int) {
+        _state.update { currentState ->
+            currentState.copy(creditCards = currentState.creditCards.filter { it.id != cardId })
         }
     }
 

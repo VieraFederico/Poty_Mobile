@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import hci.mobile.poty.ui.theme.PotyTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.*
 
 import androidx.compose.runtime.collectAsState
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
+import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.utils.PasswordFieldWithLabel
 import hci.mobile.poty.utils.TextFieldWithLabel
 
@@ -56,8 +58,11 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         contentScale = ContentScale.Crop
                     )
-                        Text(
-                        text = "Iniciar Sesión",
+
+                    Spacer(modifier = Modifier.height(30.dp))
+
+                    Text(
+                        text = "Inicio de Sesión",
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
                             .padding(bottom = 16.dp)
@@ -80,7 +85,16 @@ fun LoginScreen(
                             onValueChange = {viewModel.updatePassword(it)}
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                            TextButton(
+                                onClick = onNavigateToRegister,
+                            ) {
+                                Text(
+                                    text="Olvidé mi Contraseña",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                            }
+
+                        Spacer(modifier = Modifier.height(70.dp))
 
                         Button(
                             onClick = {
@@ -88,7 +102,12 @@ fun LoginScreen(
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Ingresar")
+                            Text(
+                                text="Iniciar Sesión",
+                                color = White,
+                                style = MaterialTheme.typography.bodyLarge,
+                                )
+
                         }
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -97,7 +116,10 @@ fun LoginScreen(
                             onClick = onNavigateToRegister,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Registrarse")
+                            Text(
+                                text="Registrarse",
+                                style = MaterialTheme.typography.bodyMedium,
+                                )
                         }
 
                         Text(

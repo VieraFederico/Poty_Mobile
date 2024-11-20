@@ -39,6 +39,7 @@ import hci.mobile.poty.ui.components.CardsCarousel
 import java.time.LocalTime
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.ui.components.BottomNavBar
+import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.components.TransactionHistory
 import hci.mobile.poty.ui.components.spendingCard
 
@@ -145,7 +146,14 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel(),
                         )
                     }
                     spendingCard(spent = state.spent)
-                    CardsCarousel(creditCards = state.creditCards, onAddCardClick = { newCard -> viewModel.addCreditCard(newCard) })
+                    PaymentCardsCarousel(
+                        creditCards = state.creditCards,
+                        selectedCard = null,
+                        onCardSelected = { },
+                        onNavigateToAddCard = { /* Para Sangui :) */ },
+                        onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) }
+                    )
+
                     TransactionHistory(transactions = state.transactions)
                 }
             }

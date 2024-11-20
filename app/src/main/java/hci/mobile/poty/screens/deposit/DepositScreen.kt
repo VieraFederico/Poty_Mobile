@@ -131,12 +131,9 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
                         PaymentCardsCarousel(
                             creditCards = state.creditCards,
                             selectedCard = state.selectedCard,
-                            onCardSelected = { selectedCard ->
-                                viewModel.onCardSelect(selectedCard)
-                            },
-                            onAddCardClick = { newCard ->
-                                viewModel.addCreditCard(newCard)
-                            }
+                            onCardSelected = {card -> viewModel.onCardSelect(card)},
+                            onNavigateToAddCard = { /* Para Sangui :) */ },
+                            onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) }
                         )
 
                         Spacer(modifier = Modifier.height(50.dp))
