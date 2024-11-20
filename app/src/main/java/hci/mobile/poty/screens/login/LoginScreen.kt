@@ -41,6 +41,8 @@ fun LoginScreen(
 ) {
     val state by viewModel.state.collectAsState()
 
+    viewModel.onLoginSuccess = onLoginSuccess
+
     PotyTheme(darkTheme = true, dynamicColor = false) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import hci.mobile.poty.screens.addCard.AddCardScreen
 import hci.mobile.poty.screens.dashboard.Dashboard
 import hci.mobile.poty.screens.landing.LandingScreen
 import hci.mobile.poty.screens.login.LoginScreen
@@ -47,7 +48,14 @@ fun AppNavGraph(navController: NavHostController) {
         composable(route = Routes.DASHBOARD) {
             Dashboard(
                 onNavigateToCharge = { navController.navigate(Routes.CHARGE_SCREEN) },
-                onNavigateToDeposit = { navController.navigate(Routes.DEPOSIT_SCREEN) }
+                onNavigateToDeposit = { navController.navigate(Routes.DEPOSIT_SCREEN) },
+                onNavigateToAddCard = { navController.navigate(Routes.ADD_CARD_SCREEN) }
+            )
+        }
+
+        composable(route = Routes.ADD_CARD_SCREEN) {
+            AddCardScreen(
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
             )
         }
 
@@ -58,7 +66,10 @@ fun AppNavGraph(navController: NavHostController) {
         }
 
         composable(route = Routes.DEPOSIT_SCREEN) {
-            DepositScreen()
+            DepositScreen(
+                onNavigateToAddCard = { navController.navigate(Routes.ADD_CARD_SCREEN) },
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
+            )
         }
     }
 }

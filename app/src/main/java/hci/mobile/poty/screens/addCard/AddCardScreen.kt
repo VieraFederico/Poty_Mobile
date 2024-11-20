@@ -49,11 +49,19 @@ import hci.mobile.poty.utils.TextFieldWithLabel
 @Preview
 @Composable
 fun AddCardScreenPreview(){
-    AddCardScreen()
+    AddCardScreen(
+        onNavigateToDashboard = {}
+    )
 }
+
+
 @Composable
-fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenViewModel() }) {
+fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenViewModel() },
+                  onNavigateToDashboard: () -> Unit) {
     val state by viewModel.state.collectAsState()
+
+    viewModel.onAddCardSuccess = onNavigateToDashboard
+
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
@@ -83,7 +91,7 @@ fun AddCardScreen(viewModel: AddCardScreenViewModel = remember { AddCardScreenVi
                     )
 
                     IconButton(
-                        onClick = { /*Cuando enseñen navegacion xddd*/ },
+                        onClick = { onNavigateToDashboard() },
                     ) {
                         Surface(
                             shape = CircleShape,
