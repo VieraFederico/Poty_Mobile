@@ -310,15 +310,13 @@ fun PaymentCardsCarousel(
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit
 ) {
-    // Create a list that includes all cards plus the empty card
-    val allItems = creditCards + null // null represents the empty card
-    // Create and remember PagerState
+    val allItems = creditCards + null
+
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { allItems.size }
     )
 
-    // Update selected card when page changes
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collect { page ->
             val selectedItem = allItems.getOrNull(page)
@@ -333,7 +331,7 @@ fun PaymentCardsCarousel(
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp),
-        contentPadding = PaddingValues(horizontal = 10.dp)
+        contentPadding = PaddingValues(start = 15.dp, end = 30.dp)
 
     ) { page ->
         val item = allItems[page]
