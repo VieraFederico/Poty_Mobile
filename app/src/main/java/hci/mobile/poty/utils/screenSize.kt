@@ -23,19 +23,37 @@ fun calculateWindowSizeClass(
     val context = LocalContext.current
     val density = context.resources.displayMetrics.density
 
-    val widthDp: Float
-    val heightDp: Float
+    var widthDp: Float
+    var heightDp: Float
 
-    if (mockWidthDp != null && mockHeightDp != null) {
-        widthDp = mockWidthDp
-        heightDp = mockHeightDp
-    } else {
-        val activity = context as Activity
-        val windowMetrics = WindowMetricsCalculator.getOrCreate()
-            .computeCurrentWindowMetrics(activity)
-        widthDp = windowMetrics.bounds.width() / density
-        heightDp = windowMetrics.bounds.height() / density
+//    if (mockWidthDp != null && mockHeightDp != null) {
+//        widthDp = mockWidthDp
+//        heightDp = mockHeightDp
+//    } else {
+//        val activity = context as? Activity
+//        if (activity != null) {
+//            val windowMetrics = WindowMetricsCalculator.getOrCreate()
+//                .computeCurrentWindowMetrics(activity)
+//            widthDp = windowMetrics.bounds.width() / density
+//            heightDp = windowMetrics.bounds.height() / density
+//        } else {
+//            widthDp = 360f
+//            heightDp = 640f
+//        }
+//    }
+
+    widthDp = mockWidthDp ?: 360f // Default width for fallback
+    heightDp = mockHeightDp ?: 640f // Default height for fallback
+
+    if (mockWidthDp == null || mockHeightDp == null) {
+        (context as? Activity)?.let { activity ->
+            val windowMetrics = WindowMetricsCalculator.getOrCreate()
+                .computeCurrentWindowMetrics(activity)
+            widthDp = windowMetrics.bounds.width() / density
+            heightDp = windowMetrics.bounds.height() / density
+        }
     }
+
 
     val isLandscape = widthDp > heightDp
 

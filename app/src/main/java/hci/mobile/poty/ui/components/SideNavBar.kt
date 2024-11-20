@@ -184,7 +184,7 @@ fun SideNavBar(
         else -> false
     }
 
-    val navWidth = if (isTablet) 250.dp else 80.dp
+    val navWidth = if (isTablet) 200.dp else 80.dp
     val includeLabels = isTablet
 
     NavigationRail(

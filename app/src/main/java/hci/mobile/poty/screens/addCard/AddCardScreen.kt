@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -36,6 +37,7 @@ import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 
 
+
 @Composable
 fun AddCardScreen(
     viewModel: AddCardScreenViewModel = remember { AddCardScreenViewModel() },
@@ -45,356 +47,253 @@ fun AddCardScreen(
 
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
 
-    // UI adjustments based on window size class
-    val contentPadding: Dp
-    val cardHeight: Dp
-    val isLandscape: Boolean
-
-    when (windowSizeClass) {
-        WindowSizeClass.MediumPhone -> {
-            contentPadding = 16.dp
-            cardHeight = Dp.Unspecified
-            isLandscape = false
-        }
-        WindowSizeClass.MediumPhoneLandscape -> {
-            contentPadding = 16.dp
-            cardHeight = Dp.Unspecified
-            isLandscape = true
-        }
-        WindowSizeClass.MediumTablet -> {
-            contentPadding = 32.dp
-            cardHeight = Dp.Unspecified
-            isLandscape = false
-        }
-        WindowSizeClass.MediumTabletLandscape -> {
-            contentPadding = 32.dp
-            cardHeight = Dp.Unspecified
-            isLandscape = true
-        }
-    }
+    val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
+    val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         ResponsiveNavBar(
             onNavigate = { /* Handle navigation */ },
             mockWindowSizeClass = mockWindowSizeClass
         ) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.secondary,
-        ) { innerPadding ->
-            if (isLandscape) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                ) {
-                    Box(
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.secondary,
+            ) { innerPadding ->
+                if (isLandscape) {
+                    Row(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1f)
-                            .padding(contentPadding),
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.background_scaffolding),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f),
+                            contentPadding = contentPadding,
+                            showCreditCard = windowSizeClass == WindowSizeClass.MediumPhoneLandscape,
+                            state = state,
+                            onBackClick = { /* Handle navigation */ }
                         )
 
-                        IconButton(
-                            onClick = { /* Handle navigation */ },
-                        ) {
-                            Surface(
-                                shape = CircleShape,
-                                color = GreenDark,
-                                modifier = Modifier.size(35.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.KeyboardArrowLeft,
-                                    contentDescription = "Go Back",
-                                    tint = White
-                                )
-                            }
-                        }
-
-                        Card(
-                            modifier = Modifier.fillMaxSize(),
-                            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                Text(
-                                    text = "Agregar Nueva Tarjeta",
-                                    style = MaterialTheme.typography.titleSmallSemiBold,
-                                    color = White
-                                )
-                                Spacer(modifier = Modifier.height(16.dp))
-                                if(windowSizeClass == WindowSizeClass.MediumPhoneLandscape) {
-                                    FullCreditCardView(
-                                        creditCard = CreditCard(
-                                            bank = "Banco Royale",
-                                            number = state.number,
-                                            owner = state.owner,
-                                            cvv = state.cvv,
-                                            exp = state.exp
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    Card(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1f),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.onBackground,
-                        ),
-                        shape = RoundedCornerShape(topStart = 30.dp, bottomStart = 30.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                    ) {
-                        Column(
+                        FormSection(
                             modifier = Modifier
-                                .padding(contentPadding)
-                                .verticalScroll(rememberScrollState()),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-
-
-                            if (windowSizeClass != WindowSizeClass.MediumPhoneLandscape) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.9f)
-                                        .align(Alignment.CenterHorizontally)
-                                ) {
-                                    FullCreditCardView(
-                                        creditCard = CreditCard(
-                                            bank = "Banco Royale",
-                                            number = state.number,
-                                            owner = state.owner,
-                                            cvv = state.cvv,
-                                            exp = state.exp
-                                        )
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(16.dp))
-                            }
-
-
-
-                            TextFieldWithLabel(
-                                label = "Número de Tarjeta",
-                                value = state.number,
-                                onValueChange = { viewModel.onNumberChange(it) },
-                                maxLength = 16,
-                                regex = Regex("^\\d{0,16}\$")
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            TextFieldWithLabel(
-                                label = "Nombre del Responsable",
-                                value = state.owner,
-                                onValueChange = { viewModel.onOwnerChange(it) }
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                Column(modifier = Modifier.weight(1.5f)) {
-                                    CompactDateFieldWithLabel(
-                                        label = "Fecha de Venc. (MM/AA)",
-                                        value = state.exp,
-                                        onValueChange = { viewModel.onExpDateChange(it) }
-                                    )
-                                }
-
-                                Column(modifier = Modifier.weight(1f)) {
-                                    TextFieldWithLabel(
-                                        label = "CVV",
-                                        value = state.cvv,
-                                        onValueChange = { viewModel.onCVVChange(it) },
-                                        maxLength = 3
-                                    )
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Button(
-                                onClick = { viewModel.onAddCardClick() },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp)
-                                    .align(Alignment.CenterHorizontally),
-                            ) {
-                                Text(
-                                    text = "Agregar Tarjeta",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
-                        }
-
+                                .fillMaxHeight()
+                                .weight(1f),
+                            contentPadding = contentPadding,
+                            showCreditCard = windowSizeClass != WindowSizeClass.MediumPhoneLandscape,
+                            state = state,
+                            onNumberChange = viewModel::onNumberChange,
+                            onOwnerChange = viewModel::onOwnerChange,
+                            onExpDateChange = viewModel::onExpDateChange,
+                            onCVVChange = viewModel::onCVVChange,
+                            onAddCardClick = viewModel::onAddCardClick,
+                            shape = RoundedCornerShape(topStart = 30.dp, bottomStart = 30.dp)
+                        )
                     }
-                }
-            } else {
-
-                // Portrait layout
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    verticalArrangement = Arrangement.Top
-                ) {
-                    Box(
+                } else {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .padding(contentPadding),
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        verticalArrangement = Arrangement.Top
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.background_scaffolding),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            contentScale = ContentScale.Crop
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentPadding = contentPadding,
+                            showCreditCard = false,
+                            state = state,
+                            onBackClick = { /* Handle navigation */ }
                         )
 
-                        IconButton(
-                            onClick = { /* Handle navigation */ },
-                        ) {
-                            Surface(
-                                shape = CircleShape,
-                                color = GreenDark,
-                                modifier = Modifier.size(35.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.KeyboardArrowLeft,
-                                    contentDescription = "Go Back",
-                                    tint = White
-                                )
-                            }
-                        }
-
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                Text(
-                                    text = "Agregar Nueva Tarjeta",
-                                    style = MaterialTheme.typography.titleSmallSemiBold,
-                                    color = White
-                                )
-                            }
-                        }
-                    }
-
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(3.5f),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.onBackground,
-                        ),
-                        shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                    ) {
-                        Column(
+                        FormSection(
                             modifier = Modifier
-                                .padding(contentPadding)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-
-                            FullCreditCardView(
-                                creditCard = CreditCard(
-                                    bank = "Banco Royale",
-                                    number = state.number,
-                                    owner = state.owner,
-                                    cvv = state.cvv,
-                                    exp = state.exp
-                                )
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            TextFieldWithLabel(
-                                label = "Número de Tarjeta",
-                                value = state.number,
-                                onValueChange = { viewModel.onNumberChange(it) },
-                                maxLength = 16,
-                                regex = Regex("^\\d{0,16}\$")
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            TextFieldWithLabel(
-                                label = "Nombre del Responsable",
-                                value = state.owner,
-                                onValueChange = { viewModel.onOwnerChange(it) }
-                            )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Row {
-                                Column(modifier = Modifier.weight(1.5f)) {
-                                    CompactDateFieldWithLabel(
-                                        label = "Fecha de Venc. (MM/AA)",
-                                        value = state.exp,
-                                        onValueChange = { viewModel.onExpDateChange(it) },
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.width(8.dp))
-
-                                Column(modifier = Modifier.weight(1f)) {
-                                    TextFieldWithLabel(
-                                        label = "CVV",
-                                        value = state.cvv,
-                                        onValueChange = { viewModel.onCVVChange(it) },
-                                        maxLength = 3,
-                                    )
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Button(
-                                onClick = { viewModel.onAddCardClick() },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp)
-                                    .align(Alignment.CenterHorizontally),
-                            ) {
-                                Text(
-                                    text = "Agregar Tarjeta",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onBackground
-                                )
-                            }
-                        }
-                    }}
+                                .fillMaxWidth()
+                                .weight(3.5f),
+                            contentPadding = contentPadding,
+                            showCreditCard = true,
+                            state = state,
+                            onNumberChange = viewModel::onNumberChange,
+                            onOwnerChange = viewModel::onOwnerChange,
+                            onExpDateChange = viewModel::onExpDateChange,
+                            onCVVChange = viewModel::onCVVChange,
+                            onAddCardClick = viewModel::onAddCardClick,
+                            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
+                        )
+                    }
                 }
             }
         }
     }
 }
+
+@Composable
+fun HeaderSection(
+    modifier: Modifier,
+    contentPadding: Dp,
+    showCreditCard: Boolean,
+    state: AddCardScreenState,
+    onBackClick: () -> Unit
+) {
+    Box(
+        modifier = modifier.padding(contentPadding),
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.background_scaffolding),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        IconButton(
+            onClick = onBackClick,
+        ) {
+            Surface(
+                shape = CircleShape,
+                color = GreenDark,
+                modifier = Modifier.size(35.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowLeft,
+                    contentDescription = "Go Back",
+                    tint = White
+                )
+            }
+        }
+
+        Card(
+            modifier = Modifier.fillMaxSize(),
+            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = "Agregar Nueva Tarjeta",
+                    style = MaterialTheme.typography.titleSmallSemiBold,
+                    color = White
+                )
+                if (showCreditCard) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    FullCreditCardView(
+                        creditCard = CreditCard(
+                            bank = "Banco Royale",
+                            number = state.number,
+                            owner = state.owner,
+                            cvv = state.cvv,
+                            exp = state.exp
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FormSection(
+    modifier: Modifier,
+    contentPadding: Dp,
+    showCreditCard: Boolean,
+    state: AddCardScreenState,
+    onNumberChange: (String) -> Unit,
+    onOwnerChange: (String) -> Unit,
+    onExpDateChange: (String) -> Unit,
+    onCVVChange: (String) -> Unit,
+    onAddCardClick: () -> Unit,
+    shape: Shape
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onBackground,
+        ),
+        shape = shape,
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(contentPadding)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (showCreditCard) {
+                FullCreditCardView(
+                    creditCard = CreditCard(
+                        bank = "Banco Royale",
+                        number = state.number,
+                        owner = state.owner,
+                        cvv = state.cvv,
+                        exp = state.exp
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            TextFieldWithLabel(
+                label = "Número de Tarjeta",
+                value = state.number,
+                onValueChange = onNumberChange,
+                maxLength = 16,
+                regex = Regex("^\\d{0,16}\$")
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextFieldWithLabel(
+                label = "Nombre del Responsable",
+                value = state.owner,
+                onValueChange = onOwnerChange
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Column(modifier = Modifier.weight(1.5f)) {
+                    CompactDateFieldWithLabel(
+                        label = "Fecha de Venc. (MM/AA)",
+                        value = state.exp,
+                        onValueChange = onExpDateChange
+                    )
+                }
+
+                Column(modifier = Modifier.weight(1f)) {
+                    TextFieldWithLabel(
+                        label = "CVV",
+                        value = state.cvv,
+                        onValueChange = onCVVChange,
+                        maxLength = 3
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = onAddCardClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+            ) {
+                Text(
+                    text = "Agregar Tarjeta",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+    }
+}
+
 
 @Preview(
     name = "Medium Phone Portrait",
