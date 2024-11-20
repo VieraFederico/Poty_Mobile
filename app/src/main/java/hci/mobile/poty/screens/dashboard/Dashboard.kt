@@ -48,13 +48,15 @@ import hci.mobile.poty.ui.components.spendingCard
 fun DashboardPreview(){
     Dashboard(
         onNavigateToCharge = {},
-        onNavigateToDeposit = {}
+        onNavigateToDeposit = {},
+        onNavigateToAddCard = {}
     )
 }
 @Composable
 fun Dashboard(viewModel: DashboardViewModel = viewModel(),
               onNavigateToCharge: () -> Unit, // Callback para ir a ChargeScreen
-              onNavigateToDeposit: () -> Unit // Callback para ir a DepositScreen
+              onNavigateToDeposit: () -> Unit, // Callback para ir a DepositScreen
+              onNavigateToAddCard: () -> Unit
      ) {
     val state by viewModel.state.collectAsState()  // Collect state from ViewModel
 
@@ -145,7 +147,8 @@ fun Dashboard(viewModel: DashboardViewModel = viewModel(),
                         )
                     }
                     spendingCard(spent = state.spent)
-                    CardsCarousel(creditCards = state.creditCards, onAddCardClick = { newCard -> viewModel.addCreditCard(newCard) })
+                    CardsCarousel(creditCards = state.creditCards, onAddCardClick = {onNavigateToAddCard()})
+                    //{ newCard -> viewModel.addCreditCard(newCard) }
                     TransactionHistory(transactions = state.transactions)
                 }
             }

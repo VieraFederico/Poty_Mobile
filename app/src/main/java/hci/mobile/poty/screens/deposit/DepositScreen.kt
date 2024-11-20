@@ -45,11 +45,19 @@ import hci.mobile.poty.utils.NumberFieldWithLabel
 @Preview
 @Composable
 fun DepositScreenPreview(){
-    DepositScreen()
+    DepositScreen(
+        onNavigateToAddCard = {},
+        onNavigateToDashboard = {}
+    )
 }
 @Composable
-fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenViewModel() }) {
+fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenViewModel() },
+                  onNavigateToAddCard: () -> Unit = {},
+                  onNavigateToDashboard: () -> Unit = {}
+) {
     val state by viewModel.state.collectAsState()
+
+    viewModel.onDepositSuccess = onNavigateToDashboard
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
@@ -79,7 +87,7 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
                     )
 
                     IconButton(
-                        onClick = { /*Cuando enseñen navegacion xddd*/ },
+                        onClick = { onNavigateToDashboard() },
                     ) {
                         Surface(
                             shape = CircleShape,
@@ -134,8 +142,7 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
                             onCardSelected = { selectedCard ->
                                 viewModel.onCardSelect(selectedCard)
                             },
-                            onAddCardClick = { newCard ->
-                                viewModel.addCreditCard(newCard)
+                            onAddCardClick = { onNavigateToAddCard()
                             }
                         )
 

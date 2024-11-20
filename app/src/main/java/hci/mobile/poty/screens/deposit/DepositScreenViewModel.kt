@@ -11,6 +11,9 @@ class DepositScreenViewModel : ViewModel() {
     private val _state = MutableStateFlow(DepositScreenState())
     val state: StateFlow<DepositScreenState> = _state
 
+    var onDepositSuccess: (() -> Unit)? = null // Callback para navegar al Dashboard
+
+
     fun onNumberChange(newNumber: Float) {
         _state.value = _state.value.copy(number = newNumber)
     }
@@ -31,6 +34,8 @@ class DepositScreenViewModel : ViewModel() {
             }
 
             else -> {
+                onDepositSuccess?.invoke()
+
                 // Proceed with deposit logic (API call or further actions)
                 _state.value = currentState.copy(
                     errorMessage = null

@@ -54,7 +54,7 @@ fun RegistrationScreen(
     // Si el registro es exitoso, navega al Dashboard o Login
     LaunchedEffect(isRegistrationSuccessful) {
         if (isRegistrationSuccessful) {
-            onRegisterSuccess()
+            onNavigateToLogin()
         }
     }
 

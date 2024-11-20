@@ -10,9 +10,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel : ViewModel( ) {
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
+
+    var onLoginSuccess: (() -> Unit)? = null // Callback para navegar al Dashboard
 
     fun onEvent(event: LoginEvent) {
         when (event) {
@@ -40,6 +42,7 @@ class LoginViewModel : ViewModel() {
             // Si pasa la validación, inicia sesión
             loginUser()
 
+
         } catch (e: IllegalArgumentException) {
             // Si hay un error en la validación, muestra el mensaje de error
             _state.value = _state.value.copy(errorMessage = e.message ?: "Error de validación")
@@ -61,6 +64,7 @@ class LoginViewModel : ViewModel() {
                 _state.value = _state.value.copy(isLoading = false, errorMessage = "")
 
                 // Aquí navegarías a la siguiente pantalla o mostrarías un mensaje de éxito
+                onLoginSuccess?.invoke()
 
             } catch (e: Exception) {
                 _state.value = _state.value.copy(isLoading = false, errorMessage = e.message ?: "Error durante el inicio de sesión")

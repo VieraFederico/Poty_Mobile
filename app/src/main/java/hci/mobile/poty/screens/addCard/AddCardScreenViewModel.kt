@@ -11,6 +11,8 @@ class AddCardScreenViewModel : ViewModel() {
     private val _state = MutableStateFlow(AddCardScreenState())
     val state: StateFlow<AddCardScreenState> = _state
 
+    var onAddCardSuccess: (() -> Unit)? = null // Callback para navegar al Dashboard
+
     fun onAddCardClick() {
         val currentState = _state.value
 
@@ -19,8 +21,7 @@ class AddCardScreenViewModel : ViewModel() {
             return
         }
 
-        _state.value = currentState.copy(errorMessage = null)
-
+        onAddCardSuccess?.invoke()
         // Llamada de API
     }
 
