@@ -23,6 +23,7 @@ import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -33,6 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.R
@@ -45,6 +49,9 @@ import hci.mobile.poty.ui.components.spendingCard
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
+
+
+
 
 
 @Composable
@@ -60,6 +67,10 @@ fun Dashboard(
 
     val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
     val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
+
+    // Determine if the device is a phone in portrait mode
+    val isPhonePortrait = windowSizeClass == WindowSizeClass.MediumPhone && !isLandscape
+
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         ResponsiveNavBar(
@@ -79,10 +90,12 @@ fun Dashboard(
                         HeaderSection(
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .weight(1f),
+                                .weight(if (windowSizeClass == WindowSizeClass.MediumPhoneLandscape) 1f else 0.7f),
                             contentPadding = contentPadding,
                             state = state,
-                            onToggleVisibility = { viewModel.toggleBalanceVisibility() }
+                            onToggleVisibility = { viewModel.toggleBalanceVisibility() },
+                            showTransactionHistory = windowSizeClass == WindowSizeClass.MediumPhoneLandscape,
+                            windowSizeClass = windowSizeClass
                         )
 
                         ContentSection(
@@ -95,7 +108,11 @@ fun Dashboard(
                             onNavigateToDeposit = onNavigateToDeposit,
                             onNavigateToAddCard = onNavigateToAddCard,
                             viewModel = viewModel,
-                            windowSizeClass = windowSizeClass
+                            windowSizeClass = windowSizeClass,
+                            showTransactionHistory = windowSizeClass != WindowSizeClass.MediumPhoneLandscape,
+                            topStart = 30.dp,
+                            bottomStart =  30.dp
+
                         )
                     }
                 } else {
@@ -107,23 +124,27 @@ fun Dashboard(
                         HeaderSection(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(1f),
+                                .weight(if (windowSizeClass == WindowSizeClass.MediumPhone) 0.27f else 0.3f),
                             contentPadding = contentPadding,
                             state = state,
-                            onToggleVisibility = { viewModel.toggleBalanceVisibility() }
+                            onToggleVisibility = { viewModel.toggleBalanceVisibility() },
+                            isPhonePortrait = isPhonePortrait,
+                            windowSizeClass = windowSizeClass
                         )
 
                         ContentSection(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .weight(2.5f),
+                                .weight(1f),
                             contentPadding = contentPadding,
                             state = state,
                             onNavigateToCharge = onNavigateToCharge,
                             onNavigateToDeposit = onNavigateToDeposit,
                             onNavigateToAddCard = onNavigateToAddCard,
                             viewModel = viewModel,
-                            windowSizeClass = windowSizeClass
+                            windowSizeClass = windowSizeClass,
+                            topStart = 30.dp,
+                            topEnd = 30.dp
                         )
                     }
                 }
@@ -137,7 +158,10 @@ fun HeaderSection(
     modifier: Modifier,
     contentPadding: Dp,
     state: DashboardState,
-    onToggleVisibility: () -> Unit
+    onToggleVisibility: () -> Unit,
+    isPhonePortrait: Boolean = false,
+    showTransactionHistory: Boolean = false,
+    windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone
 ) {
     Box(
         modifier = modifier
@@ -159,18 +183,146 @@ fun HeaderSection(
                 modifier = Modifier
                     .padding(contentPadding),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = if (isPhonePortrait) Arrangement.Top else Arrangement.Center
             ) {
-                Greeting(state.userName)
+                Greeting(name = state.userName, windowSizeClass = windowSizeClass)
                 BalanceCard(
                     balance = state.balance,
                     isVisible = state.isBalanceVisible,
                     onToggleVisibility = onToggleVisibility
                 )
+
+                if (showTransactionHistory) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    TransactionHistory(transactions = state.transactions)
+                }
             }
         }
     }
 }
+
+@Composable
+fun Greeting(
+    name: String,
+    windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone,
+) {
+    val currentTime = LocalTime.now().hour
+
+    val greeting = when {
+        currentTime in 5..11 -> "¡Buenos Días,"
+        currentTime in 12..17 -> "¡Buenas Tardes,"
+        else -> "¡Buenas Noches,"
+    }
+
+    val textStyle = when (windowSizeClass) {
+        WindowSizeClass.MediumTablet, WindowSizeClass.MediumTabletLandscape -> MaterialTheme.typography.titleLarge
+        else -> MaterialTheme.typography.titleSmall
+    }
+
+    val nameStyle = when (windowSizeClass) {
+        WindowSizeClass.MediumTablet, WindowSizeClass.MediumTabletLandscape -> MaterialTheme.typography.titleLarge
+        else -> MaterialTheme.typography.titleSmallSemiBold
+    }
+
+    val hasEnter =  when (windowSizeClass) {
+        WindowSizeClass.MediumTabletLandscape -> true
+        else -> false
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+    ) {
+        if (hasEnter) {
+            Text(
+                text = greeting,
+                style = textStyle,
+                color = White
+            )
+            Text(
+                text = "$name!",
+                style = nameStyle,
+                color = White
+            )
+        } else {
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(color = White, fontSize = textStyle.fontSize, fontWeight = textStyle.fontWeight)) {
+                        append(greeting)
+                        append(" ")
+                    }
+                    withStyle(style = SpanStyle(color = White, fontSize = nameStyle.fontSize, fontWeight = nameStyle.fontWeight)) {
+                        append(name)
+                        append("!")
+                    }
+                }
+            )
+        }
+    }
+}
+
+
+//@Composable
+//fun Greeting(
+//    name: String,
+//    windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone
+//) {
+//    val currentTime = LocalTime.now().hour
+//
+//    val greeting = when {
+//        currentTime in 5..11 -> "¡Buenos Días,"
+//        currentTime in 12..17 -> "¡Buenas Tardes,"
+//        else -> "¡Buenas Noches,"
+//    }
+//
+//    val isTablet = windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape
+//
+//
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(10.dp)
+//    ) {
+//        if (windowSizeClass == WindowSizeClass.MediumTablet) {
+//            // Unified and larger greeting for tablets
+//            Text(
+//                text = "$greeting $name!",
+//                style = MaterialTheme.typography.titleLarge,
+//                color = White
+//            )
+//        } else if(windowSizeClass == WindowSizeClass.MediumTabletLandscape){
+//            Text(
+//                text = greeting,
+//                style = MaterialTheme.typography.titleLarge,
+//                color = White
+//            )
+//            Text(
+//                text = "$name!",
+//                style = MaterialTheme.typography.titleLarge,
+//                color = White
+//            )
+//        }
+//        else if(windowSizeClass == WindowSizeClass.MediumPhone) {
+//            Text(
+//                text = "$greeting $name!",
+//                style = MaterialTheme.typography.titleSmall,
+//                color = White
+//            )
+//        }else{
+//            Text(
+//                text = greeting,
+//                style = MaterialTheme.typography.titleSmall,
+//                color = White
+//            )
+//            Text(
+//                text = "$name!",
+//                style = MaterialTheme.typography.titleSmallSemiBold,
+//                color = White
+//            )
+//        }
+//    }
+//}
 
 @Composable
 fun ContentSection(
@@ -181,7 +333,12 @@ fun ContentSection(
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
     viewModel: DashboardViewModel,
-    windowSizeClass: WindowSizeClass
+    windowSizeClass: WindowSizeClass,
+    showTransactionHistory: Boolean = true,
+    topStart: Dp = 0.dp,
+    topEnd: Dp = 0.dp,
+    bottomStart: Dp = 0.dp,
+    bottomEnd: Dp = 0.dp
 ) {
     Card(
         modifier = modifier,
@@ -189,10 +346,10 @@ fun ContentSection(
             containerColor = MaterialTheme.colorScheme.onBackground,
         ),
         shape = RoundedCornerShape(
-            topStart = if (modifier.fillMaxWidth() == Modifier.fillMaxWidth()) 30.dp else 0.dp,
-            topEnd = 30.dp,
-            bottomStart = if (modifier.fillMaxWidth() == Modifier.fillMaxWidth()) 0.dp else 30.dp,
-            bottomEnd = 30.dp
+            topStart = topStart,
+            topEnd = topEnd,
+            bottomStart = bottomStart,
+            bottomEnd = bottomEnd
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
@@ -238,41 +395,16 @@ fun ContentSection(
                 onCardSelected = { },
                 onNavigateToAddCard = onNavigateToAddCard,
                 onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) },
-                windowSizeClass =  windowSizeClass
+                windowSizeClass = windowSizeClass
             )
-            TransactionHistory(transactions = state.transactions)
+            if (showTransactionHistory) {
+                TransactionHistory(transactions = state.transactions)
+            }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String){
-    val currentTime = LocalTime.now().hour
 
-    val greeting = when {
-        currentTime in 5..11 -> "¡Buenos Días,"
-        currentTime in 12..17 -> "¡Buenas Tardes,"
-        else -> "¡Buenas Noches,"
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .padding(bottom = 20.dp)
-    ){
-        Text(
-            text = greeting,
-            style = MaterialTheme.typography.titleSmall,
-            color = White
-        )
-        Text(
-            text = "$name!",
-            style = MaterialTheme.typography.titleSmallSemiBold,
-            color = White
-        )
-    }
-}
 
 @Composable
 fun DashboardButton(
@@ -364,3 +496,4 @@ fun MediumTabletLandscapePreview() {
         mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
     )
 }
+
