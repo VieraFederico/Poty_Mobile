@@ -60,7 +60,7 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenVi
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar { } },
+            bottomBar = { BottomNavBar(onNavigate = { }) }
         ) { innerPadding ->
             Column(
                 modifier = Modifier

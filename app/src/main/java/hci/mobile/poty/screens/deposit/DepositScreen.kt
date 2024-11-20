@@ -63,7 +63,7 @@ fun DepositScreen(viewModel: DepositScreenViewModel = remember { DepositScreenVi
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar { } },
+            bottomBar = { BottomNavBar(onNavigate = { }) }
         ) { innerPadding ->
             Column(
                 modifier = Modifier

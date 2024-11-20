@@ -17,14 +17,27 @@ import hci.mobile.poty.R
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
+import hci.mobile.poty.utils.WindowSizeClass
+import hci.mobile.poty.utils.calculateWindowSizeClass
 
 
 @Composable
 fun BottomNavBar(
-    onNavigate: (String) -> Unit
+    onNavigate: (String) -> Unit,
+    mockWindowSizeClass: WindowSizeClass? = null
 ) {
+    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val isTablet = when (windowSizeClass) {
+        WindowSizeClass.MediumTablet,
+        WindowSizeClass.MediumTabletLandscape -> true
+        else -> false
+    }
+
+    val newHeight = if (isTablet) 130.dp else 70.dp
+
+
     NavigationBar (
-        modifier = Modifier.height(70.dp),
+        modifier = Modifier.height(newHeight),
         containerColor = GreyLight
     ){
         NavigationBarItem(
@@ -100,9 +113,11 @@ fun BottomNavBar(
     }
 }
 
-@Preview
-@Composable
-fun BottomNavBarPreview(){
-    PotyTheme { BottomNavBar {  } }
 
+@Preview(showBackground = true, widthDp = 750, heightDp = 1200)
+@Composable
+fun BottomNavBarPreview() {
+    PotyTheme {
+        BottomNavBar(onNavigate = { }, mockWindowSizeClass = WindowSizeClass.MediumTablet)
+    }
 }
