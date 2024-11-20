@@ -46,12 +46,14 @@ import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import hci.mobile.poty.ui.theme.Black
+import hci.mobile.poty.utils.WindowSizeClass
 
 @Preview
 @Composable
@@ -300,7 +302,7 @@ fun FullCreditCardView(creditCard: CreditCard) {
         }
     }
 }
-
+/*
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PaymentCardsCarousel(
@@ -348,7 +350,73 @@ fun PaymentCardsCarousel(
             )
         }
     }
+}*/
+
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun PaymentCardsCarousel(
+    creditCards: List<CardResponse>,
+    selectedCard: CardResponse? = null,
+    onCardSelected: (CardResponse) -> Unit,
+    onNavigateToAddCard: () -> Unit,
+    onDeleteCard: (Int) -> Unit,
+    windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone
+) {
+    val allItems = creditCards + null
+
+    // Calculate dynamic padding based on WindowSizeClass
+    val contentPadding = when (windowSizeClass) {
+        WindowSizeClass.MediumTablet  -> PaddingValues(start = 150.dp, end = 200.dp)
+        WindowSizeClass.MediumTabletLandscape -> PaddingValues(start = 0.dp, end = 120.dp)
+        WindowSizeClass.MediumPhoneLandscape -> PaddingValues(start = 0.dp, end = 120.dp)
+        else -> PaddingValues(start = 0.dp, end = 70.dp)
+    }
+
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { allItems.size }
+    )
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            val selectedItem = allItems.getOrNull(page)
+            if (selectedItem != null) {
+                onCardSelected(selectedItem)
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(220.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(220.dp),
+            contentPadding = contentPadding // Apply dynamic padding here
+        ) { page ->
+            val item = allItems[page]
+            if (item != null) {
+                CreditCardView(
+                    Card = item,
+                    isSelected = selectedCard?.id == item.id,
+                    onCardClick = { onCardSelected(item) },
+                    onDeleteCard = {}
+                )
+            } else {
+                EmptyCreditCardView(
+                    onAddCardClick = { onNavigateToAddCard() }
+                )
+            }
+        }
+    }
 }
+
 
 @Composable
 fun CardsCarousel(
@@ -380,6 +448,9 @@ fun CardsCarousel(
         }
     }
 }
+
+
+
 
 
 @Preview

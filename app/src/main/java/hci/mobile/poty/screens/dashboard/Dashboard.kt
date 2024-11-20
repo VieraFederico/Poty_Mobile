@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -32,137 +33,217 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BalanceCard
-import hci.mobile.poty.ui.components.CardsCarousel
 import java.time.LocalTime
 import androidx.lifecycle.viewmodel.compose.viewModel
-import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.PaymentCardsCarousel
+import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.components.TransactionHistory
 import hci.mobile.poty.ui.components.spendingCard
+import hci.mobile.poty.utils.WindowSizeClass
+import hci.mobile.poty.utils.calculateWindowSizeClass
+import hci.mobile.poty.ui.components.PaymentCardsCarousel
 
 
-@Preview
 @Composable
-fun DashboardPreview(){
-    Dashboard(
-        onNavigateToCharge = {},
-        onNavigateToDeposit = {},
-        onNavigateToAddCard = {}
-    )
-}
-@Composable
-fun Dashboard(viewModel: DashboardViewModel = viewModel(),
-              onNavigateToCharge: () -> Unit, // Callback para ir a ChargeScreen
-              onNavigateToDeposit: () -> Unit, // Callback para ir a DepositScreen
-              onNavigateToAddCard: () -> Unit
-     ) {
-    val state by viewModel.state.collectAsState()  // Collect state from ViewModel
+fun Dashboard(
+    viewModel: DashboardViewModel = viewModel(),
+    onNavigateToCharge: () -> Unit,
+    onNavigateToDeposit: () -> Unit,
+    onNavigateToAddCard: () -> Unit,
+    mockWindowSizeClass: WindowSizeClass? = null
+) {
+    val state by viewModel.state.collectAsState()
+    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+
+    val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
+    val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar(onNavigate = { }) }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.Top
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                ) {
-                    // Background image
-                    Image(
-                        painter = painterResource(id = R.drawable.background_scaffolding),
-                        contentDescription = null,
+        ResponsiveNavBar(
+            onNavigate = { /* Handle navigation */ },
+            mockWindowSizeClass = mockWindowSizeClass
+        ) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.secondary,
+            ) { innerPadding ->
+                if (isLandscape) {
+                    Row(
                         modifier = Modifier
-                            .fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    // Top Card with content on top of the image
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.Transparent // Set to transparent to let image show through
-                        ),
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Greeting(state.userName)
-                            BalanceCard(
-                                balance = state.balance,
-                                isVisible = state.isBalanceVisible,
-                                onToggleVisibility = { viewModel.toggleBalanceVisibility() }
-                            )
-                        }
-                    }
-                }
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f),
+                            contentPadding = contentPadding,
+                            state = state,
+                            onToggleVisibility = { viewModel.toggleBalanceVisibility() }
+                        )
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(2.5f),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.onBackground,
-                    ),
-                    shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomEnd = 0.dp, bottomStart = 0.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                ) {
-                    Row (
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-
-                    ) {
-                        DashboardButton(
-                            onClick = {onNavigateToDeposit()},
-                            iconResId = R.drawable.corner_right_down,
-                            contentDescription = "Ingresar"
-                        )
-                        Spacer(modifier = Modifier.width(20.dp))
-                        DashboardButton(
-                            onClick = {onNavigateToCharge()},
-                            iconResId = R.drawable.dollar_sign,
-                            contentDescription = "Cobrar"
-                        )
-                        Spacer(modifier = Modifier.width(20.dp))
-                        DashboardButton(
-                            onClick = {},
-                            iconResId = R.drawable.corner_right_up,
-                            contentDescription = "Enviar"
-                        )
-                        Spacer(modifier = Modifier.width(20.dp))
-                        DashboardButton(
-                            onClick = {},
-                            iconResId = R.drawable.user,
-                            contentDescription = "CVU"
+                        ContentSection(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f),
+                            contentPadding = contentPadding,
+                            state = state,
+                            onNavigateToCharge = onNavigateToCharge,
+                            onNavigateToDeposit = onNavigateToDeposit,
+                            onNavigateToAddCard = onNavigateToAddCard,
+                            viewModel = viewModel,
+                            windowSizeClass = windowSizeClass
                         )
                     }
-                    spendingCard(spent = state.spent)
-                    PaymentCardsCarousel(
-                        creditCards = state.creditCards,
-                        selectedCard = null,
-                        onCardSelected = { },
-                        onNavigateToAddCard = { onNavigateToAddCard() },
-                        onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) }
-                    )
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            contentPadding = contentPadding,
+                            state = state,
+                            onToggleVisibility = { viewModel.toggleBalanceVisibility() }
+                        )
 
-                    TransactionHistory(transactions = state.transactions)
+                        ContentSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(2.5f),
+                            contentPadding = contentPadding,
+                            state = state,
+                            onNavigateToCharge = onNavigateToCharge,
+                            onNavigateToDeposit = onNavigateToDeposit,
+                            onNavigateToAddCard = onNavigateToAddCard,
+                            viewModel = viewModel,
+                            windowSizeClass = windowSizeClass
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+@Composable
+fun HeaderSection(
+    modifier: Modifier,
+    contentPadding: Dp,
+    state: DashboardState,
+    onToggleVisibility: () -> Unit
+) {
+    Box(
+        modifier = modifier
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.background_scaffolding),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        Card(
+            modifier = Modifier.fillMaxSize(),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.Transparent
+            ),
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(contentPadding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Greeting(state.userName)
+                BalanceCard(
+                    balance = state.balance,
+                    isVisible = state.isBalanceVisible,
+                    onToggleVisibility = onToggleVisibility
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ContentSection(
+    modifier: Modifier,
+    contentPadding: Dp,
+    state: DashboardState,
+    onNavigateToCharge: () -> Unit,
+    onNavigateToDeposit: () -> Unit,
+    onNavigateToAddCard: () -> Unit,
+    viewModel: DashboardViewModel,
+    windowSizeClass: WindowSizeClass
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onBackground,
+        ),
+        shape = RoundedCornerShape(
+            topStart = if (modifier.fillMaxWidth() == Modifier.fillMaxWidth()) 30.dp else 0.dp,
+            topEnd = 30.dp,
+            bottomStart = if (modifier.fillMaxWidth() == Modifier.fillMaxWidth()) 0.dp else 30.dp,
+            bottomEnd = 30.dp
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(contentPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                DashboardButton(
+                    onClick = onNavigateToDeposit,
+                    iconResId = R.drawable.corner_right_down,
+                    contentDescription = "Ingresar"
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                DashboardButton(
+                    onClick = onNavigateToCharge,
+                    iconResId = R.drawable.dollar_sign,
+                    contentDescription = "Cobrar"
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                DashboardButton(
+                    onClick = { /* TODO */ },
+                    iconResId = R.drawable.corner_right_up,
+                    contentDescription = "Enviar"
+                )
+                Spacer(modifier = Modifier.width(20.dp))
+                DashboardButton(
+                    onClick = { /* TODO */ },
+                    iconResId = R.drawable.user,
+                    contentDescription = "CVU"
+                )
+            }
+            spendingCard(spent = state.spent)
+            PaymentCardsCarousel(
+                creditCards = state.creditCards,
+                selectedCard = null,
+                onCardSelected = { },
+                onNavigateToAddCard = onNavigateToAddCard,
+                onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) },
+                windowSizeClass =  windowSizeClass
+            )
+            TransactionHistory(transactions = state.transactions)
+        }
+    }
+}
 
 @Composable
 fun Greeting(name: String){
@@ -184,8 +265,7 @@ fun Greeting(name: String){
             text = greeting,
             style = MaterialTheme.typography.titleSmall,
             color = White
-
-            )
+        )
         Text(
             text = "$name!",
             style = MaterialTheme.typography.titleSmallSemiBold,
@@ -197,22 +277,22 @@ fun Greeting(name: String){
 @Composable
 fun DashboardButton(
     onClick: () -> Unit,
-    iconResId: Int,  // Add parameter for the icon resource ID
-    contentDescription: String // Add parameter for the content description
+    iconResId: Int,
+    contentDescription: String
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ){
         FloatingActionButton(
-            onClick = { onClick() },
+            onClick = onClick,
             containerColor = MaterialTheme.colorScheme.primary,
             shape = CircleShape,
             modifier = Modifier.padding(10.dp)
         ) {
             Icon(
-                painter = painterResource(id = iconResId),  // Use the passed resource ID
-                contentDescription = contentDescription,  // Use the passed content description
+                painter = painterResource(id = iconResId),
+                contentDescription = contentDescription,
                 tint = White,
                 modifier = Modifier.size(35.dp)
             )
@@ -220,6 +300,67 @@ fun DashboardButton(
         Text(
             text = contentDescription,
             style = MaterialTheme.typography.bodyMedium,
-            )
+        )
     }
+}
+
+
+@Preview(
+    name = "Medium Phone Portrait",
+    device = "spec:width=411dp,height=914dp",
+    showBackground = true
+)
+@Composable
+fun MediumPhonePortraitPreview() {
+    Dashboard(
+        onNavigateToCharge = {},
+        onNavigateToDeposit = {},
+        onNavigateToAddCard = {},
+        mockWindowSizeClass = WindowSizeClass.MediumPhone
+    )
+}
+
+@Preview(
+    name = "Medium Phone Landscape",
+    device = "spec:width=914dp,height=411dp",
+    showBackground = true
+)
+@Composable
+fun MediumPhoneLandscapePreview() {
+    Dashboard(
+        onNavigateToCharge = {},
+        onNavigateToDeposit = {},
+        onNavigateToAddCard = {},
+        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
+    )
+}
+
+@Preview(
+    name = "Medium Tablet Portrait",
+    device = "spec:width=800dp,height=1280dp",
+    showBackground = true
+)
+@Composable
+fun MediumTabletPortraitPreview() {
+    Dashboard(
+        onNavigateToCharge = {},
+        onNavigateToDeposit = {},
+        onNavigateToAddCard = {},
+        mockWindowSizeClass = WindowSizeClass.MediumTablet
+    )
+}
+
+@Preview(
+    name = "Medium Tablet Landscape",
+    device = "spec:width=1280dp,height=800dp",
+    showBackground = true
+)
+@Composable
+fun MediumTabletLandscapePreview() {
+    Dashboard(
+        onNavigateToCharge = {},
+        onNavigateToDeposit = {},
+        onNavigateToAddCard = {},
+        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
+    )
 }

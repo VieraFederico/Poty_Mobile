@@ -56,7 +56,7 @@ fun TransactionHistory(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start=16.dp,end=16.dp,bottom=8.dp),
+                .padding(start=0.dp,end=16.dp,bottom=8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(
             containerColor = GreenDark
@@ -74,7 +74,7 @@ fun TransactionHistory(
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(bottom=16.dp,start=16.dp,end=16.dp),
+                .padding(bottom=16.dp,start=0.dp,end=16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(transactions) { transaction ->
