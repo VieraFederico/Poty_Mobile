@@ -25,70 +25,16 @@ import hci.mobile.poty.R
 import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.FullCreditCardView
+import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.CompactDateFieldWithLabel
 import hci.mobile.poty.utils.TextFieldWithLabel
+import hci.mobile.poty.utils.WindowSizeClass
+import hci.mobile.poty.utils.calculateWindowSizeClass
 
-// Enum for window size classes with specified names
-enum class WindowSizeClass {
-    MediumPhone,
-    MediumPhoneLandscape,
-    MediumTablet,
-    MediumTabletLandscape
-}
-
-// Function to calculate window size class based on device dimensions
-@Composable
-fun calculateWindowSizeClass(
-    mockWidthDp: Float? = null,
-    mockHeightDp: Float? = null
-): WindowSizeClass {
-    val context = LocalContext.current
-    val density = context.resources.displayMetrics.density
-
-    val widthDp: Float
-    val heightDp: Float
-
-    if (mockWidthDp != null && mockHeightDp != null) {
-        widthDp = mockWidthDp
-        heightDp = mockHeightDp
-    } else {
-        val activity = context as Activity
-        val windowMetrics = WindowMetricsCalculator.getOrCreate()
-            .computeCurrentWindowMetrics(activity)
-        widthDp = windowMetrics.bounds.width() / density
-        heightDp = windowMetrics.bounds.height() / density
-    }
-
-    val isLandscape = widthDp > heightDp
-
-    return when {
-        // Medium Phone Portrait (approximate dp values)
-        !isLandscape && widthDp in 400f..450f && heightDp in 850f..950f ->
-            WindowSizeClass.MediumPhone
-
-        // Medium Phone Landscape
-        isLandscape && widthDp in 850f..950f && heightDp in 400f..450f ->
-            WindowSizeClass.MediumPhoneLandscape
-
-        // Medium Tablet Portrait
-        !isLandscape && widthDp in 750f..850f && heightDp in 1200f..1350f ->
-            WindowSizeClass.MediumTablet
-
-        // Medium Tablet Landscape
-        isLandscape && widthDp in 1200f..1350f && heightDp in 750f..850f ->
-            WindowSizeClass.MediumTabletLandscape
-
-        else -> {
-            // Default to MediumPhone if size doesn't match
-            if (isLandscape) WindowSizeClass.MediumPhoneLandscape
-            else WindowSizeClass.MediumPhone
-        }
-    }
-}
 
 @Composable
 fun AddCardScreen(
@@ -128,10 +74,13 @@ fun AddCardScreen(
     }
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
+        ResponsiveNavBar(
+            onNavigate = { /* Handle navigation */ },
+            mockWindowSizeClass = mockWindowSizeClass
+        ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar { } },
         ) { innerPadding ->
             if (isLandscape) {
                 Row(
@@ -440,7 +389,7 @@ fun AddCardScreen(
                                 )
                             }
                         }
-                    }
+                    }}
                 }
             }
         }

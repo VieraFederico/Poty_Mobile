@@ -104,5 +104,4 @@ fun BottomNavBar(
 @Composable
 fun BottomNavBarPreview(){
     PotyTheme { BottomNavBar {  } }
-
 }
