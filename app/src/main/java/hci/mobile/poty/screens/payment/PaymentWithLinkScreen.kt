@@ -52,7 +52,7 @@ fun PaymentWithLinkScreen(viewModel: PaymentScreenViewModel = remember { Payment
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar { } },
+            bottomBar = { BottomNavBar(onNavigate = { }) }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
