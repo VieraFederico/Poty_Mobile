@@ -10,10 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.LoginRegisterImageSection
 import hci.mobile.poty.ui.theme.PotyTheme
@@ -27,7 +29,9 @@ import hci.mobile.poty.utils.isTablet
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    viewModel: LoginViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = LoginViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit,
     mockWindowSizeClass: WindowSizeClass? = null

@@ -2,7 +2,6 @@ package hci.mobile.poty.screens.dashboard
 
 import hci.mobile.poty.classes.CardResponse
 import androidx.compose.runtime.mutableStateListOf
-import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.classes.Transaction
 import hci.mobile.poty.classes.TransactionStatus
 import hci.mobile.poty.classes.TransactionType
@@ -10,7 +9,7 @@ import java.time.LocalDateTime
 
 data class DashboardState(
     val userName: String = "James Bond",
-    val balance: Float = 12750.60f,
+    val balance: Float = 2000f,
     val spent: Float = 6451f,
     val isBalanceVisible: Boolean = true,
     val creditCards: List<CardResponse> = mutableStateListOf(
