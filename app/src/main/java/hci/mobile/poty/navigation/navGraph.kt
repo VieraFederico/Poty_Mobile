@@ -14,7 +14,7 @@ import hci.mobile.poty.screens.charge.ChargeScreen
 import hci.mobile.poty.screens.deposit.DepositScreen
 
 @Composable
-fun AppNavGraph(navController: NavHostController) {
+fun AppNavGraph(navController: NavHostController, ) {
     NavHost(
         navController = navController,
         startDestination = Routes.LANDING // Ruta inicial
