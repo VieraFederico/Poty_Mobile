@@ -6,13 +6,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 import android.content.Intent
-import android.net.Uri
-import androidx.core.content.ContextCompat.startActivity
-import hci.mobile.poty.classes.ChargeForm;
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import androidx.core.content.ContextCompat
 
 class ChargeScreenViewModel : ViewModel() {
 

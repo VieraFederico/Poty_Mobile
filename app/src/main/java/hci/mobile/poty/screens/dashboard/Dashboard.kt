@@ -392,7 +392,7 @@ fun ContentSection(
             PaymentCardsCarousel(
                 creditCards = state.creditCards,
                 selectedCard = null,
-                onCardSelected = { },
+                onCardSelected = {},
                 onNavigateToAddCard = onNavigateToAddCard,
                 onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) },
                 windowSizeClass = windowSizeClass

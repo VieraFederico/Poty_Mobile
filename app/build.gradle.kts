@@ -2,16 +2,18 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "hci.mobile.poty"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "hci.mobile.poty"
         minSdk = 28
-        targetSdk = 34
+        //noinspection EditedTargetSdkVersion
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -53,14 +55,27 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.constraintlayout.compose.android)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
+    implementation(libs.mpandroidchart)
     implementation(libs.androidx.material.icons.extended)
+
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation ("androidx.window:window:1.1.0")
     implementation ("androidx.compose.material3:material3:1.1.0")
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.converter.kotlinx.serialization)
+
+     implementation(libs.okhttp3.logging.interceptor)
+
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

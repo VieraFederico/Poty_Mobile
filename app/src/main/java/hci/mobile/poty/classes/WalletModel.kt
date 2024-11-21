@@ -1,3 +1,5 @@
+package hci.mobile.poty.classes
+
 data class BalanceResponse(val balance: Double)
 data class RechargeRequest(val amount: Double)
 

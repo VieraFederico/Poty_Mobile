@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import hci.mobile.poty.navigation.AppNavGraph
 import hci.mobile.poty.ui.theme.PotyTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +17,7 @@ class MainActivity : ComponentActivity() {
             PotyApp()
         }
     }
+
 }
 
 @Composable
@@ -25,6 +27,7 @@ fun PotyApp() {
         AppNavGraph(navController = navController)
     }
 }
+
 
 //Aca vamos a escribir una funcion, en vez de componentes. Necesitan los @Composable
 //Declaramos funciones usando fun y sus argumentso
