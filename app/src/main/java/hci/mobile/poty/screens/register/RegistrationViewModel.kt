@@ -13,8 +13,6 @@ import hci.mobile.poty.data.repository.UserRepository
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
-
-
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -22,7 +20,6 @@ import java.time.format.DateTimeParseException
 class RegistrationViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
-
 
     var state by mutableStateOf(RegistrationState())
         private set
@@ -195,3 +192,4 @@ private fun isValidDate(date: String): Boolean {
         }
     }
 }
+
