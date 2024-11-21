@@ -1,4 +1,5 @@
 package hci.mobile.poty.screens.payment
+import CardResponse
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,9 +36,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BottomNavBar
+import hci.mobile.poty.ui.components.PaymentBalanceCard
+import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleMediumLite
+import hci.mobile.poty.utils.ErrorMessage
+import hci.mobile.poty.utils.NumberFieldWithLabel
+import hci.mobile.poty.utils.ReadOnlyNumberFieldWithLabel
+import hci.mobile.poty.utils.TextFieldWithLabel
 
 @Preview
 @Composable
@@ -46,7 +53,7 @@ fun PaymentWithLinkScreenPreview(){
 }
 @Composable
 fun PaymentWithLinkScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenViewModel() }) {
-    //val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
@@ -130,8 +137,28 @@ fun PaymentWithLinkScreen(viewModel: PaymentScreenViewModel = remember { Payment
                     Column(
                         modifier = Modifier.padding(15.dp)
                     ) {
-
-
+                        when (state.currentStep) {
+                            1 -> LinkStepOne(
+                                link = state.paymentLink,
+                                onLinkChange = { viewModel.updateLink(it) },
+                                onNext = { viewModel.nextStep() },
+                                errorMessage = state.errorMessage
+                            )
+                            2 -> LinkStepTwo(
+                                number = state.request.amount,
+                                balance = state.balance,
+                                onNumberChange = { viewModel.updateAmount(it.toDouble()) },
+                                creditCards = state.creditCards,
+                                selectedCard = state.selectedCard,
+                                onCardSelected = { viewModel.selectCard(it) },
+                                paymentMethod = state.type,
+                                onPaymentTypeChange = {viewModel.onPaymentTypeChange(it)},
+                                onNavigateToAddCard = { /* Hay que agregar esto xd */ },
+                                onDeleteCard = { viewModel.onDeleteCard(it) },
+                                onSubmit = { viewModel.onSubmitPayment() },
+                                errorMessage = state.errorMessage
+                            )
+                        }
                     }
                 }
             }
@@ -141,8 +168,13 @@ fun PaymentWithLinkScreen(viewModel: PaymentScreenViewModel = remember { Payment
 
 @Composable
 fun LinkStepOne(
-
+    link: String,
+    onLinkChange: (String) -> Unit,
+    onNext: () -> Unit,
+    errorMessage: String
 ) {
+    var localLink by remember { mutableStateOf(link) }
+
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -150,31 +182,99 @@ fun LinkStepOne(
         verticalArrangement = Arrangement.Center,
     ) {
 
-
-    }
-}
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            TextFieldWithLabel(
+                label = "Ingrese el Link de Pago ",
+                value = localLink,
+                onValueChange = {
+                    localLink = it
+                    onLinkChange(it)
+                }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { onNext() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+            ) {
+                Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            }
+            if (errorMessage.isNotEmpty()) {
+                ErrorMessage(message = errorMessage)
+            }
+        }
+}   }
 
 @Composable
-fun LinkStepTwo(){
+fun LinkStepTwo(
+    number: Double,
+    balance: Double,
+    onNumberChange: (Float) -> Unit,
+    creditCards: List<CardResponse>,
+    selectedCard: CardResponse? = null,
+    onCardSelected: (CardResponse) -> Unit,
+    paymentMethod: PaymentType,
+    onPaymentTypeChange: (PaymentType) -> Unit,
+    onNavigateToAddCard: () -> Unit,
+    onDeleteCard: (Int) -> Unit,
+    onSubmit: () -> Unit,
+    errorMessage: String,
+){
+    var localNumber by remember { mutableStateOf(number) }
+    var localSelectedCard by remember { mutableStateOf(selectedCard) }
+    var localPaymentMethod by remember { mutableStateOf(paymentMethod) }
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
     ) {
+        ReadOnlyNumberFieldWithLabel(
+            label = "Monto a Enviar",
+            value = localNumber.toFloat(),
+        )
 
 
+        SelectOptionTextButton(
+            selectedOption = localPaymentMethod,
+            onOptionSelected = { selectedOption ->
+                localPaymentMethod = selectedOption
+                onPaymentTypeChange(selectedOption)
+            }
+        )
+
+        when (localPaymentMethod) {
+            PaymentType.CARD -> {
+                PaymentCardsCarousel(
+                    creditCards = creditCards,
+                    selectedCard = localSelectedCard,
+                    onCardSelected = onCardSelected,
+                    onNavigateToAddCard = onNavigateToAddCard,
+                    onDeleteCard = onDeleteCard
+                )
+            }
+            PaymentType.BALANCE -> {
+                PaymentBalanceCard(balance)
+            }
+        }
+
+        Button(
+            onClick = { onSubmit() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+        }
+
+        if (errorMessage.isNotEmpty()) {
+            ErrorMessage(message = errorMessage)
+        }
     }
-}
-
-@Preview
-@Composable
-fun LinkStepOnePreview(){
-    LinkStepOne()
-}
-
-@Preview
-@Composable
-fun LinkStepTwoPreview(){
-    LinkStepTwo()
 }

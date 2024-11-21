@@ -40,8 +40,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import hci.mobile.poty.R
-import hci.mobile.poty.ui.components.BalanceCard
 import hci.mobile.poty.ui.components.BottomNavBar
+import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.components.RecipientCard
 import hci.mobile.poty.ui.theme.GreenDark
@@ -61,7 +61,7 @@ fun PaymentWithEmailScreenPreview(){
 }
 @Composable
 fun PaymentWithEmailScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenViewModel() }) {
-    //val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
@@ -145,8 +145,28 @@ fun PaymentWithEmailScreen(viewModel: PaymentScreenViewModel = remember { Paymen
                     Column(
                         modifier = Modifier.padding(15.dp)
                     ) {
-
-
+                        when (state.currentStep) {
+                            1 -> StepOne(
+                                email = state.email,
+                                onEmailChange = { viewModel.updateEmail(it) },
+                                onNext = { viewModel.nextStep() },
+                                errorMessage = state.errorMessage
+                            )
+                            2 -> StepTwo(
+                                number = state.request.amount,
+                                balance = state.balance,
+                                onNumberChange = { viewModel.updateAmount(it.toDouble()) },
+                                creditCards = state.creditCards,
+                                selectedCard = state.selectedCard,
+                                onCardSelected = { viewModel.selectCard(it) },
+                                paymentMethod = state.type,
+                                onPaymentTypeChange = {viewModel.onPaymentTypeChange(it)},
+                                onNavigateToAddCard = { /* Hay que agregar esto xd */ },
+                                onDeleteCard = { viewModel.onDeleteCard(it) },
+                                onSubmit = { viewModel.onSubmitPayment() },
+                                errorMessage = state.errorMessage
+                            )
+                        }
                     }
                 }
             }
@@ -194,12 +214,14 @@ fun StepOne(
 
 @Composable
 fun StepTwo(
-    number: Float,
+    number: Double,
+    balance: Double,
     onNumberChange: (Float) -> Unit,
     creditCards: List<CardResponse>,
     selectedCard: CardResponse? = null,
     onCardSelected: (CardResponse) -> Unit,
-    paymentMethod: String,
+    paymentMethod: PaymentType,
+    onPaymentTypeChange: (PaymentType) -> Unit,
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit,
     onSubmit: () -> Unit,
@@ -207,8 +229,7 @@ fun StepTwo(
 ) {
     var localNumber by remember { mutableStateOf(number) }
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
-    var localselectedOption by remember { mutableStateOf("Tarjeta") }
-
+    var localPaymentMethod by remember { mutableStateOf(paymentMethod) }
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -217,31 +238,37 @@ fun StepTwo(
     ) {
         NumberFieldWithLabel(
             label = "Monto a Enviar",
-            value = localNumber,
+            value = localNumber.toFloat(),
             onValueChange = {
-                localNumber = it
+                localNumber = it.toDouble()
                 onNumberChange(it)
             }
         )
 
 
         SelectOptionTextButton(
-            selectedOption = localselectedOption,
-            onOptionSelected = { localselectedOption = it }
+            selectedOption = localPaymentMethod,
+            onOptionSelected = { selectedOption ->
+                localPaymentMethod = selectedOption
+                onPaymentTypeChange(selectedOption)
+            }
         )
-        if(localselectedOption=="Tarjeta"){
-            PaymentCardsCarousel(
-                creditCards = creditCards,
-                selectedCard = localSelectedCard,
-                onCardSelected = onCardSelected,
-                onNavigateToAddCard = onNavigateToAddCard,
-                onDeleteCard = onDeleteCard
-            )
-        }
-        else{
 
-            
+        when (localPaymentMethod) {
+            PaymentType.CARD -> {
+                PaymentCardsCarousel(
+                    creditCards = creditCards,
+                    selectedCard = localSelectedCard,
+                    onCardSelected = onCardSelected,
+                    onNavigateToAddCard = onNavigateToAddCard,
+                    onDeleteCard = onDeleteCard
+                )
+            }
+            PaymentType.BALANCE -> {
+                PaymentBalanceCard(balance)
+            }
         }
+
         Button(
             onClick = { onSubmit() },
             modifier = Modifier
@@ -259,8 +286,8 @@ fun StepTwo(
 
 @Composable
 fun SelectOptionTextButton(
-    selectedOption: String,
-    onOptionSelected: (String) -> Unit
+    selectedOption: PaymentType,
+    onOptionSelected: (PaymentType) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -269,22 +296,22 @@ fun SelectOptionTextButton(
         horizontalArrangement = Arrangement.Center
     ) {
         TextButton(
-            onClick = { onOptionSelected("Tarjeta") },
+            onClick = { onOptionSelected(PaymentType.CARD) },
             modifier = Modifier.padding(end = 8.dp)
         ) {
             Text(
                 text = "Tarjeta",
-                color = if (selectedOption == "Tarjeta") GreenLight else GreyLight
+                color = if (selectedOption == PaymentType.CARD) GreenLight else GreyLight
             )
         }
 
         TextButton(
-            onClick = { onOptionSelected("Balance") },
+            onClick = { onOptionSelected(PaymentType.BALANCE) },
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text(
                 text = "Balance",
-                color = if (selectedOption == "Balance") GreenLight else GreyLight
+                color = if (selectedOption == PaymentType.BALANCE) GreenLight else GreyLight
             )
         }
     }
@@ -294,13 +321,11 @@ fun SelectOptionTextButton(
 @Preview
 @Composable
 fun SelectOptionButtonPreview() {
-    var selectedOption by remember { mutableStateOf("Tarjeta") }
-
+    var selectedOption by remember { mutableStateOf(PaymentType.CARD) }
     SelectOptionTextButton(
         selectedOption = selectedOption,
         onOptionSelected = { selectedOption = it }
     )
 
-    // Mostrar algo basado en la opción seleccionada
     Text("Opción seleccionada: $selectedOption")
 }

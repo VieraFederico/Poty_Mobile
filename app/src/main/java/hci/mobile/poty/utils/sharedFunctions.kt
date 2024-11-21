@@ -411,3 +411,36 @@ fun ThickTextFieldWithLabel(modifier: Modifier = Modifier,
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
     )
 }
+
+@Composable
+fun ReadOnlyNumberFieldWithLabel(
+    label: String,
+    value: Float = 0.0f,
+    isPassword: Boolean = false
+) {
+    Column {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .height(70.dp)
+                .border(
+                    BorderStroke(1.dp, Color.Black),
+                    RoundedCornerShape(10.dp)
+                )
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(
+                text = if (isPassword) "******" else value.toString(),
+                style = LocalTextStyle.current.copy(color = Color.Black, fontSize = 30.sp),
+                color = Color.Black
+            )
+        }
+    }
+}

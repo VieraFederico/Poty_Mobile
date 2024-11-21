@@ -68,3 +68,6 @@ val Typography.labelLargeLite: TextStyle
 
 val Typography.titleMediumLite: TextStyle
     get() = Typography.titleMedium.copy(fontWeight = FontWeight.Thin)
+
+val Typography.bodyLargeSemibold: TextStyle
+    get() = Typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold)
