@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
+import hci.mobile.poty.ui.components.LoginRegisterImageSection
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.utils.PasswordFieldWithLabel
@@ -54,7 +55,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .padding(innerPadding)
                 ) {
-                    LoginImageSection(
+                    LoginRegisterImageSection(
                         modifier = Modifier
                             .fillMaxHeight(),
                         windowSizeClass = windowSizeClass
@@ -85,13 +86,13 @@ fun LoginScreen(
                 ) {
 
                     if((windowSizeClass.isTablet() && windowSizeClass.isLandscape()) || !windowSizeClass.isTablet()){
-                        LoginImageSection(
+                        LoginRegisterImageSection(
                             modifier = Modifier
                                 .fillMaxWidth(),
                             windowSizeClass = windowSizeClass
                         )
                     }else{
-                        LoginImageSection(
+                        LoginRegisterImageSection(
                             modifier = Modifier
                                 .fillMaxWidth().fillMaxHeight(0.5f),
                             windowSizeClass = windowSizeClass
@@ -114,42 +115,6 @@ fun LoginScreen(
     }
 }
 
-@Composable
-fun LoginImageSection(
-    modifier: Modifier,
-    windowSizeClass: WindowSizeClass
-) {
-    val isLandscape = windowSizeClass.isLandscape()
-    val shape = if (isLandscape) {
-        RoundedCornerShape(topStart = 0.dp, topEnd = 16.dp, bottomStart = 0.dp, bottomEnd = 16.dp)
-    } else {
-        RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp, bottomStart = 16.dp, bottomEnd = 16.dp)
-    }
-
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        if (!isLandscape) {
-            Image(
-                painter = painterResource(id = R.drawable.loginreg),
-                contentDescription = "Login Image",
-                modifier = modifier
-                    .clip(shape)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            val height = if(windowSizeClass.isTablet()) 0.8f else 1f
-            Image(
-                painter = painterResource(id = R.drawable.login2),
-                contentDescription = "Login Image",
-                modifier = modifier.wrapContentSize(Alignment.Center).fillMaxWidth(0.5f).fillMaxHeight(height),
-                contentScale = ContentScale.Crop
-            )}
-
-    }
-
-}
 
 
 @Composable

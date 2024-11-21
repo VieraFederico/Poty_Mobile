@@ -3,6 +3,7 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,8 @@ import hci.mobile.poty.R
 import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
+import java.util.Calendar
+import java.util.TimeZone
 
 @Composable
 fun ErrorMessage(message: String) {
@@ -105,125 +108,177 @@ fun isValidDate(input: String): Boolean {
     return regex.matches(input)
 }
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompactDateFieldWithLabel(
     label: String,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    showCal: Boolean = true
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
-    val selectedDate = datePickerState.selectedDateMillis?.let {
-        convertMillisToDate(it)
-    } ?: value
+    val currentTimeMillis = System.currentTimeMillis() // Get the current time in milliseconds
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = currentTimeMillis)
 
-    Column {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
+    val datePickerColors = DatePickerDefaults.colors(
+        containerColor = Color(0xFFF0F0F0),
+        titleContentColor = Color.Black,
+        headlineContentColor = Color.Black,
+        weekdayContentColor = Color.Gray,
+        dayContentColor = Color.Black,
+        selectedDayContentColor = Color.White,
+        selectedDayContainerColor = Color.Gray,
 
-        OutlinedTextField(
-            value = value,
-            onValueChange = { newValue ->
-                if (isValidDate(newValue)) {
-                    onValueChange(newValue)
-                }
-            },
-            readOnly = false,
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Default.DateRange,
-                    contentDescription = "Select date"
-                )
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(50.dp))
-                .height(50.dp)
-                .background(Color.Transparent)
-                .border(
-                    BorderStroke(1.dp, Black),
-                    RoundedCornerShape(50.dp)
+    )
+
+    if (showCal) {
+        Column {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = value,
+                onValueChange = { newValue ->
+                    if (isValidDate(newValue)) {
+                        onValueChange(newValue)
+                    }
+                },
+                readOnly = false,
+                trailingIcon = {
+                    IconButton(onClick = { showDatePicker = true }) {
+                        Icon(
+                            imageVector = Icons.Default.DateRange,
+                            contentDescription = "Seleccionar fecha"
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(50.dp))
+                    .height(50.dp)
+                    .background(Color.Transparent)
+                    .border(
+                        BorderStroke(1.dp, Color.Black),
+                        RoundedCornerShape(50.dp)
+                    )
+                    .clickable { showDatePicker = true },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    cursorColor = Color.Black
                 ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedTextColor = Black,
-                unfocusedTextColor = Black,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                cursorColor = Black
-            ),
-            singleLine = true
-        )
+                singleLine = true
+            )
 
-        if (showDatePicker) {
-            Dialog(onDismissRequest = { showDatePicker = false }) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(16.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                ) {
-                    Column(
+            if (showDatePicker) {
+                Dialog(onDismissRequest = { showDatePicker = false }) {
+                    Card(
                         modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(16.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
                     ) {
-                        CompositionLocalProvider(
-                            LocalTextStyle provides TextStyle(color = Black)
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            DatePicker(
-                                state = datePickerState,
-                                showModeToggle = false,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(400.dp)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            TextButton(
-                                onClick = { showDatePicker = false }
+                            CompositionLocalProvider(
+                                LocalTextStyle provides TextStyle(color = Color.Black)
                             ) {
-                                Text("Cancelar", color = GreenDark)
+                                DatePicker(
+                                    state = datePickerState,
+                                    colors = datePickerColors,
+                                    showModeToggle = false,
+                                    title = { Text("Seleccionar Fecha") },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(500.dp)
+                                )
                             }
 
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
 
-                            Button(
-                                onClick = {
-                                    datePickerState.selectedDateMillis?.let {
-                                        onValueChange(convertMillisToDate(it))
-
-                                        showDatePicker = false
-                                    }
-                                }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
                             ) {
-                                Text("Confirmar", color = White)
+                                TextButton(
+                                    onClick = { showDatePicker = false }
+                                ) {
+                                    Text("Cancelar", color = Color.Gray)
+                                }
+
+                                Spacer(modifier = Modifier.width(8.dp))
+
+                                Button(
+                                    onClick = {
+                                        datePickerState.selectedDateMillis?.let {
+                                            val selectedDate = convertMillisToDate(it)
+                                            onValueChange(selectedDate)
+                                            showDatePicker = false
+                                        }
+                                    }
+                                ) {
+                                    Text("Confirmar", color = Color.White)
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    } else {
+        Column {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = value,
+                onValueChange = { newValue ->
+                    if (isValidDate(newValue)) {
+                        onValueChange(newValue)
+                    }
+                },
+                readOnly = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(50.dp))
+                    .height(50.dp)
+                    .background(Color.Transparent)
+                    .border(
+                        BorderStroke(1.dp, Color.Black),
+                        RoundedCornerShape(50.dp)
+                    ),
+                singleLine = true
+            )
+        }
     }
 }
 
 
 private fun convertMillisToDate(millis: Long): String {
+    val calendar = Calendar.getInstance()
+    calendar.time = Date(millis)
+    calendar.add(Calendar.DAY_OF_MONTH, 1)
+
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-    return formatter.format(Date(millis))
+    return formatter.format(calendar.time)
 }
+
 
 @Composable
 fun PasswordFieldWithLabel(
@@ -335,12 +390,15 @@ fun NumberFieldWithLabel(
 
 
 @Composable
-fun ThickTextFieldWithLabel(value: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {
+fun ThickTextFieldWithLabel(modifier: Modifier = Modifier,
+                            value: String,
+                            onValueChange: (String) -> Unit,
+                            isPassword: Boolean = false) {
 
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(50.dp))
             .height(90.dp)
