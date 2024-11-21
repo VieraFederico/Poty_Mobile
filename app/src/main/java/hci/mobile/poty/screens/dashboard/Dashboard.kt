@@ -33,6 +33,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -43,6 +44,8 @@ import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BalanceCard
 import java.time.LocalTime
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.MyApplication
+import hci.mobile.poty.screens.register.RegistrationViewModel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.components.TransactionHistory
 import hci.mobile.poty.ui.components.spendingCard
@@ -56,7 +59,9 @@ import hci.mobile.poty.ui.components.PaymentCardsCarousel
 
 @Composable
 fun Dashboard(
-    viewModel: DashboardViewModel = viewModel(),
+    viewModel: DashboardViewModel = viewModel(factory = DashboardViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
     onNavigateToCharge: () -> Unit,
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
