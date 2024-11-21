@@ -57,17 +57,18 @@ fun ErrorMessage(message: String) {
 
 @Composable
 fun TextFieldWithLabel(
+    modifier: Modifier = Modifier,
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false,
     maxLength: Int? = null,
-    regex: Regex? = null
+    regex: Regex? = null,
 ) {
     Text(
         text = label,
         style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.padding(bottom = 8.dp)
+        modifier = modifier.padding(bottom = 8.dp)
     )
     OutlinedTextField(
         value = value,
@@ -76,7 +77,7 @@ fun TextFieldWithLabel(
                 onValueChange(newValue)
             }
         },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(50.dp))
             .height(50.dp)
@@ -226,6 +227,7 @@ private fun convertMillisToDate(millis: Long): String {
 
 @Composable
 fun PasswordFieldWithLabel(
+    modifier: Modifier = Modifier,
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -237,13 +239,13 @@ fun PasswordFieldWithLabel(
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(start = 15.dp, bottom = 8.dp)
+            modifier = modifier.padding(start = 15.dp, bottom = 8.dp)
         )
 
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(50.dp))
                 .height(56.dp)
@@ -262,7 +264,7 @@ fun PasswordFieldWithLabel(
                         painter = painterResource(id = if (isPasswordVisible) R.drawable.eye else R.drawable.eye_off),
                         contentDescription = if (isPasswordVisible) "Ocular Contraseña" else "Mostrar Contraseña",
                         tint = Black,
-                        modifier = Modifier.size(35.dp)
+                        modifier = modifier.size(35.dp)
                     )
                 }
             }
