@@ -1,6 +1,6 @@
 package hci.mobile.poty.screens.payment
 
-import CardResponse
+import hci.mobile.poty.classes.CardResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow

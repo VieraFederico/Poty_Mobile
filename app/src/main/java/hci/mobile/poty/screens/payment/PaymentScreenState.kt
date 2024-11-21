@@ -1,7 +1,7 @@
 package hci.mobile.poty.screens.payment
 
-import CardResponse
 import androidx.compose.runtime.mutableStateListOf
+import hci.mobile.poty.classes.CardResponse
 
 data class PaymentScreenState(
     val currentStep: Int = 1,

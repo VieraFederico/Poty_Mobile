@@ -1,7 +1,8 @@
 package hci.mobile.poty.screens.cvu
 
-import UserResponse
-import WalletDetailsResponse
+
+import hci.mobile.poty.classes.User
+import hci.mobile.poty.classes.WalletDetailsResponse
 
 data class CVUScreenState(
     val alias: String = "",
@@ -13,5 +14,5 @@ data class CVUScreenState(
 
 data class CVUDetailsResponse(
     val walletDetails: WalletDetailsResponse,
-    val userDetails: UserResponse
+    val userDetails: User
 )
