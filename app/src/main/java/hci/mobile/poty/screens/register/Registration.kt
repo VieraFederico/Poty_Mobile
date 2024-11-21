@@ -1,6 +1,5 @@
 package hci.mobile.poty.screens.register
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,8 +19,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.ui.components.LoginRegisterImageSection
 import hci.mobile.poty.utils.isLandscape
 import hci.mobile.poty.utils.isTablet
-
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,15 +52,25 @@ import hci.mobile.poty.utils.ThickTextFieldWithLabel
 fun RegistrationScreen(
     onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null
+    mockWindowSizeClass: WindowSizeClass? = null,
+    mockViewModel: Boolean = false
 ) {
-    val viewModel: RegistrationViewModel = viewModel(factory = RegistrationViewModel.provideFactory(
-        LocalContext.current.applicationContext as MyApplication
-        )
-    )
 
-    val state = viewModel.state
-    val isRegistrationSuccessful = viewModel.isRegistrationSuccessful
+    val state: RegistrationState
+    val isRegistrationSuccessful: Boolean
+    val onEvent: (RegistrationEvent) -> Unit
+
+    if (!mockViewModel) {
+        val viewModel: RegistrationViewModel = viewModel(factory = RegistrationViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+        state = viewModel.state
+        isRegistrationSuccessful = viewModel.isRegistrationSuccessful
+        onEvent = { viewModel.onEvent(it) }
+    } else {
+        val viewModel: MockRegistrationViewModel = viewModel()
+        state = viewModel.state.collectAsState().value
+        isRegistrationSuccessful = viewModel.isRegistrationSuccessful.collectAsState().value
+        onEvent = { viewModel.onEvent(it) }
+    }
 
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
     val isLandscape = windowSizeClass.isLandscape()
@@ -108,7 +115,7 @@ fun RegistrationScreen(
                             .weight(1f)
                             .fillMaxHeight(),
                         state = state,
-                        viewModel = viewModel,
+                        onEvent = onEvent,
                         onNavigateToLogin = onNavigateToLogin,
                         contentPadding = contentPadding,
                         windowSizeClass = windowSizeClass
@@ -131,7 +138,7 @@ fun RegistrationScreen(
                         modifier = Modifier
                             .fillMaxWidth(),
                         state = state,
-                        viewModel = viewModel,
+                        onEvent = onEvent,
                         onNavigateToLogin = onNavigateToLogin,
                         contentPadding = contentPadding,
                         windowSizeClass = windowSizeClass
@@ -199,7 +206,7 @@ fun LoginNavigationText(
 fun RegistrationContentSection(
     modifier: Modifier,
     state: RegistrationState,
-    viewModel: RegistrationViewModel,
+    onEvent: (RegistrationEvent) -> Unit,
     onNavigateToLogin: () -> Unit,
     contentPadding: Dp,
     windowSizeClass: WindowSizeClass
@@ -219,25 +226,25 @@ fun RegistrationContentSection(
                 name = state.name,
                 surname = state.surname,
                 birthDate = state.birthday,
-                onNameChange = { viewModel.onEvent(RegistrationEvent.UpdateName(it)) },
-                onSurnameChange = { viewModel.onEvent(RegistrationEvent.UpdateSurname(it)) },
-                onBirthdayChange = { viewModel.onEvent(RegistrationEvent.UpdateBirthday(it)) },
-                onNext = { viewModel.onEvent(RegistrationEvent.NextStep) },
+                onNameChange = { onEvent(RegistrationEvent.UpdateName(it)) },
+                onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) },
+                onBirthdayChange = { onEvent(RegistrationEvent.UpdateBirthday(it)) },
+                onNext = { onEvent(RegistrationEvent.NextStep) },
                 errorMessage = state.errorMessage,
                 windowSizeClass = windowSizeClass,
-                onBackClick = { viewModel.onEvent(RegistrationEvent.PreviousStep) },
+                onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
                 onNavigateToLogin = onNavigateToLogin
             )
 
             2 -> StepTwo(
                 email = state.email,
                 password = state.password,
-                onEmailChange = { viewModel.onEvent(RegistrationEvent.UpdateEmail(it)) },
-                onPasswordChange = { viewModel.onEvent(RegistrationEvent.UpdatePassword(it)) },
-                onNext = { viewModel.onEvent(RegistrationEvent.NextStep) },
+                onEmailChange = { onEvent(RegistrationEvent.UpdateEmail(it)) },
+                onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
+                onNext = { onEvent(RegistrationEvent.NextStep) },
                 errorMessage = state.errorMessage,
                 windowSizeClass = windowSizeClass,
-                onBackClick = { viewModel.onEvent(RegistrationEvent.PreviousStep) },
+                onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
                 onNavigateToLogin = onNavigateToLogin
             )
 
@@ -245,12 +252,12 @@ fun RegistrationContentSection(
                 confirmationCode = state.confirmationCode,
                 email = state.email,
                 onConfirmationCodeChange = {
-                    viewModel.onEvent(RegistrationEvent.UpdateConfirmationCode(it))
+                    onEvent(RegistrationEvent.UpdateConfirmationCode(it))
                 },
-                onSubmit = { viewModel.onEvent(RegistrationEvent.Submit) },
+                onSubmit = { onEvent(RegistrationEvent.Submit) },
                 errorMessage = state.errorMessage,
                 windowSizeClass = windowSizeClass,
-                onBackClick = { viewModel.onEvent(RegistrationEvent.PreviousStep) },
+                onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
                 onNavigateToLogin = onNavigateToLogin
             )
         }
@@ -482,7 +489,6 @@ fun StepThree(
 }
 
 @Composable
-
 fun RegistrationTitle(
     currentStep: Int,
     windowSizeClass: WindowSizeClass,
@@ -497,6 +503,8 @@ fun RegistrationTitle(
 }
 
 
+
+
 @Preview(
     name = "Medium Phone Portrait",
     device = "spec:width=411dp,height=914dp",
@@ -507,21 +515,23 @@ fun RegistrationScreenMediumPhonePortraitPreview() {
     RegistrationScreen(
         onRegisterSuccess = {},
         onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
+        mockWindowSizeClass = WindowSizeClass.MediumPhone,
+        mockViewModel = true
     )
 }
 
 @Preview(
     name = "Medium Phone Landscape",
     device = "spec:width=914dp,height=411dp",
-    showBackground = true
+    showBackground = true,
 )
 @Composable
 fun RegistrationScreenMediumPhoneLandscapePreview() {
     RegistrationScreen(
         onRegisterSuccess = {},
         onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
+        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape,
+        mockViewModel = true
     )
 }
 
@@ -535,7 +545,8 @@ fun RegistrationScreenMediumTabletPortraitPreview() {
     RegistrationScreen(
         onRegisterSuccess = {},
         onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
+        mockWindowSizeClass = WindowSizeClass.MediumTablet,
+        mockViewModel = true
     )
 }
 
@@ -549,9 +560,11 @@ fun RegistrationScreenMediumTabletLandscapePreview() {
     RegistrationScreen(
         onRegisterSuccess = {},
         onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
+        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape,
+        mockViewModel = true
     )
 }
+
 
 
 
