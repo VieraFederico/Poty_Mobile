@@ -49,9 +49,7 @@ import hci.mobile.poty.ui.components.spendingCard
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
-
-
-
+import hci.mobile.poty.utils.isTablet
 
 
 @Composable
@@ -69,13 +67,13 @@ fun Dashboard(
     val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
     // Determine if the device is a phone in portrait mode
-    val isPhonePortrait = windowSizeClass == WindowSizeClass.MediumPhone && !isLandscape
+    val isPhonePortrait = windowSizeClass == WindowSizeClass.MediumPhone
 
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         ResponsiveNavBar(
             onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass
+            mockWindowSizeClass = mockWindowSizeClass,
         ) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
@@ -123,8 +121,8 @@ fun Dashboard(
                     ) {
                         HeaderSection(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(if (windowSizeClass == WindowSizeClass.MediumPhone) 0.27f else 0.3f),
+                                .fillMaxWidth().fillMaxHeight(if (windowSizeClass == WindowSizeClass.MediumPhone) 0.22f else 0.3f),
+
                             contentPadding = contentPadding,
                             state = state,
                             onToggleVisibility = { viewModel.toggleBalanceVisibility() },
@@ -134,8 +132,7 @@ fun Dashboard(
 
                         ContentSection(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
+                                .fillMaxWidth().fillMaxHeight(),
                             contentPadding = contentPadding,
                             state = state,
                             onNavigateToCharge = onNavigateToCharge,
@@ -194,7 +191,7 @@ fun HeaderSection(
 
                 if (showTransactionHistory) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    TransactionHistory(transactions = state.transactions)
+                    TransactionHistory(transactions = state.transactions, useWhite = true)
                 }
             }
         }
@@ -327,7 +324,9 @@ fun ContentSection(
                     contentDescription = "CVU"
                 )
             }
-            spendingCard(spent = state.spent)
+            if(windowSizeClass.isTablet()){
+                spendingCard(spent = state.spent)
+            }
             PaymentCardsCarousel(
                 creditCards = state.creditCards,
                 selectedCard = null,

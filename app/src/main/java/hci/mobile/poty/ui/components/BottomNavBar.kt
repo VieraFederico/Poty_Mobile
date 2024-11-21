@@ -20,6 +20,107 @@ import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 
+//
+//@Composable
+//fun BottomNavBar(
+//    onNavigate: (String) -> Unit,
+//    mockWindowSizeClass: WindowSizeClass? = null
+//) {
+//    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+//    val isTablet = when (windowSizeClass) {
+//        WindowSizeClass.MediumTablet,
+//        WindowSizeClass.MediumTabletLandscape -> true
+//        else -> false
+//    }
+//
+//    val newHeight = if (isTablet) 130.dp else 100.dp
+//
+//
+//    NavigationBar (
+//        modifier = Modifier.height(newHeight),
+//        containerColor = GreyLight
+//    ){
+//        NavigationBarItem(
+//            icon = {
+//                Icon(
+//                    Icons.Default.Notifications,
+//                    contentDescription = "Notifications",
+//                    modifier = Modifier.size(25.dp),
+//                    tint = Color.DarkGray
+//                )
+//            },
+//            selected = false,
+//            onClick = { onNavigate("notifications") }
+//        )
+//
+//        NavigationBarItem(
+//            icon = {
+//                Icon(
+//                    Icons.Default.Home,
+//                    contentDescription = "Home",
+//                    modifier = Modifier.size(25.dp),
+//                    tint = Color.DarkGray
+//                )
+//            },
+//            selected = false,
+//            onClick = { onNavigate("home") }
+//        )
+//
+//        NavigationBarItem(
+//            icon = {
+//                Surface(
+//                    shape = CircleShape,
+//                    color = MaterialTheme.colorScheme.primary,
+//                    modifier = Modifier.size(70.dp)  // Increased circle size
+//                ) {
+//                    Icon(
+//                        painter = painterResource(id = R.drawable.qr),
+//                        contentDescription = "QR",
+//                        tint = White,
+//                        modifier = Modifier.padding(10.dp)  // Decreased QR icon size
+//                    )
+//                }
+//            },
+//            selected = false,
+//            onClick = { onNavigate("qr_scanner") }
+//        )
+//
+//        NavigationBarItem(
+//            icon = {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.trending_up),
+//                    contentDescription = "Inversiones",
+//                    tint = Color.DarkGray,
+//                    modifier = Modifier.size(25.dp)
+//                )
+//            },
+//            selected = false,
+//            onClick = { onNavigate("investments") }
+//        )
+//
+//        NavigationBarItem(
+//            icon = {
+//                Icon(
+//                    Icons.Default.Settings,
+//                    contentDescription = "Settings",
+//                    modifier = Modifier.size(25.dp),
+//                    tint = Color.DarkGray
+//                )
+//            },
+//            selected = false,
+//            onClick = { onNavigate("settings") }
+//        )
+//    }
+//}
+//
+//
+//@Preview(showBackground = true, widthDp = 750, heightDp = 1200)
+//@Composable
+//fun BottomNavBarPreview() {
+//    PotyTheme {
+//        BottomNavBar(onNavigate = { }, mockWindowSizeClass = WindowSizeClass.MediumTablet)
+//    }
+//}
 
 @Composable
 fun BottomNavBar(
@@ -33,13 +134,12 @@ fun BottomNavBar(
         else -> false
     }
 
-    val newHeight = if (isTablet) 130.dp else 70.dp
+    val newHeight = if (isTablet) 130.dp else 95.dp
 
-
-    NavigationBar (
+    NavigationBar(
         modifier = Modifier.height(newHeight),
         containerColor = GreyLight
-    ){
+    ) {
         NavigationBarItem(
             icon = {
                 Icon(
@@ -71,13 +171,13 @@ fun BottomNavBar(
                 Surface(
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(70.dp)  // Increased circle size
+                    modifier = Modifier.size(70.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.qr),
                         contentDescription = "QR",
                         tint = White,
-                        modifier = Modifier.padding(10.dp)  // Decreased QR icon size
+                        modifier = Modifier.padding(10.dp)
                     )
                 }
             },
@@ -89,7 +189,7 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.trending_up),
-                    contentDescription = "Inversiones",
+                    contentDescription = "Investments",
                     tint = Color.DarkGray,
                     modifier = Modifier.size(25.dp)
                 )
@@ -110,14 +210,5 @@ fun BottomNavBar(
             selected = false,
             onClick = { onNavigate("settings") }
         )
-    }
-}
-
-
-@Preview(showBackground = true, widthDp = 750, heightDp = 1200)
-@Composable
-fun BottomNavBarPreview() {
-    PotyTheme {
-        BottomNavBar(onNavigate = { }, mockWindowSizeClass = WindowSizeClass.MediumTablet)
     }
 }

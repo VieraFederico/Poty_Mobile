@@ -50,8 +50,13 @@ fun TrasactionHistoryPreview(){
 @Composable
 fun TransactionHistory(
     transactions: List<Transaction>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    useWhite: Boolean = false
 ) {
+
+    val containerColor = if(useWhite) Color.White else GreenDark
+    val textColor = if(useWhite) Color.Black else Color.White
+
     Column(modifier = modifier.fillMaxWidth()) {
         Card(
             modifier = Modifier
@@ -59,13 +64,13 @@ fun TransactionHistory(
                 .padding(start=16.dp,end=16.dp,bottom=8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(
-            containerColor = GreenDark
+            containerColor = containerColor
             )
         ) {
             Text(
                 text = "Historial de Movimientos",
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
+                color = textColor,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -78,7 +83,7 @@ fun TransactionHistory(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(transactions) { transaction ->
-                TransactionCard(transaction = transaction)
+                TransactionCard(transaction = transaction, useWhite = useWhite)
             }
         }
     }
@@ -86,13 +91,17 @@ fun TransactionHistory(
 
 
 @Composable
-fun TransactionCard(transaction: Transaction) {
+fun TransactionCard(transaction: Transaction,
+    useWhite: Boolean = false
+    ) {
+    val containerColor = if(useWhite) Color.White else GreenDark
+    val textColor = if(useWhite) Color.Black else Color.White
     // Use your GreenDark color for the card background
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = GreenDark // Replace with your actual GreenDark color
+            containerColor = containerColor
         )
     ) {
         Row(
@@ -127,14 +136,14 @@ fun TransactionCard(transaction: Transaction) {
                         text = transaction.description,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium,
-                        color = Color.White // Text color set to white
+                        color = textColor
                     )
                     Text(
                         text = transaction.timestamp.format(
                             DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White // Text color set to white
+                        color = textColor
                     )
                 }
             }
