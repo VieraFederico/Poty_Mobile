@@ -1,6 +1,6 @@
 package hci.mobile.poty.screens.dashboard
 
-import CardResponse
+import hci.mobile.poty.classes.CardResponse
 import androidx.compose.runtime.mutableStateListOf
 import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.classes.Transaction

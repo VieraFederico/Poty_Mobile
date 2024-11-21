@@ -1,6 +1,6 @@
 package hci.mobile.poty.ui.components
 
-import CardResponse
+import hci.mobile.poty.classes.CardResponse
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

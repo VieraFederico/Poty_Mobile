@@ -1,6 +1,6 @@
 package hci.mobile.poty.screens.payment
 
-import CardResponse
+import hci.mobile.poty.classes.CardResponse
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

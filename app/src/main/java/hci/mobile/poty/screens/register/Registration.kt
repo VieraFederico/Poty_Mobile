@@ -39,20 +39,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import hci.mobile.poty.R
-import hci.mobile.poty.ui.theme.PotyTheme
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
 
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+
 import hci.mobile.poty.MyApplication
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.TextFieldWithLabel
@@ -73,10 +62,9 @@ fun RegistrationScreen(
         )
     )
 
-    val state by viewModel.state.collectAsState()
-    //val state = viewModel.state
-    //val isRegistrationSuccessful = viewModel.isRegistrationSuccessful
-    val isRegistrationSuccessful = viewModel.isRegistrationSuccessful.collectAsState()
+    val state = viewModel.state
+    val isRegistrationSuccessful = viewModel.isRegistrationSuccessful
+
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
     val isLandscape = windowSizeClass.isLandscape()
     val contentPadding = if (windowSizeClass.isTablet()) 32.dp else if(!windowSizeClass.isLandscape()) 16.dp else 8.dp
