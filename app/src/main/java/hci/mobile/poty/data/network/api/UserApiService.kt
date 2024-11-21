@@ -17,4 +17,9 @@ interface UserApiService {
 
     @GET("user")
     suspend fun getCurrentUser(): Response<NetworkUser>
+
+    @POST("user")
+    suspend fun register(@Body user: NetworkUser): Response<NetworkUser>
+
+
 }

@@ -29,6 +29,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.TextFieldWithLabel
 
@@ -37,13 +40,15 @@ import hci.mobile.poty.utils.ThickTextFieldWithLabel
 
 @Composable
 fun RegistrationScreen(
-    onRegisterSuccess: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onRegisterSuccess: () -> Unit
 ) {
-    val viewModel = remember { RegistrationViewModel() }
-    val state by viewModel.state.collectAsState()
-    val isRegistrationSuccessful by viewModel.isRegistrationSuccessful.collectAsState()
+    val viewModel: RegistrationViewModel = viewModel(factory = RegistrationViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+        )
+    )
 
+    val state = viewModel.state
+    val isRegistrationSuccessful = viewModel.isRegistrationSuccessful
 
     LaunchedEffect(isRegistrationSuccessful) {
         if (isRegistrationSuccessful) {
@@ -130,7 +135,6 @@ fun RegistrationScreen(
         }
     }
 }
-
 
 
 @Composable
@@ -320,7 +324,6 @@ fun StepThree(
 @Composable
 fun RegisterScreenPreview() {
     RegistrationScreen(
-        onRegisterSuccess = {},
-        onNavigateToLogin = {}
+        onRegisterSuccess = {}
     )
 }

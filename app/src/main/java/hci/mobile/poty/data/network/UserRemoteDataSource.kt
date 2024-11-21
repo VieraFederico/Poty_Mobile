@@ -25,4 +25,9 @@ class UserRemoteDataSource(
     suspend fun getCurrentUser(): NetworkUser {
         return handleApiResponse { userApiService.getCurrentUser() }
     }
+
+    suspend fun register(user: NetworkUser): NetworkUser {
+        return handleApiResponse { userApiService.register(user) }
+    }
+
 }

@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
+
 object RetrofitClient {
     // No usar localhost o la IP 127.0.0.1 porque es la interfaz de loopback
     // del emulador. La forma de salir del emulador para acceder al localhost

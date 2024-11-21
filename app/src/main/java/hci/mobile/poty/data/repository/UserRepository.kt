@@ -2,6 +2,7 @@ package hci.mobile.poty.data.repository
 
 import hci.mobile.poty.data.model.User
 import hci.mobile.poty.data.network.UserRemoteDataSource
+import hci.mobile.poty.data.network.model.NetworkUser
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -33,4 +34,9 @@ class UserRepository(
 
         return currentUserMutex.withLock { this.currentUser }
     }
+
+    suspend fun register(user: User): User {
+        return remoteDataSource.register(user.asNetworkModel()).asModel()
+    }
+
 }

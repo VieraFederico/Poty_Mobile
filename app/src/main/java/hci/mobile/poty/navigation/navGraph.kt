@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import hci.mobile.poty.api.WalletApiManager
 import hci.mobile.poty.screens.dashboard.Dashboard
 import hci.mobile.poty.screens.landing.LandingScreen
 import hci.mobile.poty.screens.login.LoginScreen
