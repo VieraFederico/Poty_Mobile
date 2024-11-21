@@ -1,5 +1,6 @@
 package hci.mobile.poty.data.repository
 
+import hci.mobile.poty.data.model.Balance
 import hci.mobile.poty.data.model.Card
 import hci.mobile.poty.data.network.WalletRemoteDataSource
 import kotlinx.coroutines.sync.Mutex
@@ -38,5 +39,10 @@ class WalletRepository(
         cardsMutex.withLock {
             this.cards = emptyList()
         }
+    }
+
+    suspend fun getBalance() : Balance {
+        return remoteDataSource.getBalance().asModel()
+
     }
 }

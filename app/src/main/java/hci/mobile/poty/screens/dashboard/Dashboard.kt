@@ -263,67 +263,6 @@ fun Greeting(
 }
 
 
-//@Composable
-//fun Greeting(
-//    name: String,
-//    windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone
-//) {
-//    val currentTime = LocalTime.now().hour
-//
-//    val greeting = when {
-//        currentTime in 5..11 -> "¡Buenos Días,"
-//        currentTime in 12..17 -> "¡Buenas Tardes,"
-//        else -> "¡Buenas Noches,"
-//    }
-//
-//    val isTablet = windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape
-//
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(10.dp)
-//    ) {
-//        if (windowSizeClass == WindowSizeClass.MediumTablet) {
-//            // Unified and larger greeting for tablets
-//            Text(
-//                text = "$greeting $name!",
-//                style = MaterialTheme.typography.titleLarge,
-//                color = White
-//            )
-//        } else if(windowSizeClass == WindowSizeClass.MediumTabletLandscape){
-//            Text(
-//                text = greeting,
-//                style = MaterialTheme.typography.titleLarge,
-//                color = White
-//            )
-//            Text(
-//                text = "$name!",
-//                style = MaterialTheme.typography.titleLarge,
-//                color = White
-//            )
-//        }
-//        else if(windowSizeClass == WindowSizeClass.MediumPhone) {
-//            Text(
-//                text = "$greeting $name!",
-//                style = MaterialTheme.typography.titleSmall,
-//                color = White
-//            )
-//        }else{
-//            Text(
-//                text = greeting,
-//                style = MaterialTheme.typography.titleSmall,
-//                color = White
-//            )
-//            Text(
-//                text = "$name!",
-//                style = MaterialTheme.typography.titleSmallSemiBold,
-//                color = White
-//            )
-//        }
-//    }
-//}
-
 @Composable
 fun ContentSection(
     modifier: Modifier,

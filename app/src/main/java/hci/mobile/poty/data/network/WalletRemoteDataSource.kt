@@ -1,6 +1,7 @@
 package hci.mobile.poty.data.network
 
 import hci.mobile.poty.data.network.api.WalletApiService
+import hci.mobile.poty.data.network.model.NetworkBalance
 import hci.mobile.poty.data.network.model.NetworkCard
 
 class WalletRemoteDataSource(
@@ -22,6 +23,12 @@ class WalletRemoteDataSource(
     suspend fun deleteCard(cardId: Int) {
         handleApiResponse {
             walletApiService.deleteCard(cardId)
+        }
+    }
+
+    suspend fun getBalance() : NetworkBalance {
+        return handleApiResponse {
+            walletApiService.getBalance()
         }
     }
 }

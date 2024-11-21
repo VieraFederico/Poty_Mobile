@@ -1,5 +1,6 @@
 package hci.mobile.poty.data.network.api
 
+import hci.mobile.poty.data.network.model.NetworkBalance
 import hci.mobile.poty.data.network.model.NetworkCard
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,4 +19,7 @@ interface WalletApiService {
 
     @DELETE("wallet/cards/{cardId}")
     suspend fun deleteCard(@Path("cardId") cardId: Int): Response<Unit>
+
+    @GET("wallet/balance")
+    suspend fun getBalance() : Response<NetworkBalance>
 }

@@ -1,16 +1,22 @@
 package hci.mobile.poty.screens.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.classes.LoginForm
 import hci.mobile.poty.classes.User
+import hci.mobile.poty.data.repository.UserRepository
 import hci.mobile.poty.screens.register.RegistrationEvent
+import hci.mobile.poty.screens.register.RegistrationViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel( ) {
+class LoginViewModel(
+    private val userRepository: UserRepository
+) : ViewModel() {
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
 
@@ -49,25 +55,34 @@ class LoginViewModel : ViewModel( ) {
         }
     }
 
-    // Simula el proceso de login
     private fun loginUser() {
         viewModelScope.launch {
             try {
                 _state.value = _state.value.copy(isLoading = true) // Cambia el estado a cargando
 
-                // Realizar acción de login (reemplazar con llamada a API real)
-                // Supongamos que el login es exitoso:
-                val user = LoginForm(email = _state.value.email, password = _state.value.password)
 
-                // Llamada a la API para loguear al usuario
+                userRepository.login(_state.value.email, _state.value.password)
 
                 _state.value = _state.value.copy(isLoading = false, errorMessage = "")
 
-                // Aquí navegarías a la siguiente pantalla o mostrarías un mensaje de éxito
                 onLoginSuccess?.invoke()
 
             } catch (e: Exception) {
                 _state.value = _state.value.copy(isLoading = false, errorMessage = e.message ?: "Error durante el inicio de sesión")
+            }
+        }
+    }
+    companion object {
+        const val TAG = "UI Layer"
+
+        fun provideFactory(
+            app: MyApplication
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return LoginViewModel(
+                    app.userRepository
+                ) as T
             }
         }
     }

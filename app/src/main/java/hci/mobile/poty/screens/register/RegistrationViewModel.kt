@@ -180,6 +180,8 @@ private fun isValidDate(date: String): Boolean {
     }
 
     companion object {
+        const val TAG = "UI Layer"
+
         fun provideFactory(
             app: MyApplication
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
