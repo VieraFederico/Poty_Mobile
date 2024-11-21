@@ -73,7 +73,7 @@ dependencies {
     implementation(libs.converter.kotlinx.serialization)
 
      implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.play.services.cast.framework)
+    //implementation(libs.play.services.cast.framework)
 
 
 

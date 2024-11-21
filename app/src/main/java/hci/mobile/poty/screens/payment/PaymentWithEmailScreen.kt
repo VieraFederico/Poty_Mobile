@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -164,7 +165,9 @@ fun PaymentWithEmailScreen(viewModel: PaymentScreenViewModel = remember { Paymen
                                 onNavigateToAddCard = { /* Hay que agregar esto xd */ },
                                 onDeleteCard = { viewModel.onDeleteCard(it) },
                                 onSubmit = { viewModel.onSubmitPayment() },
-                                errorMessage = state.errorMessage
+                                errorMessage = state.errorMessage,
+                                description = state.description,
+                                onDescriptionChange = {viewModel.onDescriptionChange(it)}
                             )
                         }
                     }
@@ -226,6 +229,8 @@ fun StepTwo(
     onDeleteCard: (Int) -> Unit,
     onSubmit: () -> Unit,
     errorMessage: String,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
 ) {
     var localNumber by remember { mutableStateOf(number) }
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
@@ -245,6 +250,16 @@ fun StepTwo(
             }
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        TextFieldWithLabel(
+            label = "Descripcion",
+            value = description,
+            onValueChange = onDescriptionChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         SelectOptionTextButton(
             selectedOption = localPaymentMethod,

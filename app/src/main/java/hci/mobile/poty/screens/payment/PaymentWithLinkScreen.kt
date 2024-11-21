@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -147,7 +148,6 @@ fun PaymentWithLinkScreen(viewModel: PaymentScreenViewModel = remember { Payment
                             2 -> LinkStepTwo(
                                 number = state.request.amount,
                                 balance = state.balance,
-                                onNumberChange = { viewModel.updateAmount(it.toDouble()) },
                                 creditCards = state.creditCards,
                                 selectedCard = state.selectedCard,
                                 onCardSelected = { viewModel.selectCard(it) },
@@ -156,7 +156,9 @@ fun PaymentWithLinkScreen(viewModel: PaymentScreenViewModel = remember { Payment
                                 onNavigateToAddCard = { /* Hay que agregar esto xd */ },
                                 onDeleteCard = { viewModel.onDeleteCard(it) },
                                 onSubmit = { viewModel.onSubmitPayment() },
-                                errorMessage = state.errorMessage
+                                errorMessage = state.errorMessage,
+                                description = state.description,
+                                onDescriptionChange = {viewModel.onDescriptionChange(it)}
                             )
                         }
                     }
@@ -215,7 +217,6 @@ fun LinkStepOne(
 fun LinkStepTwo(
     number: Double,
     balance: Double,
-    onNumberChange: (Float) -> Unit,
     creditCards: List<CardResponse>,
     selectedCard: CardResponse? = null,
     onCardSelected: (CardResponse) -> Unit,
@@ -225,6 +226,8 @@ fun LinkStepTwo(
     onDeleteCard: (Int) -> Unit,
     onSubmit: () -> Unit,
     errorMessage: String,
+    description: String,
+    onDescriptionChange: (String) -> Unit,
 ){
     var localNumber by remember { mutableStateOf(number) }
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
@@ -240,6 +243,16 @@ fun LinkStepTwo(
             value = localNumber.toFloat(),
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
+
+        TextFieldWithLabel(
+            label = "Descripcion",
+            value = description,
+            onValueChange = onDescriptionChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         SelectOptionTextButton(
             selectedOption = localPaymentMethod,

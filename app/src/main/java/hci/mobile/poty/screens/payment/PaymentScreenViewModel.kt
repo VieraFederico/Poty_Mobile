@@ -17,7 +17,8 @@ class PaymentScreenViewModel : ViewModel() {
                 amount = 0.0,
                 description = "",
                 receiverEmail = ""
-            )
+            ),
+            description = "",
         )
     )
     val state: StateFlow<PaymentScreenState> = _state
@@ -114,15 +115,15 @@ class PaymentScreenViewModel : ViewModel() {
                     PaymentRequest.CardPayment(
                         amount = state.request.amount,
                         description = state.request.description,
-                        cardId = state.selectedCard?.id ?: 0, // Si no hay tarjeta seleccionada, usamos 0
-                        receiverEmail = state.email // Suponiendo que es necesario el email del receptor
+                        cardId = state.selectedCard?.id ?: 0,
+                        receiverEmail = state.email
                     )
                 }
                 PaymentType.BALANCE -> {
                     PaymentRequest.BalancePayment(
                         amount = state.request.amount,
                         description = state.request.description,
-                        receiverEmail = state.email // Suponiendo que es necesario el email del receptor
+                        receiverEmail = state.email
                     )
                 }
                 else -> {
@@ -156,5 +157,9 @@ class PaymentScreenViewModel : ViewModel() {
         _state.update { currentState ->
             currentState.copy(creditCards = currentState.creditCards.filter { it.id != cardId })
         }
+    }
+
+    fun onDescriptionChange(newDescription: String) {
+        _state.update { it.copy(description = newDescription, errorMessage = "") }
     }
 }

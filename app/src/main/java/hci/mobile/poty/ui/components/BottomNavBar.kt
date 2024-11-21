@@ -71,7 +71,7 @@ fun BottomNavBar(
                 Surface(
                     shape = CircleShape,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(70.dp)  // Increased circle size
+                    modifier = Modifier.size(70.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.qr),
