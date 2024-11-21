@@ -43,3 +43,24 @@ data class WalletDetailsResponse(
     val cbu: String,
     val alias: String
 )
+
+data class PaymentResponse(
+    val id: Int,
+    val type: String,
+    val amount: Double,
+    val balanceBefore: Double,
+    val balanceAfter: Double,
+    val pending: Boolean,
+    val linkUuid: String?,
+    val createdAt: String,
+    val updatedAt: String,
+    val card: CardDetails? // Card details, if available
+)
+
+data class CardDetails(
+    val id: Int,
+    val number: String,
+    val expirationDate: String,
+    val fullName: String,
+    val type: String
+)

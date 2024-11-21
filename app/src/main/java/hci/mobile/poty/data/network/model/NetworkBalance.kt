@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class NetworkBalance (
-    var balance: Double
+    var balance: Float
 )
 {
     fun asModel(): Balance {

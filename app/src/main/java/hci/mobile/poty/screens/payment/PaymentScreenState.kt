@@ -1,7 +1,9 @@
 package hci.mobile.poty.screens.payment
 
 import androidx.compose.runtime.mutableStateListOf
+import hci.mobile.poty.classes.CardDetails
 import hci.mobile.poty.classes.CardResponse
+import hci.mobile.poty.classes.PaymentResponse
 
 data class PaymentScreenState(
     val currentStep: Int = 1,
@@ -24,11 +26,50 @@ data class PaymentScreenState(
         )
     ),
     val email: String = "",
+    val description: String,
     val paymentLink: String = "",
     val type: PaymentType = PaymentType.CARD,
     val request: PaymentRequest,
     val isLoading: Boolean = false,
     val errorMessage: String = "",
+    val paymentHistory: List<PaymentResponse> = mutableStateListOf(
+        PaymentResponse(
+        id = 1,
+        type = "CARD",
+        amount = 150.0,
+        balanceBefore = 0.0,
+        balanceAfter = 0.0,
+        pending = true,
+        linkUuid = null,
+        createdAt = "2023-12-23",
+        updatedAt = "2023-12-23",
+        card = CardDetails(
+            id = 1,
+            number = "1234567890123452",
+            expirationDate = "04/28",
+            fullName = "John Doe",
+            type = "CREDIT"
+            )
+        ),
+        PaymentResponse(
+            id = 1,
+            type = "BALANCE",
+            amount = 4523.0,
+            balanceBefore = 0.0,
+            balanceAfter = 0.0,
+            pending = true,
+            linkUuid = null,
+            createdAt = "2023-12-23",
+            updatedAt = "2023-12-23",
+            card = CardDetails(
+                id = 1,
+                number = "1234567890123452",
+                expirationDate = "04/28",
+                fullName = "John Doe",
+                type = "CREDIT"
+            )
+        )
+    )
 )
 
 sealed class PaymentRequest(

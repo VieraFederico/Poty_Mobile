@@ -54,7 +54,7 @@ fun PaymentScreenPreview(){
 }
 @Composable
 fun PaymentScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenViewModel() }) {
-    //val state by viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         Scaffold(
@@ -190,6 +190,9 @@ fun PaymentScreen(viewModel: PaymentScreenViewModel = remember { PaymentScreenVi
                         Text(
                             text = "Envios Recientes"
                         )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        PaymentHistory(state.paymentHistory)
 
                     }
                 }
