@@ -174,7 +174,7 @@ fun ContentSection(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .then(cardPadding), // Apply conditional padding here
+                .then(cardPadding),
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.onBackground,
             ),
