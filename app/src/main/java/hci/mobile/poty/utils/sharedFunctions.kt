@@ -445,3 +445,39 @@ fun ReadOnlyNumberFieldWithLabel(
         }
     }
 }
+
+@Composable
+fun ReadOnlyTextFieldWithLabel(
+    modifier: Modifier = Modifier,
+    label: String,
+    value: String
+) {
+    Text(
+        text = label,
+        style = MaterialTheme.typography.bodyLarge,
+        modifier = modifier.padding(bottom = 8.dp)
+    )
+    OutlinedTextField(
+        value = value,
+        onValueChange = {},
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(50.dp))
+            .height(50.dp)
+            .border(
+                BorderStroke(1.dp, Black),
+                RoundedCornerShape(50.dp)
+            ),
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Black,
+            unfocusedTextColor = Black,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            cursorColor = Black
+        ),
+        textStyle = LocalTextStyle.current.copy(color = Black),
+        visualTransformation = VisualTransformation.None,
+        enabled = false // Disable text field to make it read-only
+    )
+}
