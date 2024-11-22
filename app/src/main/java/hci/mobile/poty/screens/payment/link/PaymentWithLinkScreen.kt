@@ -55,6 +55,7 @@ import hci.mobile.poty.ui.theme.GreenLight
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleMediumLite
+import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.NumberFieldWithLabel
 import hci.mobile.poty.utils.ReadOnlyNumberFieldWithLabel
@@ -62,6 +63,7 @@ import hci.mobile.poty.utils.TextFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.utils.isLandscape
+import hci.mobile.poty.utils.isTablet
 
 @Composable
 fun PaymentWithLinkScreen(
@@ -87,6 +89,10 @@ fun PaymentWithLinkScreen(
     )
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
+        ResponsiveNavBar(
+            onNavigate = { /* Handle navigation */ },
+            mockWindowSizeClass = mockWindowSizeClass,
+        ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -99,7 +105,7 @@ fun PaymentWithLinkScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .weight(0.5f)
+                            .weight(0.53f)
                             .fillMaxHeight()
                             .padding(contentPadding)
                     ) {
@@ -150,7 +156,7 @@ fun PaymentWithLinkScreen(
 
                     Box(
                         modifier = Modifier
-                            .weight(3f)
+                            .weight(3.5f)
                             .fillMaxWidth()
                             .padding(contentPadding)
                     ) {
@@ -167,8 +173,10 @@ fun PaymentWithLinkScreen(
                 }
             }
         }
+        }
     }
 }
+
 
 
 @Composable
@@ -248,7 +256,7 @@ fun StepTwo(
                             start = 16.dp,
                             top = 5.dp,
                             end = 16.dp,
-                            bottom = 0.dp
+                            bottom = 15.dp
                         )
                         .fillMaxSize()
                         .weight(1f),
@@ -410,6 +418,7 @@ fun StepTwo(
         }
     }
 }
+
 @Composable
 fun HeaderSection(
     modifier: Modifier,
@@ -453,15 +462,26 @@ fun HeaderSection(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text(
-                        text=stringResource(R.string.pay_money),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = White
-                    )
+                    if(windowSizeClass.isLandscape() && !windowSizeClass.isTablet()){
+                        Text(
+                            text=stringResource(R.string.pay_money),
+                            style = MaterialTheme.typography.titleSmallSemiBold,
+                            color = White
+                        )
+
+                    }else {
+                        Text(
+                            text = stringResource(R.string.pay_money),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = White
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text=stringResource(R.string.using_payment_link),
                         style = MaterialTheme.typography.titleSmall,
+                        softWrap = true,
                         color = White
                     )
                 }
@@ -485,7 +505,6 @@ fun ContentSection(
         WindowSizeClass.MediumPhoneLandscape,
         WindowSizeClass.MediumTabletLandscape
     )
-
 
 
     Card(

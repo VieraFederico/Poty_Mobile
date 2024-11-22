@@ -58,12 +58,14 @@ import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.labelLargeLite
 import hci.mobile.poty.ui.theme.titleMediumLite
+import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.NumberFieldWithLabel
 import hci.mobile.poty.utils.TextFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.utils.isLandscape
+import hci.mobile.poty.utils.isTablet
 
 
 @Composable
@@ -90,6 +92,10 @@ fun PaymentWithEmailScreen(
     )
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
+        ResponsiveNavBar(
+            onNavigate = { /* Handle navigation */ },
+            mockWindowSizeClass = mockWindowSizeClass,
+        ) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
@@ -102,7 +108,7 @@ fun PaymentWithEmailScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .weight(0.5f)
+                            .weight(0.53f)
                             .fillMaxHeight()
                             .padding(contentPadding)
                     ) {
@@ -153,7 +159,7 @@ fun PaymentWithEmailScreen(
 
                     Box(
                         modifier = Modifier
-                            .weight(3f)
+                            .weight(3.5f)
                             .fillMaxWidth()
                             .padding(contentPadding)
                     ) {
@@ -169,6 +175,7 @@ fun PaymentWithEmailScreen(
                     }
                 }
             }
+        }
         }
     }
 }
@@ -492,18 +499,30 @@ fun HeaderSection(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text(
-                        text=stringResource(R.string.pay_money),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = White
-                    )
+                    if(windowSizeClass.isLandscape() && !windowSizeClass.isTablet()){
+                        Text(
+                            text=stringResource(R.string.pay_money),
+                            style = MaterialTheme.typography.titleSmallSemiBold,
+                            color = White
+                        )
+
+                    }else {
+                        Text(
+                            text = stringResource(R.string.pay_money),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = White
+                        )
+                    }
+
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text=stringResource(R.string.using_email),
                         style = MaterialTheme.typography.titleSmall,
+                        softWrap = true,
                         color = White
                     )
                 }
+
             }
         }
     }
@@ -532,6 +551,7 @@ fun ContentSection(
             bottomEnd =  0.dp,
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+
     ) {
         Column(
             modifier = Modifier

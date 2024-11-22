@@ -162,18 +162,7 @@ fun LandingContentSection(
                 color = MaterialTheme.colorScheme.onBackground,
                 style = textStyle
             )
-            Row {
-                Text(
-                    text =  stringResource(R.string.the_),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = textStyle
-                )
-                Text(
-                    text =  stringResource(R.string.pot),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.titleLargeItalic
-                )
-            }
+      
         }
 
         Column(

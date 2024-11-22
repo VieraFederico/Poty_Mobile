@@ -44,13 +44,13 @@
     <string name="amount_to_deposit">Amount to Deposit</string>
     <string name="with_Poty">With Poty</string>
     <string name="you_can_rest_easy">You can rest easy,</string>
-    <string name="your_money_is_in">your money is in</string>
+    <string name="your_money_is_in">your money is safe.</string>
     <string name="the_">the </string>
     <string name="pot">Pot</string>
     <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
     <string name="password">Password</string>
-    <string name="i_forgor_my_password">I Forgot My Password</string>
+    <string name="i_forgor_my_password">Forgot my Password</string>
     <string name="almost_there">Almost There!</string>
     <string name="go_back">Go Back</string>
     <string name="already_have_an_account">Already have an account?&#32;</string>
