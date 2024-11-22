@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
@@ -60,13 +61,13 @@ fun SideNavBar(
                     icon = {
                         Icon(
                             Icons.Default.Notifications,
-                            contentDescription = "Notifications",
+                            contentDescription = stringResource(R.string.notifications),
                             modifier = Modifier.size(25.dp),
                             tint = Color.DarkGray
                         )
                     },
                     label = if (includeLabels) {
-                        { Text("Notifications", color = Color.Black) } // Text color updated
+                        { Text(stringResource(R.string.notifications), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
                     onClick = { onNavigate("notifications") }
@@ -76,13 +77,13 @@ fun SideNavBar(
                     icon = {
                         Icon(
                             Icons.Default.Home,
-                            contentDescription = "Home",
+                            contentDescription = stringResource(R.string.home),
                             modifier = Modifier.size(25.dp),
                             tint = Color.DarkGray
                         )
                     },
                     label = if (includeLabels) {
-                        { Text("Home", color = Color.Black) } // Text color updated
+                        { Text(stringResource(R.string.home), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
                     onClick = { onNavigate("home") }
@@ -104,7 +105,7 @@ fun SideNavBar(
                         }
                     },
                     label = if (includeLabels) {
-                        { Text("QR Scanner", color = Color.Black) } // Text color updated
+                        { Text(stringResource(R.string.qr_scanner), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
                     onClick = { onNavigate("qr_scanner") }
@@ -114,13 +115,13 @@ fun SideNavBar(
                     icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.trending_up),
-                            contentDescription = "Investments",
+                            contentDescription = stringResource(R.string.investments),
                             tint = Color.DarkGray,
                             modifier = Modifier.size(25.dp)
                         )
                     },
                     label = if (includeLabels) {
-                        { Text("Investments", color = Color.Black) } // Text color updated
+                        { Text(stringResource(R.string.investments), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
                     onClick = { onNavigate("investments") }
@@ -130,13 +131,13 @@ fun SideNavBar(
                     icon = {
                         Icon(
                             Icons.Default.Settings,
-                            contentDescription = "Settings",
+                            contentDescription = stringResource(R.string.settings),
                             modifier = Modifier.size(25.dp),
                             tint = Color.DarkGray
                         )
                     },
                     label = if (includeLabels) {
-                        { Text("Settings", color = Color.Black) } // Text color updated
+                        { Text(stringResource(R.string.settings), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
                     onClick = { onNavigate("settings") }

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
@@ -45,7 +46,7 @@ fun spendingCard(spent: Float){
             ),
         ) {
             Text(
-                text = "Gastos",
+                text = stringResource(R.string.spent),
                 color = White,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(top = 10.dp,start = 10.dp,bottom = 5.dp)

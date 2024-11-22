@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BottomNavBar
@@ -181,7 +182,7 @@ fun DepositHeaderSection(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Ingresar Dinero",
+                    text = stringResource(R.string.deposit_money),
                     style = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) {
                         MaterialTheme.typography.titleLarge
                     } else {
@@ -262,7 +263,7 @@ fun DepositContentSection(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 NumberFieldWithLabel(
-                    label = "Monto a ingresar",
+                    label = stringResource(R.string.amount_to_deposit),
                     value = state.number,
                     onValueChange = { newValue ->
                         viewModel.onNumberChange(newValue)
@@ -286,7 +287,7 @@ fun DepositContentSection(
                         .height(50.dp),
                 ) {
                     Text(
-                        text = "Ingresar",
+                        text = stringResource(R.string.deposit),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onBackground
                     )

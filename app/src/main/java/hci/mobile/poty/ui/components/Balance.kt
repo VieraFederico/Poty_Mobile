@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.theme.White
@@ -28,7 +29,7 @@ import hci.mobile.poty.ui.theme.White
 @Composable
 fun BalanceCard(balance: Float, isVisible: Boolean, onToggleVisibility: () -> Unit) {
     Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-        Text(text = "Balance", color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
+        Text(text = stringResource(R.string.balance), color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (isVisible) {
                 Text(text = "$ ${String.format("%.2f", balance)}", color = White, style = MaterialTheme.typography.titleLarge)
@@ -65,7 +66,7 @@ fun PaymentBalanceCard(balance: Double){
                 .padding(10.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = "Balance", color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
+            Text(text = stringResource(R.string.balance), color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
             Text(text = "$ ${String.format("%.2f", balance)}", color = White, style = MaterialTheme.typography.titleLarge)
         }
     }

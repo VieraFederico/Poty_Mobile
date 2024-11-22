@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import hci.mobile.poty.R
 import hci.mobile.poty.classes.CreditCard
@@ -141,28 +142,28 @@ fun CVUScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Text(
-                                    text = "Datos de Cuenta",
+                                    text = stringResource(R.string.account_details),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.primary
                                 )
 
                                 Spacer(modifier = Modifier.height(10.dp))
                                 DataTab(
-                                    key = "Alias",
+                                    key = stringResource(R.string.alias),
                                     value = state.alias,
                                     onCopyClick = { value ->
                                         viewModel.copyToClipboard(context, value)
                                     }
                                 )
                                 DataTab(
-                                    key = "Correo Electronico",
+                                    key = stringResource(R.string.email),
                                     value = state.email,
                                     onCopyClick = { value ->
                                         viewModel.copyToClipboard(context, value)
                                     }
                                 )
                                 DataTab(
-                                    key = "CBU",
+                                    key = stringResource(R.string.cbu),
                                     value = state.cbu,
                                     onCopyClick = { value ->
                                         viewModel.copyToClipboard(context, value)

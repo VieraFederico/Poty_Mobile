@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
@@ -140,7 +141,7 @@ fun LandingContentSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Con Poty",
+                    text = stringResource(R.string.with_Poty),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = textStyle
                 )
@@ -152,23 +153,23 @@ fun LandingContentSection(
                 )
             }
             Text(
-                text = "Ahora podés confiar,",
+                text = stringResource(R.string.you_can_rest_easy),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = textStyle
             )
             Text(
-                text = "tu dinero está en",
+                text =  stringResource(R.string.your_money_is_in),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = textStyle
             )
             Row {
                 Text(
-                    text = "la ",
+                    text =  stringResource(R.string.the_),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = textStyle
                 )
                 Text(
-                    text = "Urna",
+                    text =  stringResource(R.string.pot),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleLargeItalic
                 )
@@ -190,7 +191,7 @@ fun LandingContentSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Iniciar Sesión",
+                    text =  stringResource(R.string.log_in),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -208,7 +209,7 @@ fun LandingContentSection(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    text = "Registrarse",
+                    text =  stringResource(R.string.sign_up),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.labelLarge
                 )

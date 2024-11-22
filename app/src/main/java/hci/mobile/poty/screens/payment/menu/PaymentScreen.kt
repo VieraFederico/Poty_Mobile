@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.R
@@ -200,7 +201,7 @@ fun HeaderSection(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        text = "Enviar Dinero",
+                        text = stringResource(R.string.pay_money),
                         style = MaterialTheme.typography.titleMedium,
                         color = White
                     )
@@ -258,12 +259,12 @@ fun ContentSection(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Enviar por ",
+                        text = stringResource(R.string.pay_using),
                         style = MaterialTheme.typography.labelLargeLite,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
-                        text = "Link de Pago",
+                        text = stringResource(R.string.payment_link),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onBackground
                     )
@@ -283,12 +284,12 @@ fun ContentSection(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Enviar por ",
+                        text = stringResource(R.string.pay_using),
                         style = MaterialTheme.typography.labelLargeLite,
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
-                        text = "Correo Electronico",
+                        text = stringResource(R.string.email),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onBackground
                     )
@@ -304,7 +305,7 @@ fun ContentSection(
             ))
 
             Text(
-                text = "Envios Recientes",
+                text = stringResource(R.string.payments_history),
                 color = GreyDark
             )
 

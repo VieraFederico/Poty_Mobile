@@ -52,6 +52,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.res.stringResource
 import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.utils.WindowSizeClass
 
@@ -116,7 +117,7 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
                 )
             }
             Text(
-                text = "Agregar una nueva tarjeta",
+                text = stringResource(R.string.add_card),
                 modifier = Modifier.padding(top=10.dp),
                 style = MaterialTheme.typography.labelLarge,
                 color = White,
@@ -235,7 +236,7 @@ fun CreditCardView(
                 onDismissRequest = { dropdownExpanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("Borrar Tarjeta") },
+                    text = { stringResource(R.string.delete_card) },
                     onClick = {
                         dropdownExpanded = false
                         onDeleteCard(Card.id)

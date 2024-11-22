@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.R
@@ -185,7 +186,7 @@ fun StepOne(
         verticalArrangement = Arrangement.Center,
     ) {
         TextFieldWithLabel(
-            label = "Ingrese el Link de Pago ",
+            label = stringResource(R.string.enter_payment_link),
             value = localLink,
             onValueChange = {
                 localLink = it
@@ -199,7 +200,7 @@ fun StepOne(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
@@ -243,14 +244,14 @@ fun StepTwo(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     ReadOnlyNumberFieldWithLabel(
-                        label = "Monto a Enviar",
+                        label = stringResource(R.string.amount_to_send),
                         value = localNumber.toFloat(),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     TextFieldWithLabel(
-                        label = "Descripcion",
+                        label = stringResource(R.string.description),
                         value = description,
                         onValueChange = onDescriptionChange,
                         modifier = Modifier.fillMaxWidth()
@@ -264,7 +265,7 @@ fun StepTwo(
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+                        Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
                     }
 
                     if (errorMessage.isNotEmpty()) {
@@ -334,7 +335,7 @@ fun StepTwo(
                 verticalArrangement = Arrangement.Center,
             ) {
                 ReadOnlyNumberFieldWithLabel(
-                    label = "Monto a Enviar",
+                    label = stringResource(R.string.amount_to_send),
                     value = localNumber.toFloat(),
                 )
 
@@ -344,7 +345,7 @@ fun StepTwo(
                 }
 
                 TextFieldWithLabel(
-                    label = "Descripcion",
+                    label = stringResource(R.string.description),
                     value = description,
                     onValueChange = onDescriptionChange,
                     modifier = Modifier.fillMaxWidth()
@@ -387,7 +388,7 @@ fun StepTwo(
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+                    Text(text = stringResource(R.string.send), color = MaterialTheme.colorScheme.onBackground)
                 }
 
                 if (errorMessage.isNotEmpty()) {
@@ -461,12 +462,12 @@ fun HeaderSection(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        text="Enviar Dinero",
+                        text=stringResource(R.string.pay_money),
                         style = MaterialTheme.typography.titleMedium,
                         color = White
                     )
                     Text(
-                        text="Por Link de Pago",
+                        text=stringResource(R.string.using_payment_link),
                         style = MaterialTheme.typography.titleMediumLite,
                         color = White
                     )
