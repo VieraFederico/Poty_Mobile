@@ -54,11 +54,7 @@ import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 
 
-@Preview
-@Composable
-fun PaymentScreenPreview(){
-    PaymentScreen()
-}
+
 @Composable
 fun PaymentScreen(
     viewModel: PaymentScreenViewModel = viewModel(factory = PaymentScreenViewModel.provideFactory(
@@ -72,8 +68,13 @@ fun PaymentScreen(
     val state by viewModel.state.collectAsState()
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
 
-    val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
-    val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
+    val contentPadding = when (windowSizeClass) {
+        WindowSizeClass.MediumTablet, WindowSizeClass.MediumTabletLandscape -> 32.dp
+        else -> 16.dp
+    }
+
+    val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape ||
+            windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         ResponsiveNavBar(
@@ -84,43 +85,31 @@ fun PaymentScreen(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.secondary,
             ) { innerPadding ->
-                if(isLandscape) {
-                    Column(
+                if (isLandscape) {
+                    Row(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding),
-                        verticalArrangement = Arrangement.Top
                     ) {
-                        Box(
+                        HeaderSection(
                             modifier = Modifier
-                                .weight(1f)
                                 .fillMaxHeight()
-                        ) {
-                            HeaderSection(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = contentPadding,
-                                state = state,
-                                windowSizeClass = windowSizeClass
-                            )
-                        }
-
-                        Box(
+                                .weight(1f),
+                            contentPadding = contentPadding,
+                            state = state,
+                            windowSizeClass = windowSizeClass
+                        )
+                        ContentSection(
                             modifier = Modifier
-                                .weight(2f)
                                 .fillMaxHeight()
-                        ) {
-                            ContentSection(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = contentPadding,
-                                state = state,
-                                viewModel = viewModel,
-                                windowSizeClass = windowSizeClass,
-                                onNavigateToLink = onNavigateToLink,
-                                onNavigateToEmail = onNavigateToEmail,
-                                topStart = 30.dp,
-                                bottomStart = 30.dp
-                            )
-                        }
+                                .weight(2f),
+                            contentPadding = contentPadding,
+                            state = state,
+                            viewModel = viewModel,
+                            windowSizeClass = windowSizeClass,
+                            onNavigateToLink = onNavigateToLink,
+                            onNavigateToEmail = onNavigateToEmail
+                        )
                     }
                 } else {
                     Column(
@@ -131,25 +120,21 @@ fun PaymentScreen(
                     ) {
                         HeaderSection(
                             modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .height(200.dp), // Adjusted for portrait mode
                             contentPadding = contentPadding,
                             state = state,
                             windowSizeClass = windowSizeClass
                         )
-
+                        Spacer(modifier = Modifier.height(16.dp))
                         ContentSection(
-                            modifier = Modifier
-                                .weight(2f)
-                                .fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                             contentPadding = contentPadding,
                             state = state,
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             onNavigateToLink = onNavigateToLink,
-                            onNavigateToEmail = onNavigateToEmail,
-                            topStart = 30.dp,
-                            bottomStart = 30.dp
+                            onNavigateToEmail = onNavigateToEmail
                         )
                     }
                 }
@@ -206,7 +191,7 @@ fun HeaderSection(
         }
     }
 }
-
+/*
 @Composable
 fun ContentSection(
     modifier: Modifier,
@@ -316,5 +301,116 @@ fun ContentSection(
             PaymentHistory(state.paymentHistory)
         }
     }
+}*/
+
+@Composable
+fun ContentSection(
+    modifier: Modifier,
+    contentPadding: Dp,
+    state: PaymentScreenState,
+    viewModel: PaymentScreenViewModel,
+    windowSizeClass: WindowSizeClass,
+    onNavigateToLink: () -> Unit = {},
+    onNavigateToEmail: () -> Unit = {}
+) {
+    val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape ||
+            windowSizeClass == WindowSizeClass.MediumTabletLandscape
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.onBackground,
+        ),
+        shape = RoundedCornerShape(
+            topStart = if (isLandscape) 30.dp else 0.dp,
+            topEnd = if (isLandscape) 0.dp else 30.dp,
+            bottomStart = if (isLandscape) 30.dp else 0.dp,
+            bottomEnd = 0.dp
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(15.dp)
+        ) {
+            Spacer(modifier = Modifier.height(
+                when (windowSizeClass) {
+                    WindowSizeClass.MediumPhoneLandscape -> 0.dp
+                    else -> 16.dp
+                }
+            ))
+
+            Button(
+                onClick = { onNavigateToLink() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(15.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Enviar por ",
+                        style = MaterialTheme.typography.labelLargeLite,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(
+                        text = "Link de Pago",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { onNavigateToEmail() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp),
+                shape = RoundedCornerShape(15.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Enviar por ",
+                        style = MaterialTheme.typography.labelLargeLite,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    Text(
+                        text = "Correo Electronico",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(
+                when (windowSizeClass) {
+                    WindowSizeClass.MediumTablet, WindowSizeClass.MediumTabletLandscape -> 60.dp
+                    WindowSizeClass.MediumPhoneLandscape -> 5.dp
+                    else -> 40.dp
+                }
+            ))
+
+            Text(
+                text = "Envios Recientes",
+                color = GreyDark
+            )
+
+            Spacer(modifier = Modifier.height(
+                when (windowSizeClass) {
+                    WindowSizeClass.MediumPhoneLandscape -> 5.dp
+                    else -> 16.dp
+                }
+            ))
+            PaymentHistory(state.paymentHistory)
+        }
+    }
 }
+
 
