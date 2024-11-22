@@ -77,16 +77,10 @@ fun CreditCardViewPreview(){
     }
 }
 
-@Preview
-@Composable
-fun EmptyCreditCardViewPreview(){
-    PotyTheme {
-        EmptyCreditCardView(onAddCardClick = { /* Define your click action here */ })
-    }
-}
+
 
 @Composable
-fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
+fun EmptyCreditCardView(onAddCardClick: () -> Unit, isTiny: Boolean = false) {
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
@@ -116,12 +110,15 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
                     modifier = Modifier.size(80.dp)
                 )
             }
-            Text(
-                text = stringResource(R.string.add_card),
-                modifier = Modifier.padding(top=10.dp),
-                style = MaterialTheme.typography.labelLarge,
-                color = White,
-            )
+            if(!isTiny){
+                Text(
+                    text = stringResource(R.string.add_card),
+                    modifier = Modifier.padding(top=10.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = White,
+                )
+            }
+
         }
     }
 }
@@ -331,7 +328,7 @@ fun PaymentCardsCarousel(
     onDeleteCard: (Int) -> Unit,
     windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone,
     modifier: Modifier = Modifier,
-    isTiny: Boolean = false
+    isTiny: Boolean = false,
 ) {
     val allItems = creditCards + null
 
@@ -381,7 +378,8 @@ fun PaymentCardsCarousel(
                 )
             } else {
                 EmptyCreditCardView(
-                    onAddCardClick = { onNavigateToAddCard() }
+                    onAddCardClick = { onNavigateToAddCard() },
+                    isTiny = isTiny
                 )
             }
         }

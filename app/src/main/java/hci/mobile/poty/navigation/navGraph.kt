@@ -109,7 +109,8 @@ fun AppNavGraph(navController: NavHostController, ) {
 
         composable(route = Routes.LINK_SCREEN) {
             PaymentWithLinkScreen(
-                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) },
+                onNavigateToAddCard = {navController.navigate(Routes.ADD_CARD_SCREEN)}
 
             )
         }
