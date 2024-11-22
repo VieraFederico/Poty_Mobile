@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.MyApplication
@@ -197,7 +198,7 @@ fun StepOne(
         verticalArrangement = Arrangement.Center,
     ) {
         TextFieldWithLabel(
-            label = "Ingrese el Correo Electrónico al cual desea enviar dinero",
+            label = stringResource(R.string.enter_email),
             value = localEmail,
             onValueChange = {
                 localEmail = it
@@ -213,7 +214,7 @@ fun StepOne(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
@@ -259,7 +260,7 @@ fun StepTwo(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     NumberFieldWithLabel(
-                        label = "Monto a Enviar",
+                        label = stringResource(R.string.amount_to_send),
                         value = localNumber.toFloat(),
                         onValueChange = {
                             localNumber = it.toDouble()
@@ -270,7 +271,7 @@ fun StepTwo(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     TextFieldWithLabel(
-                        label = "Descripción",
+                        label = stringResource(R.string.description),
                         value = description,
                         onValueChange = onDescriptionChange,
                         modifier = Modifier.fillMaxWidth()
@@ -286,7 +287,7 @@ fun StepTwo(
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+                        Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
                     }
 
                     if (errorMessage.isNotEmpty()) {
@@ -346,7 +347,7 @@ fun StepTwo(
                 verticalArrangement = Arrangement.Center,
             ) {
                 NumberFieldWithLabel(
-                    label = "Monto a Enviar",
+                    label = stringResource(R.string.amount_to_send),
                     value = localNumber.toFloat(),
                     onValueChange = {
                         localNumber = it.toDouble()
@@ -357,7 +358,7 @@ fun StepTwo(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 TextFieldWithLabel(
-                    label = "Descripción",
+                    label = stringResource(R.string.description),
                     value = description,
                     onValueChange = onDescriptionChange,
                     modifier = Modifier.fillMaxWidth()
@@ -400,7 +401,7 @@ fun StepTwo(
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+                    Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
                 }
 
                 if (errorMessage.isNotEmpty()) {
@@ -432,7 +433,7 @@ fun SelectOptionTextButton(
             modifier = Modifier.padding(end = 8.dp)
         ) {
             Text(
-                text = "Tarjeta",
+                text = stringResource(R.string.card),
                 color = if (selectedOption == PaymentType.CARD) GreenLight else GreyLight
             )
         }
@@ -442,7 +443,7 @@ fun SelectOptionTextButton(
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text(
-                text = "Balance",
+                text = stringResource(R.string.balance),
                 color = if (selectedOption == PaymentType.BALANCE) GreenLight else GreyLight
             )
         }
@@ -459,7 +460,7 @@ fun SelectOptionButtonPreview() {
         onOptionSelected = { selectedOption = it }
     )
 
-    Text("Opción seleccionada: $selectedOption")
+    Text(stringResource(R.string.next)+"$selectedOption")
 }
 
 @Composable
@@ -507,12 +508,12 @@ fun HeaderSection(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        text="Enviar Dinero",
+                        text=stringResource(R.string.pay_money),
                         style = MaterialTheme.typography.titleMedium,
                         color = White
                     )
                     Text(
-                        text="Por Correo Electronico",
+                        text=stringResource(R.string.using_email),
                         style = MaterialTheme.typography.titleMediumLite,
                         color = White
                     )

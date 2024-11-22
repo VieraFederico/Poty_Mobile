@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -317,25 +318,25 @@ fun ContentSection(
                 DashboardButton(
                     onClick = onNavigateToDeposit,
                     iconResId = R.drawable.corner_right_down,
-                    contentDescription = "Ingresar"
+                    contentDescription = stringResource(R.string.deposit)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick = onNavigateToCharge,
                     iconResId = R.drawable.dollar_sign,
-                    contentDescription = "Cobrar"
+                    contentDescription = stringResource(R.string.charge)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick =  onNavigateToPayment,
                     iconResId = R.drawable.corner_right_up,
-                    contentDescription = "Enviar"
+                    contentDescription = stringResource(R.string.pay)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick = { onNavigateToCvu() },
                     iconResId = R.drawable.user,
-                    contentDescription = "CVU"
+                    contentDescription = stringResource(R.string.cbu)
                 )
             }
             if(windowSizeClass.isTablet()){

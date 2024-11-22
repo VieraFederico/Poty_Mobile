@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -167,7 +168,7 @@ fun HeaderSection(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Agregar Nueva Tarjeta",
+                    text = stringResource(R.string.add_new_card),
                     style = MaterialTheme.typography.titleSmallSemiBold,
                     color = White
                 )
@@ -230,7 +231,7 @@ fun FormSection(
             }
 
             TextFieldWithLabel(
-                label = "Número de Tarjeta",
+                label = stringResource(R.string.card_number),
                 value = state.number,
                 onValueChange = onNumberChange,
                 maxLength = 16,
@@ -240,7 +241,7 @@ fun FormSection(
             Spacer(modifier = Modifier.height(16.dp))
 
             TextFieldWithLabel(
-                label = "Nombre del Responsable",
+                label = stringResource(R.string.cardholder_name),
                 value = state.owner,
                 onValueChange = onOwnerChange
             )
@@ -253,7 +254,7 @@ fun FormSection(
             ) {
                 Column(modifier = Modifier.weight(1.5f)) {
                     CompactDateFieldWithLabel(
-                        label = "Fecha de Venc. (MM/AA)",
+                        label = stringResource(R.string.exp_date),
                         value = state.exp,
                         onValueChange = onExpDateChange
                     )
@@ -261,7 +262,7 @@ fun FormSection(
 
                 Column(modifier = Modifier.weight(1f)) {
                     TextFieldWithLabel(
-                        label = "CVV",
+                        label = stringResource(R.string.cvv),
                         value = state.cvv,
                         onValueChange = onCVVChange,
                         maxLength = 3
@@ -278,7 +279,7 @@ fun FormSection(
                     .height(50.dp),
             ) {
                 Text(
-                    text = "Agregar Tarjeta",
+                    text = stringResource(R.string.add_card),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )

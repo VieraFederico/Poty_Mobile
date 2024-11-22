@@ -12,6 +12,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -60,7 +61,7 @@ fun LoginScreen(
                         .padding(innerPadding)
                 ) {
                     var title: String? = null
-                    title = if (!windowSizeClass.isTablet()) "Iniciar Sesión" else null
+                    title = if (!windowSizeClass.isTablet()) stringResource(R.string.log_in) else null
 
                     LoginRegisterImageSection(
                         modifier = Modifier
@@ -143,7 +144,7 @@ fun LoginContentSection(
     ) {
         if(windowSizeClass.isTablet() || (!windowSizeClass.isTablet() && !windowSizeClass.isLandscape()) ){
             Text(
-                text = "Iniciar Sesión",
+                text =  stringResource(R.string.log_in),
                 style = if (windowSizeClass.isTablet()) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -152,7 +153,7 @@ fun LoginContentSection(
         }
 
         TextFieldWithLabel(
-            label = "Correo Electrónico",
+            label =  stringResource(R.string.email),
             value = state.email,
             onValueChange = { viewModel.updateEmail(it) },
             modifier = Modifier.fillMaxWidth()
@@ -161,7 +162,7 @@ fun LoginContentSection(
         Spacer(modifier = Modifier.height(8.dp))
 
         PasswordFieldWithLabel(
-            label = "Contraseña",
+            label =  stringResource(R.string.password),
             value = state.password,
             onValueChange = { viewModel.updatePassword(it) },
             modifier = Modifier.fillMaxWidth()
@@ -179,7 +180,7 @@ fun LoginContentSection(
                 modifier = Modifier.align(Alignment.Start)
             ) {
                 Text(
-                    text = "Olvidé mi Contraseña",
+                    text = stringResource(R.string.i_forgor_my_password),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -204,7 +205,7 @@ fun LoginContentSection(
                         modifier = Modifier.align(Alignment.CenterVertically)
                     ) {
                         Text(
-                            text = "Olvidé mi Contraseña",
+                            text = stringResource(R.string.i_forgor_my_password),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
@@ -213,7 +214,7 @@ fun LoginContentSection(
                         modifier = Modifier.align(Alignment.CenterVertically)
                     ) {
                         Text(
-                            text = "Registrarse",
+                            text = stringResource(R.string.sign_up),
                             style = MaterialTheme.typography.bodyMedium,
                         )
                     }
@@ -234,7 +235,7 @@ fun LoginContentSection(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Iniciar Sesión",
+                text = stringResource(R.string.log_in),
                 color = White,
                 style = MaterialTheme.typography.bodyLarge,
             )
@@ -248,7 +249,7 @@ fun LoginContentSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Registrarse",
+                    text = stringResource(R.string.sign_up),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }

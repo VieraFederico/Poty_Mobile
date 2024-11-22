@@ -32,6 +32,7 @@ import java.util.Locale
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
@@ -153,7 +154,7 @@ fun CompactDateFieldWithLabel(
                     IconButton(onClick = { showDatePicker = true }) {
                         Icon(
                             imageVector = Icons.Default.DateRange,
-                            contentDescription = "Seleccionar fecha"
+                            contentDescription = stringResource(R.string.select_date)
                         )
                     }
                 },
@@ -200,7 +201,7 @@ fun CompactDateFieldWithLabel(
                                     state = datePickerState,
                                     colors = datePickerColors,
                                     showModeToggle = false,
-                                    title = { Text("Seleccionar Fecha") },
+                                    title = { stringResource(R.string.select_date) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(500.dp)
@@ -216,7 +217,7 @@ fun CompactDateFieldWithLabel(
                                 TextButton(
                                     onClick = { showDatePicker = false }
                                 ) {
-                                    Text("Cancelar", color = Color.Gray)
+                                    Text(stringResource(R.string.cancel), color = Color.Gray)
                                 }
 
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -230,7 +231,7 @@ fun CompactDateFieldWithLabel(
                                         }
                                     }
                                 ) {
-                                    Text("Confirmar", color = Color.White)
+                                    Text(stringResource(R.string.confirm), color = Color.White)
                                 }
                             }
                         }
@@ -317,7 +318,7 @@ fun PasswordFieldWithLabel(
                 IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                     Icon(
                         painter = painterResource(id = if (isPasswordVisible) R.drawable.eye else R.drawable.eye_off),
-                        contentDescription = if (isPasswordVisible) "Ocular Contraseña" else "Mostrar Contraseña",
+                        contentDescription = if (isPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
                         tint = Black,
                         modifier = modifier.size(35.dp)
                     )
@@ -363,7 +364,7 @@ fun NumberFieldWithLabel(
         singleLine = true,
         placeholder = {
             Text(
-                text = "Por ejemplo: 100.15",
+                text = stringResource(R.string.for_example)+": 100.15",
                 style = MaterialTheme.typography.bodyLarge.copy(color = Color.Gray)
             )
         },

@@ -19,9 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import hci.mobile.poty.R
 import hci.mobile.poty.classes.PaymentResponse
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
@@ -40,7 +42,7 @@ fun PaymentHistory(
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
         ) {
             Text(
-                text = "Payment History",
+                text = stringResource(R.string.payment_history),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White,
                 modifier = Modifier
@@ -91,16 +93,16 @@ fun PaymentCard(payment: PaymentResponse) {
 
                 Column {
                     Text(
-                        text = "Fecha: ${payment.createdAt}",
+                        text = stringResource(R.string.date)+": ${payment.createdAt}",
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium,
                         color = White
                     )
                     Text(
                         text = when (payment.type) {
-                            "CARD" -> "Pagado con Tarjeta"
-                            "BALANCE" -> "Pagado con Balance"
-                            else -> "Tipo de pago desconocido"
+                            "CARD" -> stringResource(R.string.payed_with_card)
+                            "BALANCE" -> stringResource(R.string.payed_with_balance)
+                            else -> stringResource(R.string.unknown_payment)
                         },
                         style = MaterialTheme.typography.bodySmall,
                         color = White
@@ -121,9 +123,9 @@ fun PaymentCard(payment: PaymentResponse) {
             ) {
                 Text(
                     text = if (payment.pending) {
-                        "Pendiente"
+                        stringResource(R.string.pending)
                     } else {
-                        "Completado"
+                        stringResource(R.string.completed)
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = if (payment.pending) Color.Yellow else Color.Green

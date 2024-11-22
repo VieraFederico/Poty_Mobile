@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BackButton
@@ -154,7 +155,7 @@ fun ChargeHeaderSection(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Cobrar Dinero",
+                    text = stringResource(R.string.charge_money),
                     style = if (windowSizeClass.isTablet()) {
                         MaterialTheme.typography.titleLarge
                     } else {
@@ -222,7 +223,7 @@ fun StepOne(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NumberFieldWithLabel(
-            label = "Monto a cobrar",
+            label = stringResource(R.string.amount_to_charge),
             value = amount.toFloatOrNull() ?: 0f,
             onValueChange = { newValue -> UpdateAmount(newValue.toString()) }
         )
@@ -234,7 +235,7 @@ fun StepOne(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
