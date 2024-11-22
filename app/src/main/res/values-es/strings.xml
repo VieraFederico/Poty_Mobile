@@ -53,7 +53,7 @@
     <string name="i_forgor_my_password">Olvidé mi Contraseña</string>
     <string name="almost_there">¡Ya Casi!</string>
     <string name="go_back">Volver para atrás</string>
-    <string name="already_have_an_account">¿Ya tenés una cuenta? </string>
+    <string name="already_have_an_account">¿Ya tenés una cuenta?&#32;</string>
     <string name="name">Nombre</string>
     <string name="surname">Apellido</string>
     <string name="date_of_birth">Fecha de Nacimiento (DD/MM/AAAA)</string>
@@ -64,17 +64,17 @@
     <string name="pay_using">Enviar por </string>
     <string name="payment_link">Link de Pago</string>
     <string name="payments_history">Envíos Recientes</string>
-    <string name="enter_payment_link">Ingrese el Link de Pago </string>
+    <string name="enter_payment_link">Ingrese el Link de Pago&#32;</string>
     <string name="amount_to_send">Monto a Enviar</string>
     <string name="description">Descripción</string>
     <string name="send">Enviar</string>
     <string name="using_payment_link">Por Link de Pago</string>
     <string name="enter_email">Ingrese el Correo Electrónico al cual desea enviar dinero</string>
-    <string name="selectec_option">Opción seleccionada: </string>
+    <string name="selectec_option">Opción seleccionada:&#32;</string>
     <string name="card">Tarjeta</string>
     <string name="using_email">Por Correo Electrónico</string>
     <string name="link_generated_correctly">¡Link generado con Exito!</string>
     <string name="copy_link">Copiar Link</string>
     <string name="share_link">Compartir Link</string>
-
+    <string name="transactions_history">Historial de Movimientos</string>
 </resources>

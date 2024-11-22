@@ -218,9 +218,9 @@ fun Greeting(
     val currentTime = LocalTime.now().hour
 
     val greeting = when {
-        currentTime in 5..11 -> "¡Buenos Días,"
-        currentTime in 12..17 -> "¡Buenas Tardes,"
-        else -> "¡Buenas Noches,"
+        currentTime in 5..11 -> stringResource(R.string.good_morning)
+        currentTime in 12..17 -> stringResource(R.string.good_afternoon)
+        else -> stringResource(R.string.good_night)
     }
 
     val textStyle = when (windowSizeClass) {

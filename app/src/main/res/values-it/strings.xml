@@ -53,7 +53,7 @@
     <string name="i_forgor_my_password">Ho Dimenticato la Password</string>
     <string name="almost_there">Ci Siamo Quasi!</string>
     <string name="go_back">Torna Indietro</string>
-    <string name="already_have_an_account">Hai già un account?</string>
+    <string name="already_have_an_account">Hai già un account?&#32;</string>
     <string name="name">Nome</string>
     <string name="surname">Cognome</string>
     <string name="date_of_birth">Data di Nascita (GG/MM/AAAA)</string>
@@ -64,17 +64,18 @@
     <string name="pay_using">Invia con </string>
     <string name="payment_link">Link di Pagamento</string>
     <string name="payments_history">Trasferimenti Recenti</string>
-    <string name="enter_payment_link">Inserisci il Link di Pagamento</string>
+    <string name="enter_payment_link">Inserisci il Link di Pagamento&#32;</string>
     <string name="amount_to_send">Importo da Inviare</string>
     <string name="description">Descrizione</string>
     <string name="send">Invia</string>
     <string name="using_payment_link">Con Link di Pagamento</string>
     <string name="enter_email">Inserisci l\'e-mail a cui vuoi inviare denaro</string>
-    <string name="selectec_option">Opzione selezionata: </string>
+    <string name="selectec_option">Opzione selezionata:&#32;</string>
     <string name="card">Carta</string>
     <string name="using_email">Con E-mail</string>
     <string name="link_generated_correctly">Link generato con successo!</string>
-    <string name="copy_link">Copiar Link IT</string>
-    <string name="share_link">Compartir Link IT</string>
+    <string name="copy_link">Copia Link</string>
+    <string name="share_link">Condividi Link</string>
+    <string name="transactions_history">Storico Movimenti</string>
 
 </resources>
