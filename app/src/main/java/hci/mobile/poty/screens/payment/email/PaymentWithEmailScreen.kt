@@ -46,6 +46,7 @@ import hci.mobile.poty.screens.payment.PaymentHistory
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
 import hci.mobile.poty.screens.payment.PaymentType
+import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
@@ -489,27 +490,8 @@ fun HeaderSection(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Top
         ) {
-            IconButton(
-                onClick = { /*Cuando enseñen navegacion xddd*/ },
-                modifier = Modifier.padding(
-                    start = contentPadding,
-                    top = contentPadding,
-                    end = contentPadding,
-                    bottom = 0.dp  // Remove bottom padding
-                )
-            ) {
-                Surface(
-                    shape = CircleShape,
-                    color = GreenDark,
-                    modifier = Modifier.size(35.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Go Back",
-                        tint = White
-                    )
-                }
-            }
+
+            BackButton()
 
             Card(
                 modifier = Modifier

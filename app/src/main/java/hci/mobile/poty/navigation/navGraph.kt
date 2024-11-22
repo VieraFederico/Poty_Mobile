@@ -84,7 +84,7 @@ fun AppNavGraph(navController: NavHostController, ) {
                     onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
                 )
             }
-        }
+
 
         composable(route = Routes.PAYMENT_SCREEN) {
             PaymentScreen(
@@ -107,5 +107,6 @@ fun AppNavGraph(navController: NavHostController, ) {
 
             )
         }
+    }
     }
 }

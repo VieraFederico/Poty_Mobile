@@ -44,6 +44,7 @@ import hci.mobile.poty.screens.payment.PaymentHistory
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
 import hci.mobile.poty.screens.register.RegistrationViewModel
+import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.GreyDark
@@ -179,23 +180,7 @@ fun HeaderSection(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            IconButton(
-                onClick = { /*Cuando enseñen navegacion xddd*/ },
-                modifier = Modifier.padding(contentPadding)
-            ) {
-                Surface(
-                    shape = CircleShape,
-                    color = GreenDark,
-                    modifier = Modifier.size(35.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Go Back",
-                        tint = White
-                    )
-                }
-            }
-
+           BackButton()
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -333,50 +318,3 @@ fun ContentSection(
     }
 }
 
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletPortraitPreview() {
-    PaymentScreen(
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletLandscapePreview() {
-    PaymentScreen(
-
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
-    )
-}
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhonePortraitPreview() {
-    PaymentScreen(
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhoneLandscapePreview() {
-    PaymentScreen(
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
-    )
-}
