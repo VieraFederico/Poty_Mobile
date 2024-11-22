@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,17 +42,13 @@ import hci.mobile.poty.classes.CardResponse
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
 import hci.mobile.poty.screens.payment.PaymentType
-import hci.mobile.poty.screens.payment.email.ContentSection
-import hci.mobile.poty.screens.payment.email.HeaderSection
-import hci.mobile.poty.screens.payment.email.PaymentWithEmailScreen
-import hci.mobile.poty.screens.payment.email.SelectOptionTextButton
-import hci.mobile.poty.screens.payment.email.StepOne
-import hci.mobile.poty.screens.payment.email.StepTwo
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.GreenDark
+import hci.mobile.poty.ui.theme.GreenLight
+import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleMediumLite
 import hci.mobile.poty.utils.ErrorMessage
@@ -515,8 +512,8 @@ fun ContentSection(
         ) {
             when (state.currentStep) {
                 1 -> StepOne(
-                    email = state.email,
-                    onEmailChange = { viewModel.updateEmail(it) },
+                    link = state.paymentLink,
+                    onLinkChange = { viewModel.updateLink(it) },
                     onNext = { viewModel.nextStep() },
                     errorMessage = state.errorMessage,
                     windowSizeClass = windowSizeClass
@@ -525,7 +522,6 @@ fun ContentSection(
                 2 -> StepTwo(
                     number = state.request.amount,
                     balance = state.balance,
-                    onNumberChange = { viewModel.updateAmount(it.toDouble()) },
                     creditCards = state.creditCards,
                     selectedCard = state.selectedCard,
                     onCardSelected = { viewModel.selectCard(it) },
@@ -551,7 +547,7 @@ fun ContentSection(
 )
 @Composable
 fun MediumTabletPortraitPreview() {
-    PaymentWithEmailScreen(
+    PaymentWithLinkScreen(
         mockWindowSizeClass = WindowSizeClass.MediumTablet
     )
 }
@@ -563,8 +559,7 @@ fun MediumTabletPortraitPreview() {
 )
 @Composable
 fun MediumTabletLandscapePreview() {
-    PaymentWithEmailScreen(
-
+    PaymentWithLinkScreen(
         mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
     )
 }
@@ -575,7 +570,7 @@ fun MediumTabletLandscapePreview() {
 )
 @Composable
 fun MediumPhonePortraitPreview() {
-    PaymentWithEmailScreen(
+    PaymentWithLinkScreen(
         mockWindowSizeClass = WindowSizeClass.MediumPhone
     )
 }
@@ -587,7 +582,45 @@ fun MediumPhonePortraitPreview() {
 )
 @Composable
 fun MediumPhoneLandscapePreview() {
-    PaymentWithEmailScreen(
+    PaymentWithLinkScreen(
         mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
     )
+}
+
+@Composable
+fun SelectOptionTextButton(
+    selectedOption: PaymentType,
+    onOptionSelected: (PaymentType) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .padding(
+                start = 16.dp,
+                top = 5.dp,
+                end = 16.dp,
+                bottom = 0.dp
+            )
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        TextButton(
+            onClick = { onOptionSelected(PaymentType.CARD) },
+            modifier = Modifier.padding(end = 8.dp)
+        ) {
+            Text(
+                text = "Tarjeta",
+                color = if (selectedOption == PaymentType.CARD) GreenLight else GreyLight
+            )
+        }
+
+        TextButton(
+            onClick = { onOptionSelected(PaymentType.BALANCE) },
+            modifier = Modifier.padding(start = 8.dp)
+        ) {
+            Text(
+                text = "Balance",
+                color = if (selectedOption == PaymentType.BALANCE) GreenLight else GreyLight
+            )
+        }
+    }
 }
