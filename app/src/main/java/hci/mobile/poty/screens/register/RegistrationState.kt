@@ -9,6 +9,7 @@
         val birthday: String = "",
         val errorMessage: String = "",
         val currentStep: Int = 1,
+        val currentSubStep: Int = 0,
         val isLoading: Boolean = false,
         val confirmationCode: String = ""
     )
@@ -21,6 +22,8 @@
         data class UpdateBirthday(val birthday: String) : RegistrationEvent()
         data class UpdateConfirmationCode(val confirmationCode: String) : RegistrationEvent()
         object NextStep : RegistrationEvent()
+        object NextSubStep : RegistrationEvent()
+        object PreviousSubStep: RegistrationEvent()
         object PreviousStep : RegistrationEvent()
         object Submit : RegistrationEvent()
         object verifyCode : RegistrationEvent()

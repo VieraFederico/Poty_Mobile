@@ -52,27 +52,19 @@ import hci.mobile.poty.utils.ThickTextFieldWithLabel
 fun RegistrationScreen(
     onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null,
-    mockViewModel: Boolean = false
+
 ) {
 
     val state: RegistrationState
     var isRegistrationSuccessful: Boolean
     val onEvent: (RegistrationEvent) -> Unit
 
-    if (!mockViewModel) {
-        val viewModel: RegistrationViewModel = viewModel(factory = RegistrationViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
-        state = viewModel.state
-        isRegistrationSuccessful = viewModel.isRegistrationSuccessful
-        onEvent = { viewModel.onEvent(it) }
-    } else {
-        val viewModel: MockRegistrationViewModel = viewModel()
-        state = viewModel.state.collectAsState().value
-        isRegistrationSuccessful = viewModel.isRegistrationSuccessful.collectAsState().value
-        onEvent = { viewModel.onEvent(it) }
-    }
+    val viewModel: RegistrationViewModel = viewModel(factory = RegistrationViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+    state = viewModel.state
+    isRegistrationSuccessful = viewModel.isRegistrationSuccessful
+    onEvent = { viewModel.onEvent(it) }
 
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass = calculateWindowSizeClass()
     val isLandscape = windowSizeClass.isLandscape()
     val contentPadding = if (windowSizeClass.isTablet()) 32.dp else if(!windowSizeClass.isLandscape()) 16.dp else 8.dp
 
@@ -212,77 +204,7 @@ fun RegistrationContentSection(
     contentPadding: Dp,
     windowSizeClass: WindowSizeClass
 ) {
-    Column(
-        modifier = modifier
-            .padding(contentPadding)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-
-        // Registration steps logic remains the same
-        when (state.currentStep) {
-            1 -> StepOne(
-                name = state.name,
-                surname = state.surname,
-                birthDate = state.birthday,
-                onNameChange = { onEvent(RegistrationEvent.UpdateName(it)) },
-                onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) },
-                onBirthdayChange = { onEvent(RegistrationEvent.UpdateBirthday(it)) },
-                onNext = { onEvent(RegistrationEvent.NextStep) },
-                errorMessage = state.errorMessage,
-                windowSizeClass = windowSizeClass,
-                onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                onNavigateToLogin = onNavigateToLogin
-            )
-
-            2 -> StepTwo(
-                email = state.email,
-                password = state.password,
-                onEmailChange = { onEvent(RegistrationEvent.UpdateEmail(it)) },
-                onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
-                onNext = { onEvent(RegistrationEvent.NextStep) },
-                errorMessage = state.errorMessage,
-                windowSizeClass = windowSizeClass,
-                onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                onNavigateToLogin = onNavigateToLogin
-            )
-
-            3 -> StepThree(
-                confirmationCode = state.confirmationCode,
-                email = state.email,
-                onConfirmationCodeChange = {
-                    onEvent(RegistrationEvent.UpdateConfirmationCode(it))
-                },
-                onSubmit = { onEvent(RegistrationEvent.verifyCode) },
-                errorMessage = state.errorMessage,
-                windowSizeClass = windowSizeClass,
-                onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                onNavigateToLogin = onNavigateToLogin
-            )
-        }
-
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        }
-
-    }
-}
-/*
-@Composable
-fun RegistrationContentSection(
-    modifier: Modifier,
-    state: RegistrationState,
-    onEvent: (RegistrationEvent) -> Unit,
-    onNavigateToLogin: () -> Unit,
-    contentPadding: Dp,
-    windowSizeClass: WindowSizeClass
-) {
     val isLandscapeAndNotTablet = windowSizeClass.isLandscape() && !windowSizeClass.isTablet()
-    val currentSubStep = state.currentStep % 2 // Determine the sub-step (0 or 1 for even/odd split)
 
     Column(
         modifier = modifier
@@ -291,91 +213,285 @@ fun RegistrationContentSection(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when {
-            isLandscapeAndNotTablet && state.currentStep <= 4 -> {
-                // Split content into 2 boxes per step
-                when (currentSubStep) {
-                    1 -> {
-                        StepOne(
-                            name = state.name,
-                            surname = state.surname,
-                            birthDate = state.birthday,
-                            onNameChange = { onEvent(RegistrationEvent.UpdateName(it)) },
-                            onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) },
-                            onBirthdayChange = { onEvent(RegistrationEvent.UpdateBirthday(it)) },
-                            onNext = { onEvent(RegistrationEvent.NextStep) },
-                            errorMessage = state.errorMessage,
-                            windowSizeClass = windowSizeClass,
-                            onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                            onNavigateToLogin = onNavigateToLogin
-                        )
-                    }
-                    0 -> {
-                        StepTwo(
-                            email = state.email,
-                            password = state.password,
-                            onEmailChange = { onEvent(RegistrationEvent.UpdateEmail(it)) },
-                            onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
-                            onNext = { onEvent(RegistrationEvent.NextStep) },
-                            errorMessage = state.errorMessage,
-                            windowSizeClass = windowSizeClass,
-                            onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                            onNavigateToLogin = onNavigateToLogin
-                        )
-                    }
-                }
-            }
-            else -> {
-                // Default to regular steps
-                when (state.currentStep) {
-                    1 -> StepOne(
+        if (isLandscapeAndNotTablet) {
+            // Use substeps for landscape and non-tablet devices
+            when (state.currentStep) {
+                1 -> when (state.currentSubStep) {
+                    0 -> SubStepOnePartOne(
                         name = state.name,
-                        surname = state.surname,
-                        birthDate = state.birthday,
                         onNameChange = { onEvent(RegistrationEvent.UpdateName(it)) },
-                        onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) },
+                        onNext = { onEvent(RegistrationEvent.NextSubStep) },
+                        errorMessage = state.errorMessage,
+                        windowSizeClass = windowSizeClass,
+                        onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                        onNavigateToLogin = onNavigateToLogin,
+                        surname = state.surname,
+                        onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) }
+                    )
+                    1 -> SubStepOnePartTwo(
+                        birthDate = state.birthday,
                         onBirthdayChange = { onEvent(RegistrationEvent.UpdateBirthday(it)) },
-                        onNext = { onEvent(RegistrationEvent.NextStep) },
+                        onNext = { onEvent(RegistrationEvent.NextSubStep) },
+                        onBackClick = { onEvent(RegistrationEvent.PreviousSubStep) },
                         errorMessage = state.errorMessage,
-                        windowSizeClass = windowSizeClass,
-                        onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                        onNavigateToLogin = onNavigateToLogin
-                    )
-                    2 -> StepTwo(
                         email = state.email,
-                        password = state.password,
-                        onEmailChange = { onEvent(RegistrationEvent.UpdateEmail(it)) },
-                        onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
-                        onNext = { onEvent(RegistrationEvent.NextStep) },
-                        errorMessage = state.errorMessage,
-                        windowSizeClass = windowSizeClass,
-                        onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                        onNavigateToLogin = onNavigateToLogin
-                    )
-                    3 -> StepThree(
-                        confirmationCode = state.confirmationCode,
-                        email = state.email,
-                        onConfirmationCodeChange = {
-                            onEvent(RegistrationEvent.UpdateConfirmationCode(it))
-                        },
-                        onSubmit = { onEvent(RegistrationEvent.verifyCode) },
-                        errorMessage = state.errorMessage,
-                        windowSizeClass = windowSizeClass,
-                        onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
-                        onNavigateToLogin = onNavigateToLogin
-                    )
+                        onEmailChange =  { onEvent(RegistrationEvent.UpdateEmail(it)) },
+                        )
                 }
+                2 ->  SubStepTwo(
+                        onNext = { onEvent(RegistrationEvent.NextSubStep) },
+                        onBackClick = { onEvent(RegistrationEvent.PreviousSubStep) },
+                        password = state.password,
+                        onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
+                        errorMessage = state.errorMessage,
+                    )
+
+
+                3 -> StepThree(
+                    confirmationCode = state.confirmationCode,
+                    email = state.email,
+                    onConfirmationCodeChange = {
+                        onEvent(RegistrationEvent.UpdateConfirmationCode(it))
+                    },
+                    onSubmit = { onEvent(RegistrationEvent.verifyCode) },
+                    errorMessage = state.errorMessage,
+                    windowSizeClass = windowSizeClass,
+                    onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                    onNavigateToLogin = onNavigateToLogin,
+                    state = state
+                )
+            }
+        } else {
+            when (state.currentStep) {
+                1 -> StepOne(
+                    name = state.name,
+                    surname = state.surname,
+                    birthDate = state.birthday,
+                    onNameChange = { onEvent(RegistrationEvent.UpdateName(it)) },
+                    onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) },
+                    onBirthdayChange = { onEvent(RegistrationEvent.UpdateBirthday(it)) },
+                    onNext = { onEvent(RegistrationEvent.NextStep) },
+                    errorMessage = state.errorMessage,
+                    windowSizeClass = windowSizeClass,
+                    onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                    onNavigateToLogin = onNavigateToLogin
+                )
+                2 -> StepTwo(
+                    email = state.email,
+                    password = state.password,
+                    onEmailChange = { onEvent(RegistrationEvent.UpdateEmail(it)) },
+                    onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
+                    onNext = { onEvent(RegistrationEvent.NextStep) },
+                    errorMessage = state.errorMessage,
+                    windowSizeClass = windowSizeClass,
+                    onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                    onNavigateToLogin = onNavigateToLogin
+                )
+                3 -> StepThree(
+                    confirmationCode = state.confirmationCode,
+                    email = state.email,
+                    onConfirmationCodeChange = {
+                        onEvent(RegistrationEvent.UpdateConfirmationCode(it))
+                    },
+                    onSubmit = { onEvent(RegistrationEvent.verifyCode) },
+                    errorMessage = state.errorMessage,
+                    windowSizeClass = windowSizeClass,
+                    onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                    onNavigateToLogin = onNavigateToLogin,
+                    state = state
+                )
             }
         }
 
-        if (state.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+
+    }
+}
+
+@Composable
+fun SubStepOnePartOne(
+    name: String,
+    onNameChange: (String) -> Unit,
+    onNext: () -> Unit,
+    errorMessage: String,
+    windowSizeClass: WindowSizeClass,
+    onBackClick: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    surname: String,
+    onSurnameChange: (String) -> Unit
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextFieldWithLabel(
+            label = "Nombre",
+            value = name,
+            onValueChange = onNameChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextFieldWithLabel(
+            label = "Apellido",
+            value = surname,
+            onValueChange = onSurnameChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { onNext() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LoginNavigationText(
+            currentStep = 1,
+            onBackClick = onBackClick,
+            onLoginClick = onNavigateToLogin
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        if (errorMessage.isNotEmpty()) {
+            ErrorMessage(message = errorMessage)
+        }
+
+    }
+}
+
+@Composable
+fun SubStepOnePartTwo(
+    birthDate: String,
+    onBirthdayChange: (String) -> Unit,
+    onNext: () -> Unit,
+    onBackClick: () -> Unit,
+    errorMessage: String,
+    onEmailChange: (String) -> Unit,
+    email: String
+) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        CompactDateFieldWithLabel(
+            label = "Fecha de Nacimiento (DD/MM/AAAA)",
+            value = birthDate,
+            onValueChange = onBirthdayChange,
+            showCal = false
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextFieldWithLabel(
+            label = "Correo Electrónico",
+            value = email,
+            onValueChange = onEmailChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { onNext() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        LoginNavigationText(
+            currentStep = 2,
+            onLoginClick = {},
+            onBackClick = onBackClick
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        ErrorMessage(message = errorMessage)
+    
+    }
+}
+
+@Composable
+fun SubStepTwo(
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    onNext: () -> Unit,
+    onBackClick: () -> Unit,
+    errorMessage: String,
+) {
+    var localPasswordCheck by remember { mutableStateOf("") }
+    var passwordMismatchError by remember { mutableStateOf(false) }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        PasswordFieldWithLabel(
+            label = "Contraseña",
+            value = password,
+            onValueChange = {
+                onPasswordChange(it)
+                passwordMismatchError = false
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        PasswordFieldWithLabel(
+            label = "Confirmar Contraseña",
+            value = localPasswordCheck,
+            onValueChange = {
+                localPasswordCheck = it
+                passwordMismatchError = false
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = {
+                if (password == localPasswordCheck) {
+                    onNext()
+                } else {
+                    passwordMismatchError = true
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+        ) {
+            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LoginNavigationText(
+            currentStep = 2,
+            onBackClick = onBackClick,
+            onLoginClick = { }
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        if (errorMessage.isNotEmpty()) {
+            ErrorMessage(message = errorMessage)
+        }else if (passwordMismatchError) {
+            ErrorMessage(message = "Las contraseñas no coinciden.")
+
         }
     }
 }
-*/
+
+
+
+
+
 
 @Composable
 fun StepOne(
@@ -466,6 +582,7 @@ fun StepTwo(
     onNavigateToLogin: () -> Unit
 ) {
     var localPasswordCheck by remember { mutableStateOf("") }
+    var passwordMismatchError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -475,12 +592,13 @@ fun StepTwo(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        if(!windowSizeClass.isTablet() && !windowSizeClass.isLandscape()){
+        if (!windowSizeClass.isTablet() && !windowSizeClass.isLandscape()) {
             RegistrationTitle(
                 windowSizeClass = windowSizeClass,
                 currentStep = 2
             )
         }
+
         TextFieldWithLabel(
             label = "Correo Electrónico",
             value = email,
@@ -493,7 +611,10 @@ fun StepTwo(
         PasswordFieldWithLabel(
             label = "Contraseña",
             value = password,
-            onValueChange = onPasswordChange,
+            onValueChange = {
+                onPasswordChange(it)
+                passwordMismatchError = false // Reset mismatch error on input
+            },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -502,34 +623,47 @@ fun StepTwo(
         PasswordFieldWithLabel(
             label = "Confirmar Contraseña",
             value = localPasswordCheck,
-            onValueChange = { localPasswordCheck = it },
+            onValueChange = {
+                localPasswordCheck = it
+                passwordMismatchError = false // Reset mismatch error on input
+            },
             modifier = Modifier.fillMaxWidth()
         )
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { onNext() },
+            onClick = {
+                if (password == localPasswordCheck) {
+                    onNext()
+                } else {
+                    passwordMismatchError = true
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
             Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
-        }else{
+        } else if (passwordMismatchError)  {
+            ErrorMessage(message = "Las contraseñas no coinciden.")
+        }else {
             LoginNavigationText(
                 currentStep = 2,
                 onBackClick = onBackClick,
                 onLoginClick = onNavigateToLogin
             )
         }
-
-
     }
 }
+
 
 @Composable
 fun StepThree(
@@ -540,23 +674,32 @@ fun StepThree(
     errorMessage: String,
     windowSizeClass: WindowSizeClass,
     onBackClick: () -> Unit,
-    onNavigateToLogin: () -> Unit
+    onNavigateToLogin: () -> Unit,
+    state: RegistrationState
 ) {
+    val horizontalPadding = when {
+        windowSizeClass.isTablet() -> 32.dp
+        windowSizeClass == WindowSizeClass.MediumPhoneLandscape -> 8.dp
+        else -> 16.dp
+    }
+
+    val spacing = if (windowSizeClass == WindowSizeClass.MediumPhoneLandscape) 8.dp else 16.dp
+
     Column(
         modifier = Modifier
-            .padding(horizontal = if (windowSizeClass.isTablet()) 32.dp else 16.dp)
+            .padding(horizontal = horizontalPadding)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if(!windowSizeClass.isTablet() && !windowSizeClass.isLandscape()){
+        if (!windowSizeClass.isTablet() && !windowSizeClass.isLandscape()) {
             RegistrationTitle(
                 windowSizeClass = windowSizeClass,
                 currentStep = 3
             )
         }
         Text(
-            text = "Para finalizar tu registro, ingresá el código que fue enviado a :",
+            text = "Para finalizar tu registro, ingresá el código que fue enviado a:",
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
@@ -565,21 +708,29 @@ fun StepThree(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(spacing))
 
-        ThickTextFieldWithLabel(
-            value = confirmationCode,
-            onValueChange = onConfirmationCodeChange,
-            isPassword = false,
-            modifier = Modifier.fillMaxWidth()
-        )
+        if (windowSizeClass == WindowSizeClass.MediumPhoneLandscape) {
+            TextFieldWithLabel(
+                label = "",
+                value = confirmationCode,
+                onValueChange = onConfirmationCodeChange,
+                isPassword = false,
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
+            ThickTextFieldWithLabel(
+                value = confirmationCode,
+                onValueChange = onConfirmationCodeChange,
+                isPassword = false,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
-
-
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(spacing))
 
         Button(
-            onClick = {  onSubmit() },
+            onClick = { onSubmit() },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -587,20 +738,27 @@ fun StepThree(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
 
-        if (errorMessage.isNotEmpty()) {
-            ErrorMessage(message = errorMessage)
-        }else{
+        Spacer(modifier = Modifier.height(spacing))
+
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        } else {
             LoginNavigationText(
                 currentStep = 3,
                 onBackClick = onBackClick,
                 onLoginClick = onNavigateToLogin
             )
+            Spacer(modifier = Modifier.height(spacing))
+            if (errorMessage.isNotEmpty()) {
+                ErrorMessage(message = errorMessage)
+            }
         }
-
     }
 }
+
 
 @Composable
 fun RegistrationTitle(
@@ -615,70 +773,5 @@ fun RegistrationTitle(
             .padding(top = 20.dp, bottom = 10.dp)
     )
 }
-
-
-
-
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun RegistrationScreenMediumPhonePortraitPreview() {
-    RegistrationScreen(
-        onRegisterSuccess = {},
-        onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhone,
-        mockViewModel = true
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true,
-)
-@Composable
-fun RegistrationScreenMediumPhoneLandscapePreview() {
-    RegistrationScreen(
-        onRegisterSuccess = {},
-        onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape,
-        mockViewModel = true
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun RegistrationScreenMediumTabletPortraitPreview() {
-    RegistrationScreen(
-        onRegisterSuccess = {},
-        onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTablet,
-        mockViewModel = true
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun RegistrationScreenMediumTabletLandscapePreview() {
-    RegistrationScreen(
-        onRegisterSuccess = {},
-        onNavigateToLogin = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape,
-        mockViewModel = true
-    )
-}
-
-
 
 

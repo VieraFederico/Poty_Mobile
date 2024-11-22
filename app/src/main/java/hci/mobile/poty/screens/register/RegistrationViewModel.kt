@@ -38,7 +38,9 @@ class RegistrationViewModel(
             is RegistrationEvent.UpdateBirthday -> updateBirthday(event.birthday)
             is RegistrationEvent.UpdateConfirmationCode -> updateConfirmationCode(event.confirmationCode)
             RegistrationEvent.NextStep -> validateAndMoveToNextStep()
+            RegistrationEvent.NextSubStep -> validateAndMoveToNextSubStep()
             RegistrationEvent.PreviousStep -> moveToPreviousStep()
+            RegistrationEvent.PreviousSubStep -> moveToPreviousSubStep()
             RegistrationEvent.Submit -> submitRegistration()
             RegistrationEvent.verifyCode -> verify()
         }
@@ -68,6 +70,24 @@ class RegistrationViewModel(
         state = state.copy(confirmationCode = confirmationCode, errorMessage = "")
     }
 
+    private fun validateAndMoveToNextSubStep(){
+        if(state.currentSubStep == 0){
+            when (state.currentStep) {
+                1 -> validateSubStepOneStepZero()
+                2 -> validateSubStepTwo()
+                3 -> validateStepThree()
+            }
+            return;
+        }else{
+            when (state.currentStep) {
+                1 -> validateSubStepOneStepOne()
+                2 -> validateSubStepTwo()
+                3 -> validateStepThree()
+            }
+        }
+
+    }
+
     private fun validateAndMoveToNextStep() {
         when (state.currentStep) {
             1 -> validateStepOne()
@@ -75,6 +95,8 @@ class RegistrationViewModel(
             3 -> validateStepThree()
         }
     }
+
+
 
 
     private fun validateStepOne() {
@@ -86,11 +108,52 @@ class RegistrationViewModel(
                 require(isValidDate(birthday)) { "Por favor, ingrese una fecha de nacimiento válida en formato DD/MM/AAAA." }
                 require(!isFutureDate(birthday)) { "Por favor, ingresar una fecha anterior o igual a la actual." }
             }
-            state = state.copy(currentStep = 2, errorMessage = "")
+            state = state.copy(currentStep = 2, errorMessage = "", currentSubStep = 0)
         } catch (e: IllegalArgumentException) {
             state = state.copy(errorMessage = e.message ?: "Error de validación")
         }
     }
+
+    private fun validateSubStepOneStepZero() {
+        try {
+            with(state) {
+                require(name.isNotEmpty()) { "Por favor, ingrese un nombre válido." }
+                require(surname.isNotEmpty()) { "Por favor, ingrese un apellido válido." }
+            }
+            state = state.copy(currentSubStep = 1, errorMessage = "")
+        } catch (e: IllegalArgumentException) {
+            state = state.copy(errorMessage = e.message ?: "Error de validación")
+        }
+    }
+    private fun validateSubStepTwo(){
+        try {
+            with(state) {
+                require(password.isNotEmpty()) { "Por favor, ingrese una contraseña válida." }
+                require(password.length >= 6) { "Por favor, la contraseña debe tener más de 6 dígitos." }            }
+            submitRegistration()
+            state = state.copy(currentStep = 3, errorMessage = "", currentSubStep = 0)
+        } catch (e: IllegalArgumentException) {
+            state = state.copy(errorMessage = e.message ?: "Error de validación")
+        }
+    }
+
+    private fun validateSubStepOneStepOne() {
+        try {
+            with(state) {
+                require(birthday.isNotEmpty()) { "Por favor, ingrese una fecha de nacimiento válida." }
+                require(isValidDate(birthday)) { "Por favor, ingrese una fecha de nacimiento válida en formato DD/MM/AAAA." }
+                require(!isFutureDate(birthday)) { "Por favor, ingresar una fecha anterior o igual a la actual." }
+                require(email.isNotEmpty()) { "Por favor, ingrese un correo electrónico válido." }
+                require(isValidEmail(email)) { "Por favor, ingrese un correo electrónico con formato válido. " }
+            }
+            state = state.copy(currentSubStep = 0, errorMessage = "", currentStep = 2)
+        } catch (e: IllegalArgumentException) {
+            state = state.copy(errorMessage = e.message ?: "Error de validación")
+        }
+    }
+
+
+
 
     private fun isFutureDate(date: String): Boolean {
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
@@ -127,10 +190,12 @@ private fun isValidDate(date: String): Boolean {
         try {
             with(state) {
                 require(email.isNotEmpty()) { "Por favor, ingrese un correo electrónico válido." }
+                require(isValidEmail(email)) { "Por favor, ingrese un correo electrónico con formato válido. " }
                 require(password.isNotEmpty()) { "Por favor, ingrese una contraseña válida." }
+                require(password.length >= 6) { "Por favor, la contraseña debe tener más de 6 dígitos." }
             }
             submitRegistration()
-            state = state.copy(currentStep = 3, errorMessage = "")
+            state = state.copy(currentStep = 3, errorMessage = "", currentSubStep = 0)
         } catch (e: IllegalArgumentException) {
             state = state.copy(errorMessage = e.message ?: "Error de validación")
         }
@@ -176,9 +241,17 @@ private fun isValidDate(date: String): Boolean {
 
     private fun moveToPreviousStep() {
         if (state.currentStep > 1) {
-            state = state.copy(currentStep = state.currentStep - 1, errorMessage = "")
+            state = state.copy(currentStep = state.currentStep - 1, errorMessage = "", currentSubStep = 1)
         }
     }
+    private fun moveToPreviousSubStep() {
+        if (state.currentSubStep == 1) {
+            state = state.copy(currentSubStep = 0, errorMessage = "")
+        }else if(state.currentStep > 1){
+            state = state.copy(currentStep =  state.currentStep - 1, errorMessage = "", currentSubStep = 1)
+        }
+    }
+
 
     @SuppressLint("SimpleDateFormat")
     private fun submitRegistration() {
@@ -223,4 +296,10 @@ private fun isValidDate(date: String): Boolean {
         }
     }
 }
+
+private fun isValidEmail(email: String): Boolean {
+    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+    return email.matches(emailRegex.toRegex())
+}
+
 
