@@ -60,7 +60,7 @@ fun PaymentScreenPreview(){
 }
 @Composable
 fun PaymentScreen(
-    viewModel: PaymentScreenViewModel = viewModel(factory = RegistrationViewModel.provideFactory(
+    viewModel: PaymentScreenViewModel = viewModel(factory = PaymentScreenViewModel.provideFactory(
         LocalContext.current.applicationContext as MyApplication
     )),
     mockWindowSizeClass: WindowSizeClass? = null,

@@ -87,12 +87,13 @@ fun AppNavGraph(navController: NavHostController, ) {
 
         composable(route = Routes.EMAIL_SCREEN) {
             PaymentWithEmailScreen(
-
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
             )
         }
 
         composable(route = Routes.LINK_SCREEN) {
             PaymentWithLinkScreen(
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
 
             )
         }

@@ -5,7 +5,7 @@ import hci.mobile.poty.data.network.model.NetworkBalancePayment
 class BalancePayment  (
     val amount: Double,
     val description: String,
-    val type: String = "BALANCE",
+    val type: String,
     val receiverEmail: String
 ) {
     fun asNetworkModel(): NetworkBalancePayment {
