@@ -1,6 +1,6 @@
 package hci.mobile.poty.classes
 
-data class BalanceResponse(val balance: Double)
+data class BalanceResponse(val balance: Float)
 data class RechargeRequest(val amount: Double)
 
 data class InvestmentResponse(val investment: Double)
@@ -38,7 +38,7 @@ data class InterestResponse(val interest: Double)
 data class AliasUpdateRequest(val alias: String)
 data class WalletDetailsResponse(
     val id: Int,
-    val balance: Double,
+    val balance: Float,
     val invested: Double,
     val cbu: String,
     val alias: String

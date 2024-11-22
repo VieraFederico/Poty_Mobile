@@ -1,14 +1,27 @@
 package hci.mobile.poty.screens.payment
 
+import android.util.Log
 import hci.mobile.poty.classes.CardResponse
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import hci.mobile.poty.MyApplication
+import hci.mobile.poty.data.model.BalancePayment
+import hci.mobile.poty.data.model.CardPayment
+import hci.mobile.poty.data.repository.PaymentRepository
+import hci.mobile.poty.data.repository.WalletRepository
+import hci.mobile.poty.screens.dashboard.DashboardViewModel
+import hci.mobile.poty.screens.dashboard.DashboardViewModel.Companion
+import hci.mobile.poty.screens.register.RegistrationViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PaymentScreenViewModel : ViewModel() {
+class PaymentScreenViewModel(
+    private val paymentRepository: PaymentRepository,
+    private val walletRepository: WalletRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(
         PaymentScreenState(
@@ -23,6 +36,28 @@ class PaymentScreenViewModel : ViewModel() {
     )
     val state: StateFlow<PaymentScreenState> = _state
 
+
+    init{
+        viewModelScope.launch {
+            fetchBalance()
+        }
+    }
+
+    private suspend fun fetchBalance() {
+        try {
+            val balanceResponse = walletRepository.getBalance() // Puede lanzar excepciones
+            _state.update { currentState ->
+                currentState.copy(balance = balanceResponse.balance)
+            }
+        } catch (e: Exception) {
+            // Manejo de error: Actualiza el estado con un mensaje o loguea el error
+            _state.update { currentState ->
+                currentState.copy(balance = 0f) // Asume balance 0 en caso de error
+            }
+            // Loguea para depuración
+            android.util.Log.e(DashboardViewModel.TAG, "Error fetching balance", e)
+        }
+    }
 
     fun nextStep() {
         viewModelScope.launch {
@@ -45,10 +80,12 @@ class PaymentScreenViewModel : ViewModel() {
             val currentRequest = _state.value.request
             if (currentRequest is PaymentRequest.BalancePayment) {
                 _state.value = _state.value.copy(
+                    email = email,
                     request = currentRequest.copy(receiverEmail = email)
                 )
             } else if (currentRequest is PaymentRequest.CardPayment) {
                 _state.value = _state.value.copy(
+                    email = email,
                     request = currentRequest.copy(receiverEmail = email)
                 )
             }
@@ -109,35 +146,44 @@ class PaymentScreenViewModel : ViewModel() {
         viewModelScope.launch {
             val state = _state.value
 
-            // Verificamos el tipo de pago y armamos el PaymentRequest
-            val paymentRequest = when (state.type) {
-                PaymentType.CARD -> {
-                    PaymentRequest.CardPayment(
-                        amount = state.request.amount,
-                        description = state.request.description,
-                        cardId = state.selectedCard?.id ?: 0,
-                        receiverEmail = state.email
-                    )
-                }
-                PaymentType.BALANCE -> {
-                    PaymentRequest.BalancePayment(
-                        amount = state.request.amount,
-                        description = state.request.description,
-                        receiverEmail = state.email
-                    )
-                }
-                else -> {
-                    setErrorMessage("Tipo de pago no válido.")
-                }
-            }
 
             try {
-                //Llamamos API
+                _state.update { it.copy(isLoading = true) } // Marca como cargando
+
+
+                if (state.type == PaymentType.BALANCE) {
+                    paymentRepository.payWithBalance(
+                        BalancePayment(
+                            description = state.description,
+                            type = "BALANCE",
+                            receiverEmail = state.email,
+                            amount = state.request.amount
+                        )
+                    )
+                } else {
+                    paymentRepository.payWithCard(
+                        CardPayment(
+                            description = state.description,
+                            type = "CARD",
+                            receiverEmail = state.email,
+                            amount = state.request.amount,
+                            cardId = state.selectedCard?.id ?: 0
+                        )
+                    )
+                }
+
+                _state.update { it.copy(isLoading = false, errorMessage = "") }
             } catch (e: Exception) {
-                setErrorMessage("Error al procesar el pago: ${e.message}")
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = "Error al procesar el pago: ${e.message}"
+                    )
+                }
             }
         }
     }
+
 
     fun extractDataFromLink (link: String) {
         viewModelScope.launch {
@@ -161,5 +207,21 @@ class PaymentScreenViewModel : ViewModel() {
 
     fun onDescriptionChange(newDescription: String) {
         _state.update { it.copy(description = newDescription, errorMessage = "") }
+    }
+
+    companion object {
+        const val TAG = "UI Layer"
+
+        fun provideFactory(
+            app: MyApplication
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return PaymentScreenViewModel(
+                    app.paymentRepository,
+                    app.walletRepository
+                ) as T
+            }
+        }
     }
 }

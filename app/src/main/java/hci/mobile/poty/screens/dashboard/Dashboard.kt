@@ -63,6 +63,7 @@ fun Dashboard(
     onNavigateToCharge: () -> Unit,
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
+    onNavigateToPayment: () -> Unit = {},
     mockWindowSizeClass: WindowSizeClass? = null
 ) {
     val state by viewModel.state.collectAsState()
@@ -110,6 +111,7 @@ fun Dashboard(
                             onNavigateToCharge = onNavigateToCharge,
                             onNavigateToDeposit = onNavigateToDeposit,
                             onNavigateToAddCard = onNavigateToAddCard,
+                            onNavigateToPayment = onNavigateToPayment,
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             showTransactionHistory = windowSizeClass != WindowSizeClass.MediumPhoneLandscape,
@@ -143,6 +145,7 @@ fun Dashboard(
                             onNavigateToCharge = onNavigateToCharge,
                             onNavigateToDeposit = onNavigateToDeposit,
                             onNavigateToAddCard = onNavigateToAddCard,
+                            onNavigateToPayment = onNavigateToPayment,
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             topStart = 30.dp,
@@ -273,6 +276,7 @@ fun ContentSection(
     onNavigateToCharge: () -> Unit,
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
+    onNavigateToPayment: () -> Unit,
     viewModel: DashboardViewModel,
     windowSizeClass: WindowSizeClass,
     showTransactionHistory: Boolean = true,
@@ -319,7 +323,7 @@ fun ContentSection(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
-                    onClick = { /* TODO */ },
+                    onClick =  onNavigateToPayment,
                     iconResId = R.drawable.corner_right_up,
                     contentDescription = "Enviar"
                 )

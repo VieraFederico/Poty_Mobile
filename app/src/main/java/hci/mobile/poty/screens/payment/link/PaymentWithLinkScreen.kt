@@ -34,9 +34,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
 import hci.mobile.poty.classes.CardResponse
 import hci.mobile.poty.screens.payment.PaymentScreenState
@@ -65,8 +67,11 @@ fun PaymentWithLinkScreenPreview(){
 }
 @Composable
 fun PaymentWithLinkScreen(
-    viewModel: PaymentScreenViewModel = viewModel(),
-    mockWindowSizeClass: WindowSizeClass? = null
+    viewModel: PaymentScreenViewModel = viewModel(factory = PaymentScreenViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
+    mockWindowSizeClass: WindowSizeClass? = null,
+    onNavigateToDashboard: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
@@ -117,7 +122,9 @@ fun PaymentWithLinkScreen(
                                 viewModel = viewModel,
                                 windowSizeClass = windowSizeClass,
                                 topStart = 30.dp,
-                                bottomStart = 30.dp
+                                bottomStart = 30.dp,
+                                onNavigateToDashboard = onNavigateToDashboard
+
                             )
                         }
                     }
@@ -153,7 +160,9 @@ fun PaymentWithLinkScreen(
                                 viewModel = viewModel,
                                 windowSizeClass = windowSizeClass,
                                 topStart = 30.dp,
-                                bottomStart = 30.dp
+                                bottomStart = 30.dp,
+                                onNavigateToDashboard = onNavigateToDashboard
+
                             )
                         }
                     }
@@ -210,7 +219,7 @@ fun StepOne(
 @Composable
 fun StepTwo(
     number: Double,
-    balance: Double,
+    balance: Float,
     creditCards: List<CardResponse>,
     selectedCard: CardResponse? = null,
     onCardSelected: (CardResponse) -> Unit,
@@ -259,7 +268,8 @@ fun StepTwo(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
-                        onClick = { onSubmit() },
+                        onClick = { onSubmit()
+                                  },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -486,7 +496,8 @@ fun ContentSection(
     topStart: Dp = 0.dp,
     topEnd: Dp = 0.dp,
     bottomStart: Dp = 0.dp,
-    bottomEnd: Dp = 0.dp
+    bottomEnd: Dp = 0.dp,
+    onNavigateToDashboard: () -> Unit
 ) {
 
     Card(
