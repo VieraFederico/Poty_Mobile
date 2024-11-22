@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,9 +22,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.window.layout.WindowMetricsCalculator
 import hci.mobile.poty.R
 import hci.mobile.poty.classes.CreditCard
+import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.FullCreditCardView
 import hci.mobile.poty.ui.components.ResponsiveNavBar
@@ -42,7 +45,8 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 fun AddCardScreen(
     viewModel: AddCardScreenViewModel = remember { AddCardScreenViewModel() },
     mockWindowSizeClass: WindowSizeClass? = null,
-    onNavigateToDashboard: () -> Unit
+    onNavigateToDashboard: () -> Unit,
+    onBackClick: () ->Unit
 ) {
     val state by viewModel.state.collectAsState()
     viewModel.onAddCardSuccess = onNavigateToDashboard
@@ -60,6 +64,7 @@ fun AddCardScreen(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.secondary,
             ) { innerPadding ->
+
                 if (isLandscape) {
                     Row(
                         modifier = Modifier
@@ -73,7 +78,7 @@ fun AddCardScreen(
                             contentPadding = contentPadding,
                             showCreditCard = windowSizeClass == WindowSizeClass.MediumPhoneLandscape,
                             state = state,
-                            onBackClick = { /* Handle navigation */ }
+                            onBackClick = onBackClick
                         )
 
                         FormSection(
@@ -105,7 +110,7 @@ fun AddCardScreen(
                             contentPadding = contentPadding,
                             showCreditCard = false,
                             state = state,
-                            onBackClick = { /* Handle navigation */ }
+                            onBackClick = onBackClick
                         )
 
                         FormSection(
@@ -147,21 +152,8 @@ fun HeaderSection(
             contentScale = ContentScale.Crop
         )
 
-        IconButton(
-            onClick = onBackClick,
-        ) {
-            Surface(
-                shape = CircleShape,
-                color = GreenDark,
-                modifier = Modifier.size(35.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Go Back",
-                    tint = White
-                )
-            }
-        }
+
+        BackButton( )
 
         Card(
             modifier = Modifier.fillMaxSize(),
@@ -291,47 +283,7 @@ fun FormSection(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
+
         }
     }
-}
-
-
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhonePortraitPreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumPhone, onNavigateToDashboard = {})
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhoneLandscapePreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape, onNavigateToDashboard = {})
-}
-
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletPortraitPreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumTablet,  onNavigateToDashboard = {})
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletLandscapePreview() {
-    AddCardScreen(mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape,  onNavigateToDashboard = {})
 }

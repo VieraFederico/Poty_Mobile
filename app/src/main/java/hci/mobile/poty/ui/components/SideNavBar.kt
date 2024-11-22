@@ -16,12 +16,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
+import hci.mobile.poty.navigation.LocalNavController
+import hci.mobile.poty.navigation.Routes
 import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
+import hci.mobile.poty.utils.isTablet
 
 @Composable
 fun SideNavBar(
@@ -29,12 +32,9 @@ fun SideNavBar(
     mockWindowSizeClass: WindowSizeClass? = null // Optional for previews
 ) {
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
-    val isTablet = when (windowSizeClass) {
-        WindowSizeClass.MediumTablet,
-        WindowSizeClass.MediumTabletLandscape -> true
+    val isTablet = windowSizeClass.isTablet()
 
-        else -> false
-    }
+    val navController = LocalNavController.current
 
     val navWidth = if (isTablet) 200.dp else 80.dp
     val includeLabels = isTablet
@@ -85,7 +85,7 @@ fun SideNavBar(
                         { Text("Home", color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
-                    onClick = { onNavigate("home") }
+                    onClick = { navController.navigate(Routes.DASHBOARD) }
                 )
 
                 NavigationRailItem(
@@ -143,13 +143,5 @@ fun SideNavBar(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true, widthDp = 360, heightDp = 640)
-@Composable
-fun SideNavBarPreview() {
-    PotyTheme {
-        SideNavBar(onNavigate = { destination -> println("Navigated to $destination") }, mockWindowSizeClass = WindowSizeClass.MediumTablet)
     }
 }

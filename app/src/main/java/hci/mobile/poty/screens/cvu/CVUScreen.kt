@@ -47,6 +47,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import hci.mobile.poty.R
 import hci.mobile.poty.classes.CreditCard
+import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.FullCreditCardView
 import hci.mobile.poty.ui.theme.GreenDark
@@ -100,22 +101,7 @@ fun CVUScreen(
                         contentScale = ContentScale.Crop
                     )
 
-                    IconButton(
-                        onClick = { /*Cuando enseñen navegacion xddd*/ },
-                        modifier = Modifier.align(Alignment.TopStart) // This ensures it's at the top-left
-                    ) {
-                        Surface(
-                            shape = CircleShape,
-                            color = GreenDark,
-                            modifier = Modifier.size(35.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowLeft,
-                                contentDescription = "Go Back",
-                                tint = White
-                            )
-                        }
-                    }
+                    BackButton()
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()

@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import hci.mobile.poty.R
+import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
@@ -134,22 +135,9 @@ fun ChargeHeaderSection(
             contentScale = ContentScale.Crop
         )
 
-        IconButton(
-            onClick = { onNavigateBack() },
-            modifier = Modifier.padding(contentPadding)
-        ) {
-            Surface(
-                shape = CircleShape,
-                color = GreenDark,
-                modifier = Modifier.size(35.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Go Back",
-                    tint = White
-                )
-            }
-        }
+
+//        }
+        BackButton()
 
         Card(
             modifier = Modifier
