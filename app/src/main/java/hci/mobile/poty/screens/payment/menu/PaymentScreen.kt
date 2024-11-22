@@ -34,13 +34,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
 import hci.mobile.poty.screens.payment.PaymentHistory
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
+import hci.mobile.poty.screens.register.RegistrationViewModel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.GreyDark
@@ -57,8 +60,13 @@ fun PaymentScreenPreview(){
 }
 @Composable
 fun PaymentScreen(
-    viewModel: PaymentScreenViewModel = viewModel(),
-    mockWindowSizeClass: WindowSizeClass? = null
+    viewModel: PaymentScreenViewModel = viewModel(factory = RegistrationViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
+    mockWindowSizeClass: WindowSizeClass? = null,
+    onNavigateToDashboard: () -> Unit = {},
+    onNavigateToEmail: () -> Unit = {},
+    onNavigateToLink: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
@@ -106,6 +114,8 @@ fun PaymentScreen(
                                 state = state,
                                 viewModel = viewModel,
                                 windowSizeClass = windowSizeClass,
+                                onNavigateToLink = onNavigateToLink,
+                                onNavigateToEmail = onNavigateToEmail,
                                 topStart = 30.dp,
                                 bottomStart = 30.dp
                             )
@@ -135,6 +145,8 @@ fun PaymentScreen(
                             state = state,
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
+                            onNavigateToLink = onNavigateToLink,
+                            onNavigateToEmail = onNavigateToEmail,
                             topStart = 30.dp,
                             bottomStart = 30.dp
                         )
@@ -217,6 +229,8 @@ fun ContentSection(
     state: PaymentScreenState,
     viewModel: PaymentScreenViewModel,
     windowSizeClass: WindowSizeClass,
+    onNavigateToLink: () -> Unit = {},
+    onNavigateToEmail: () -> Unit = {},
     topStart: Dp = 0.dp,
     topEnd: Dp = 0.dp,
     bottomStart: Dp = 0.dp,
@@ -248,7 +262,7 @@ fun ContentSection(
             ))
 
             Button(
-                onClick = { /*Navegar a pantalla correspondiente*/ },
+                onClick = { onNavigateToLink() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -273,7 +287,7 @@ fun ContentSection(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { /*Navegar a pantalla correspondiente*/ },
+                onClick = { onNavigateToEmail() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),

@@ -2,9 +2,11 @@ package hci.mobile.poty
 
 import android.app.Application
 import hci.mobile.poty.SessionManager
+import hci.mobile.poty.data.network.PaymentRemoteDataSource
 import hci.mobile.poty.data.network.UserRemoteDataSource
 import hci.mobile.poty.data.network.WalletRemoteDataSource
 import hci.mobile.poty.data.network.api.RetrofitClient
+import hci.mobile.poty.data.repository.PaymentRepository
 import hci.mobile.poty.data.repository.UserRepository
 import hci.mobile.poty.data.repository.WalletRepository
 
@@ -16,6 +18,9 @@ class MyApplication : Application() {
     private val walletRemoteDataSource: WalletRemoteDataSource
         get() = WalletRemoteDataSource(RetrofitClient.getWalletApiService(this))
 
+    private val paymentRemoteDataSource: PaymentRemoteDataSource
+        get() = PaymentRemoteDataSource(RetrofitClient.getPaymentApiService(this))
+
     val sessionManager: SessionManager
         get() = SessionManager(this)
 
@@ -24,4 +29,7 @@ class MyApplication : Application() {
 
     val walletRepository: WalletRepository
         get() = WalletRepository(walletRemoteDataSource)
+
+    val paymentRepository: PaymentRepository
+        get() = PaymentRepository(paymentRemoteDataSource)
 }

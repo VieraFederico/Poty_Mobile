@@ -1,0 +1,19 @@
+package hci.mobile.poty.data.model
+
+import hci.mobile.poty.data.network.model.NetworkBalancePayment
+
+class BalancePayment  (
+    val amount: Double,
+    val description: String,
+    val type: String = "BALANCE",
+    val receiverEmail: String
+) {
+    fun asNetworkModel(): NetworkBalancePayment {
+        return NetworkBalancePayment(
+            amount = amount,
+            description = description,
+            type = type,
+            receiverEmail = receiverEmail
+        )
+    }
+}

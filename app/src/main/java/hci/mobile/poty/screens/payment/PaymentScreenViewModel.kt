@@ -2,13 +2,21 @@ package hci.mobile.poty.screens.payment
 
 import hci.mobile.poty.classes.CardResponse
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import hci.mobile.poty.MyApplication
+import hci.mobile.poty.data.model.BalancePayment
+import hci.mobile.poty.data.model.CardPayment
+import hci.mobile.poty.data.repository.PaymentRepository
+import hci.mobile.poty.screens.register.RegistrationViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class PaymentScreenViewModel : ViewModel() {
+class PaymentScreenViewModel(
+    private val paymentRepository: PaymentRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(
         PaymentScreenState(
@@ -109,35 +117,63 @@ class PaymentScreenViewModel : ViewModel() {
         viewModelScope.launch {
             val state = _state.value
 
-            // Verificamos el tipo de pago y armamos el PaymentRequest
-            val paymentRequest = when (state.type) {
-                PaymentType.CARD -> {
-                    PaymentRequest.CardPayment(
-                        amount = state.request.amount,
-                        description = state.request.description,
-                        cardId = state.selectedCard?.id ?: 0,
-                        receiverEmail = state.email
+            if (state.type == PaymentType.BALANCE) {
+                paymentRepository.payWithBalance(
+                    BalancePayment(
+                        description = state.description,
+                        type = state.type.toString(),
+                        receiverEmail = state.email,
+                        amount = state.request.amount
                     )
-                }
-                PaymentType.BALANCE -> {
-                    PaymentRequest.BalancePayment(
+                )
+            } else {
+                paymentRepository.payWithCard(
+                    CardPayment(
+                        description = state.description,
+                        type = state.type.toString(),
+                        receiverEmail = state.email,
                         amount = state.request.amount,
-                        description = state.request.description,
-                        receiverEmail = state.email
+                        cardId = state.selectedCard?.id ?: 0
                     )
-                }
-                else -> {
-                    setErrorMessage("Tipo de pago no válido.")
-                }
+                )
             }
 
             try {
-                //Llamamos API
+                _state.update { it.copy(isLoading = true) } // Marca como cargando
+
+                if (state.type == PaymentType.BALANCE) {
+                    paymentRepository.payWithBalance(
+                        BalancePayment(
+                            description = state.description,
+                            type = state.type.toString(),
+                            receiverEmail = state.email,
+                            amount = state.request.amount
+                        )
+                    )
+                } else {
+                    paymentRepository.payWithCard(
+                        CardPayment(
+                            description = state.description,
+                            type = state.type.toString(),
+                            receiverEmail = state.email,
+                            amount = state.request.amount,
+                            cardId = state.selectedCard?.id ?: 0
+                        )
+                    )
+                }
+
+                _state.update { it.copy(isLoading = false, errorMessage = "") }
             } catch (e: Exception) {
-                setErrorMessage("Error al procesar el pago: ${e.message}")
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = "Error al procesar el pago: ${e.message}"
+                    )
+                }
             }
         }
     }
+
 
     fun extractDataFromLink (link: String) {
         viewModelScope.launch {
@@ -161,5 +197,20 @@ class PaymentScreenViewModel : ViewModel() {
 
     fun onDescriptionChange(newDescription: String) {
         _state.update { it.copy(description = newDescription, errorMessage = "") }
+    }
+
+    companion object {
+        const val TAG = "UI Layer"
+
+        fun provideFactory(
+            app: MyApplication
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return PaymentScreenViewModel(
+                    app.paymentRepository
+                ) as T
+            }
+        }
     }
 }

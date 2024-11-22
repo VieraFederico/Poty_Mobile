@@ -2,12 +2,21 @@ package hci.mobile.poty.screens.deposit
 
 import hci.mobile.poty.classes.CardResponse
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.classes.CreditCard
+import hci.mobile.poty.data.repository.WalletRepository
+import hci.mobile.poty.screens.register.RegistrationViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import hci.mobile.poty.data.model.RechargeRequest
+import kotlinx.coroutines.launch
 
-class DepositScreenViewModel : ViewModel() {
+class DepositScreenViewModel(
+    private val walletRepository: WalletRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(DepositScreenState())
     val state: StateFlow<DepositScreenState> = _state
@@ -35,9 +44,14 @@ class DepositScreenViewModel : ViewModel() {
             }
 
             else -> {
+
+                viewModelScope.launch {
+                    walletRepository.recharge(RechargeRequest(currentState.number))
+                }
                 onDepositSuccess?.invoke()
 
-                // Proceed with deposit logic (API call or further actions)
+
+
                 _state.value = currentState.copy(
                     errorMessage = null
                 )
@@ -60,4 +74,19 @@ class DepositScreenViewModel : ViewModel() {
         }
     }
 
+
+    companion object {
+        const val TAG = "UI Layer"
+
+        fun provideFactory(
+            app: MyApplication
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return DepositScreenViewModel(
+                    app.walletRepository
+                ) as T
+            }
+        }
+    }
 }
