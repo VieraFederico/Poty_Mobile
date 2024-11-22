@@ -32,8 +32,8 @@
     <string name="next">Avanti</string>
     <string name="account_details">Dati dell\'Account</string>
     <string name="alias" translatable="false">Alias</string>
-    <string name="email">E-mail</string>
-    <string name="cbu">CBU</string>
+    <string name="email">Posta Elettronica</string>
+    <string name="cbu" translatable="false">CBU</string>
     <string name="good_morning">Buongiorno,</string>
     <string name="good_afternoon">Buon Pomeriggio,</string>
     <string name="good_night">Buonanotte,</string>

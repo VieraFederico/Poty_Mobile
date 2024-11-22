@@ -33,7 +33,7 @@
     <string name="account_details">Kontodetails</string>
     <string name="alias" translatable="false">Alias</string>
     <string name="email">E-Mail</string>
-    <string name="cbu">CBU</string>
+    <string name="cbu" translatable="false">CBU</string>
     <string name="good_morning">Guten Morgen,</string>
     <string name="good_afternoon">Guten Tag,</string>
     <string name="good_night">Gute Nacht,</string>
@@ -73,5 +73,4 @@
     <string name="selectec_option">Ausgewählte Option: </string>
     <string name="card">Karte</string>
     <string name="using_email">Über E-Mail</string>
-
 </resources>

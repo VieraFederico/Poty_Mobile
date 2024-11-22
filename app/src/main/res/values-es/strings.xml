@@ -33,7 +33,7 @@
     <string name="account_details">Datos de Cuenta</string>
     <string name="alias" translatable="false">Alias</string>
     <string name="email">Correo Electrónico</string>
-    <string name="cbu">CBU</string>
+    <string name="cbu" translatable="false">CBU</string>
     <string name="good_morning">¡Buenos Días,</string>
     <string name="good_afternoon">¡Buenas Tardes,</string>
     <string name="good_night">¡Buenas Noches,</string>
