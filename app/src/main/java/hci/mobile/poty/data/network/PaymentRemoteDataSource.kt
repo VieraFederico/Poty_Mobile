@@ -6,8 +6,10 @@ import hci.mobile.poty.data.model.CardPayment
 import hci.mobile.poty.data.model.LinkPayment
 import hci.mobile.poty.data.network.api.PaymentApiService
 import hci.mobile.poty.data.network.model.NetworkBalancePayment
+import hci.mobile.poty.data.network.model.NetworkCard
 import hci.mobile.poty.data.network.model.NetworkCardPayment
 import hci.mobile.poty.data.network.model.NetworkLinkPayment
+import hci.mobile.poty.data.network.model.NetworkPayment
 
 class PaymentRemoteDataSource (
     private val paymentApiService: PaymentApiService
@@ -28,6 +30,12 @@ class PaymentRemoteDataSource (
     suspend fun payWithLink(linkPayment: NetworkLinkPayment){
         return handleApiResponse {
             paymentApiService.payWithLink(linkPayment)
+        }
+    }
+
+    suspend fun getPayments(): List<NetworkPayment> {
+        return handleApiResponse {
+            paymentApiService.getPayments()
         }
     }
 
