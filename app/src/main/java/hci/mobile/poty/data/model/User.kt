@@ -12,8 +12,8 @@ data class User(
     var firstName: String,
     var lastName: String,
     var email: String,
-    var birthDate: Date,
-    var password: String?
+    var birthDate: Date
+
 ) {
     fun asNetworkModel(): NetworkUser {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault(Locale.Category.FORMAT))
@@ -23,8 +23,8 @@ data class User(
             firstName = firstName,
             lastName = lastName,
             email = email,
-            birthDate = dateFormat.format(birthDate),
-            password = password
+            birthDate = dateFormat.format(birthDate)
+
         )
     }
 }

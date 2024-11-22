@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import hci.mobile.poty.MyApplication
+import hci.mobile.poty.data.model.Code
+import hci.mobile.poty.data.model.RegistrationUser
 import hci.mobile.poty.data.model.User
 import hci.mobile.poty.data.repository.UserRepository
 import kotlinx.coroutines.launch
@@ -27,7 +29,7 @@ class RegistrationViewModel(
     var isRegistrationSuccessful by mutableStateOf(false)
         private set
 
-    fun onEvent(event: RegistrationEvent) {
+     fun onEvent(event: RegistrationEvent) {
         when (event) {
             is RegistrationEvent.UpdateName -> updateName(event.name)
             is RegistrationEvent.UpdateSurname -> updateSurname(event.surname)
@@ -38,6 +40,7 @@ class RegistrationViewModel(
             RegistrationEvent.NextStep -> validateAndMoveToNextStep()
             RegistrationEvent.PreviousStep -> moveToPreviousStep()
             RegistrationEvent.Submit -> submitRegistration()
+            RegistrationEvent.verifyCode -> verify()
         }
     }
 
@@ -126,6 +129,7 @@ private fun isValidDate(date: String): Boolean {
                 require(email.isNotEmpty()) { "Por favor, ingrese un correo electrónico válido." }
                 require(password.isNotEmpty()) { "Por favor, ingrese una contraseña válida." }
             }
+            submitRegistration()
             state = state.copy(currentStep = 3, errorMessage = "")
         } catch (e: IllegalArgumentException) {
             state = state.copy(errorMessage = e.message ?: "Error de validación")
@@ -133,15 +137,41 @@ private fun isValidDate(date: String): Boolean {
     }
 
     private fun validateStepThree() {
-        try {
-            with(state) {
-                require(confirmationCode.isNotEmpty()) { "Por favor, ingrese el código de confirmación." }
-                require(confirmationCode.length == 6) { "El código de confirmación debe tener 6 dígitos." }
+
+            try {
+                with(state) {
+                    require(confirmationCode.isNotEmpty()) { "Por favor, ingrese el código de confirmación." }
+                    require(confirmationCode.length == 16) { "El código de confirmación debe tener 16 dígitos." }
+                }
+                viewModelScope.launch {
+                    userRepository.verify(Code(state.confirmationCode))
+                }
+
+            } catch (e: IllegalArgumentException) {
+                state = state.copy(errorMessage = e.message ?: "Error de validación")
             }
-            submitRegistration()
-        } catch (e: IllegalArgumentException) {
-            state = state.copy(errorMessage = e.message ?: "Error de validación")
-        }
+
+    }
+
+    private fun verify(){
+        viewModelScope.launch {
+            try {
+                with(state) {
+                    require(confirmationCode.isNotEmpty()) { "Por favor, ingrese el código de confirmación." }
+                    require(confirmationCode.length == 16) { "El código de confirmación debe tener 16 dígitos." }
+                }
+                val code = Code(state.confirmationCode)
+                userRepository.verify(code)
+                isRegistrationSuccessful = true // Marca la verificación como exitosa
+            } catch (e: Exception) {
+                state = state.copy(
+                    errorMessage = e.message ?: "Error al verificar el código"
+                )
+                isRegistrationSuccessful = false // Asegúrate de no marcarlo como exitoso
+            }
+    }
+
+
     }
 
     private fun moveToPreviousStep() {
@@ -156,8 +186,7 @@ private fun isValidDate(date: String): Boolean {
             try {
                 state = state.copy(isLoading = true)
 
-                val user = User(
-                    id = null,
+                val user = RegistrationUser(
                     firstName = state.name,
                     lastName = state.surname,
                     email = state.email,
@@ -168,7 +197,7 @@ private fun isValidDate(date: String): Boolean {
                 userRepository.register(user)
 
                 state = state.copy(isLoading = false, errorMessage = "")
-                isRegistrationSuccessful = true
+
 
             } catch (e: Exception) {
                 state = state.copy(

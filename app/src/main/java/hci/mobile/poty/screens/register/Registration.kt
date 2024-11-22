@@ -57,7 +57,7 @@ fun RegistrationScreen(
 ) {
 
     val state: RegistrationState
-    val isRegistrationSuccessful: Boolean
+    var isRegistrationSuccessful: Boolean
     val onEvent: (RegistrationEvent) -> Unit
 
     if (!mockViewModel) {
@@ -79,6 +79,7 @@ fun RegistrationScreen(
     LaunchedEffect(isRegistrationSuccessful) {
         if (isRegistrationSuccessful) {
             onNavigateToLogin()
+            isRegistrationSuccessful = false
         }
     }
 
@@ -254,7 +255,7 @@ fun RegistrationContentSection(
                 onConfirmationCodeChange = {
                     onEvent(RegistrationEvent.UpdateConfirmationCode(it))
                 },
-                onSubmit = { onEvent(RegistrationEvent.Submit) },
+                onSubmit = { onEvent(RegistrationEvent.verifyCode) },
                 errorMessage = state.errorMessage,
                 windowSizeClass = windowSizeClass,
                 onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
@@ -446,7 +447,7 @@ fun StepThree(
             )
         }
         Text(
-            text = "Para finalizar tu registro, ingresá el código que fue enviado a:",
+            text = "Para finalizar tu registro, ingresá el código que fue enviado a :",
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
@@ -471,7 +472,7 @@ fun StepThree(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { onSubmit() },
+            onClick = {  onSubmit() },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(

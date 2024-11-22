@@ -23,4 +23,5 @@
         object NextStep : RegistrationEvent()
         object PreviousStep : RegistrationEvent()
         object Submit : RegistrationEvent()
+        object verifyCode : RegistrationEvent()
     }
