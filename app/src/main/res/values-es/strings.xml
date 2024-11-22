@@ -73,5 +73,8 @@
     <string name="selectec_option">Opción seleccionada: </string>
     <string name="card">Tarjeta</string>
     <string name="using_email">Por Correo Electrónico</string>
+    <string name="link_generated_correctly">¡Link generado con Exito!</string>
+    <string name="copy_link">Copiar Link</string>
+    <string name="share_link">Compartir Link</string>
 
 </resources>
