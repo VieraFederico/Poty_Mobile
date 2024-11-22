@@ -16,10 +16,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
+import hci.mobile.poty.ui.components.BackButton
+import hci.mobile.poty.screens.register.RegistrationViewModel
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.theme.GreenDark
@@ -34,7 +39,9 @@ import hci.mobile.poty.utils.isTablet
 
 @Composable
 fun DepositScreen(
-    viewModel: DepositScreenViewModel = remember { DepositScreenViewModel() },
+    viewModel: DepositScreenViewModel = viewModel(factory = DepositScreenViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
     onNavigateToAddCard: () -> Unit = {},
     onNavigateToDashboard: () -> Unit = {},
     mockWindowSizeClass: WindowSizeClass? = null
@@ -151,22 +158,7 @@ fun DepositHeaderSection(
             contentScale = ContentScale.Crop
         )
 
-        IconButton(
-            onClick = { onNavigateToDashboard() },
-            modifier = Modifier.padding(contentPadding)
-        ) {
-            Surface(
-                shape = CircleShape,
-                color = GreenDark,
-                modifier = Modifier.size(35.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowLeft,
-                    contentDescription = "Go Back",
-                    tint = White
-                )
-            }
-        }
+        BackButton()
         Card(
             modifier = Modifier
                 .fillMaxSize(),

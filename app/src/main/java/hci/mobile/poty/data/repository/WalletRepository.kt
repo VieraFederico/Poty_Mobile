@@ -2,6 +2,8 @@ package hci.mobile.poty.data.repository
 
 import hci.mobile.poty.data.model.Balance
 import hci.mobile.poty.data.model.Card
+import hci.mobile.poty.data.model.RechargeRequest
+import hci.mobile.poty.data.model.RechargeResponse
 import hci.mobile.poty.data.network.WalletRemoteDataSource
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -44,5 +46,9 @@ class WalletRepository(
     suspend fun getBalance() : Balance {
         return remoteDataSource.getBalance().asModel()
 
+    }
+
+    suspend fun recharge(rechargeRequest: RechargeRequest) : RechargeResponse {
+        return remoteDataSource.recharge(rechargeRequest.asNetworkModel()).asModel()
     }
 }

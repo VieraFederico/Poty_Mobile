@@ -34,15 +34,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
 import hci.mobile.poty.classes.CardResponse
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
 import hci.mobile.poty.screens.payment.PaymentType
+import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
@@ -66,8 +69,11 @@ fun PaymentWithLinkScreenPreview(){
 }
 @Composable
 fun PaymentWithLinkScreen(
-    viewModel: PaymentScreenViewModel = viewModel(),
-    mockWindowSizeClass: WindowSizeClass? = null
+    viewModel: PaymentScreenViewModel = viewModel(factory = PaymentScreenViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
+    mockWindowSizeClass: WindowSizeClass? = null,
+    onNavigateToDashboard: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
@@ -118,7 +124,9 @@ fun PaymentWithLinkScreen(
                                 viewModel = viewModel,
                                 windowSizeClass = windowSizeClass,
                                 topStart = 30.dp,
-                                bottomStart = 30.dp
+                                bottomStart = 30.dp,
+                                onNavigateToDashboard = onNavigateToDashboard
+
                             )
                         }
                     }
@@ -154,7 +162,9 @@ fun PaymentWithLinkScreen(
                                 viewModel = viewModel,
                                 windowSizeClass = windowSizeClass,
                                 topStart = 30.dp,
-                                bottomStart = 30.dp
+                                bottomStart = 30.dp,
+                                onNavigateToDashboard = onNavigateToDashboard
+
                             )
                         }
                     }
@@ -163,13 +173,13 @@ fun PaymentWithLinkScreen(
         }
     }
 }
-
 @Composable
 fun StepOne(
     link: String,
     onLinkChange: (String) -> Unit,
     onNext: () -> Unit,
     errorMessage: String,
+    validateLink: () -> Boolean, // Validación para el link
     windowSizeClass: WindowSizeClass,
 ) {
     var localLink by remember { mutableStateOf(link) }
@@ -195,7 +205,9 @@ fun StepOne(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onNext() },
+            onClick = {
+                if (validateLink()) onNext() // Validación antes de avanzar
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
@@ -208,10 +220,11 @@ fun StepOne(
     }
 }
 
+
 @Composable
 fun StepTwo(
     number: Double,
-    balance: Double,
+    balance: Float,
     creditCards: List<CardResponse>,
     selectedCard: CardResponse? = null,
     onCardSelected: (CardResponse) -> Unit,
@@ -260,7 +273,8 @@ fun StepTwo(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
-                        onClick = { onSubmit() },
+                        onClick = { onSubmit()
+                                  },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -419,27 +433,7 @@ fun HeaderSection(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Top
         ) {
-            IconButton(
-                onClick = { /*Cuando enseñen navegacion xddd*/ },
-                modifier = Modifier.padding(
-                    start = contentPadding,
-                    top = contentPadding,
-                    end = contentPadding,
-                    bottom = 0.dp  // Remove bottom padding
-                )
-            ) {
-                Surface(
-                    shape = CircleShape,
-                    color = GreenDark,
-                    modifier = Modifier.size(35.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowLeft,
-                        contentDescription = "Go Back",
-                        tint = White
-                    )
-                }
-            }
+            BackButton()
 
             Card(
                 modifier = Modifier
@@ -487,7 +481,8 @@ fun ContentSection(
     topStart: Dp = 0.dp,
     topEnd: Dp = 0.dp,
     bottomStart: Dp = 0.dp,
-    bottomEnd: Dp = 0.dp
+    bottomEnd: Dp = 0.dp,
+    onNavigateToDashboard: () -> Unit
 ) {
 
     Card(
@@ -517,7 +512,8 @@ fun ContentSection(
                     onLinkChange = { viewModel.updateLink(it) },
                     onNext = { viewModel.nextStep() },
                     errorMessage = state.errorMessage,
-                    windowSizeClass = windowSizeClass
+                    windowSizeClass = windowSizeClass,
+                    validateLink = { viewModel.validateLink() }
 
                 )
                 2 -> StepTwo(

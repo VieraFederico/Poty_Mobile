@@ -48,7 +48,7 @@ fun BalanceCard(balance: Float, isVisible: Boolean, onToggleVisibility: () -> Un
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun PaymentBalanceCard(balance: Double){
+fun PaymentBalanceCard(balance: Float){
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)

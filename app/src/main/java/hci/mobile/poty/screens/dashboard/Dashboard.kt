@@ -64,6 +64,8 @@ fun Dashboard(
     onNavigateToCharge: () -> Unit,
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
+    onNavigateToPayment: () -> Unit = {},
+    onNavigateToCvu: () -> Unit,
     mockWindowSizeClass: WindowSizeClass? = null
 ) {
     val state by viewModel.state.collectAsState()
@@ -111,11 +113,13 @@ fun Dashboard(
                             onNavigateToCharge = onNavigateToCharge,
                             onNavigateToDeposit = onNavigateToDeposit,
                             onNavigateToAddCard = onNavigateToAddCard,
+                            onNavigateToPayment = onNavigateToPayment,
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             showTransactionHistory = windowSizeClass != WindowSizeClass.MediumPhoneLandscape,
                             topStart = 30.dp,
-                            bottomStart =  30.dp
+                            bottomStart =  30.dp,
+                            onNavigateToCvu = onNavigateToCvu
 
                         )
                     }
@@ -144,10 +148,12 @@ fun Dashboard(
                             onNavigateToCharge = onNavigateToCharge,
                             onNavigateToDeposit = onNavigateToDeposit,
                             onNavigateToAddCard = onNavigateToAddCard,
+                            onNavigateToPayment = onNavigateToPayment,
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             topStart = 30.dp,
-                            topEnd = 30.dp
+                            topEnd = 30.dp,
+                            onNavigateToCvu = onNavigateToCvu
                         )
                     }
                 }
@@ -274,6 +280,8 @@ fun ContentSection(
     onNavigateToCharge: () -> Unit,
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
+    onNavigateToPayment: () -> Unit,
+    onNavigateToCvu: () -> Unit,
     viewModel: DashboardViewModel,
     windowSizeClass: WindowSizeClass,
     showTransactionHistory: Boolean = true,
@@ -320,13 +328,13 @@ fun ContentSection(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
-                    onClick = { /* TODO */ },
+                    onClick =  onNavigateToPayment,
                     iconResId = R.drawable.corner_right_up,
                     contentDescription = stringResource(R.string.pay)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
-                    onClick = { /* TODO */ },
+                    onClick = { onNavigateToCvu() },
                     iconResId = R.drawable.user,
                     contentDescription = stringResource(R.string.cbu)
                 )
@@ -379,66 +387,5 @@ fun DashboardButton(
             style = MaterialTheme.typography.bodyMedium,
         )
     }
-}
-
-
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhonePortraitPreview() {
-    Dashboard(
-        onNavigateToCharge = {},
-        onNavigateToDeposit = {},
-        onNavigateToAddCard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhoneLandscapePreview() {
-    Dashboard(
-        onNavigateToCharge = {},
-        onNavigateToDeposit = {},
-        onNavigateToAddCard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletPortraitPreview() {
-    Dashboard(
-        onNavigateToCharge = {},
-        onNavigateToDeposit = {},
-        onNavigateToAddCard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletLandscapePreview() {
-    Dashboard(
-        onNavigateToCharge = {},
-        onNavigateToDeposit = {},
-        onNavigateToAddCard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
-    )
 }
 
