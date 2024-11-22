@@ -271,7 +271,111 @@ fun RegistrationContentSection(
 
     }
 }
+/*
+@Composable
+fun RegistrationContentSection(
+    modifier: Modifier,
+    state: RegistrationState,
+    onEvent: (RegistrationEvent) -> Unit,
+    onNavigateToLogin: () -> Unit,
+    contentPadding: Dp,
+    windowSizeClass: WindowSizeClass
+) {
+    val isLandscapeAndNotTablet = windowSizeClass.isLandscape() && !windowSizeClass.isTablet()
+    val currentSubStep = state.currentStep % 2 // Determine the sub-step (0 or 1 for even/odd split)
 
+    Column(
+        modifier = modifier
+            .padding(contentPadding)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        when {
+            isLandscapeAndNotTablet && state.currentStep <= 4 -> {
+                // Split content into 2 boxes per step
+                when (currentSubStep) {
+                    1 -> {
+                        StepOne(
+                            name = state.name,
+                            surname = state.surname,
+                            birthDate = state.birthday,
+                            onNameChange = { onEvent(RegistrationEvent.UpdateName(it)) },
+                            onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) },
+                            onBirthdayChange = { onEvent(RegistrationEvent.UpdateBirthday(it)) },
+                            onNext = { onEvent(RegistrationEvent.NextStep) },
+                            errorMessage = state.errorMessage,
+                            windowSizeClass = windowSizeClass,
+                            onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                            onNavigateToLogin = onNavigateToLogin
+                        )
+                    }
+                    0 -> {
+                        StepTwo(
+                            email = state.email,
+                            password = state.password,
+                            onEmailChange = { onEvent(RegistrationEvent.UpdateEmail(it)) },
+                            onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
+                            onNext = { onEvent(RegistrationEvent.NextStep) },
+                            errorMessage = state.errorMessage,
+                            windowSizeClass = windowSizeClass,
+                            onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                            onNavigateToLogin = onNavigateToLogin
+                        )
+                    }
+                }
+            }
+            else -> {
+                // Default to regular steps
+                when (state.currentStep) {
+                    1 -> StepOne(
+                        name = state.name,
+                        surname = state.surname,
+                        birthDate = state.birthday,
+                        onNameChange = { onEvent(RegistrationEvent.UpdateName(it)) },
+                        onSurnameChange = { onEvent(RegistrationEvent.UpdateSurname(it)) },
+                        onBirthdayChange = { onEvent(RegistrationEvent.UpdateBirthday(it)) },
+                        onNext = { onEvent(RegistrationEvent.NextStep) },
+                        errorMessage = state.errorMessage,
+                        windowSizeClass = windowSizeClass,
+                        onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                        onNavigateToLogin = onNavigateToLogin
+                    )
+                    2 -> StepTwo(
+                        email = state.email,
+                        password = state.password,
+                        onEmailChange = { onEvent(RegistrationEvent.UpdateEmail(it)) },
+                        onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
+                        onNext = { onEvent(RegistrationEvent.NextStep) },
+                        errorMessage = state.errorMessage,
+                        windowSizeClass = windowSizeClass,
+                        onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                        onNavigateToLogin = onNavigateToLogin
+                    )
+                    3 -> StepThree(
+                        confirmationCode = state.confirmationCode,
+                        email = state.email,
+                        onConfirmationCodeChange = {
+                            onEvent(RegistrationEvent.UpdateConfirmationCode(it))
+                        },
+                        onSubmit = { onEvent(RegistrationEvent.verifyCode) },
+                        errorMessage = state.errorMessage,
+                        windowSizeClass = windowSizeClass,
+                        onBackClick = { onEvent(RegistrationEvent.PreviousStep) },
+                        onNavigateToLogin = onNavigateToLogin
+                    )
+                }
+            }
+        }
+
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+    }
+}
+*/
 
 @Composable
 fun StepOne(
@@ -334,15 +438,18 @@ fun StepOne(
         ) {
             Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
         }
+        Spacer(modifier = Modifier.height(16.dp))
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
+        }else{
+            LoginNavigationText(
+                currentStep = 1,
+                onBackClick = onBackClick,
+                onLoginClick = onNavigateToLogin
+            )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        LoginNavigationText(
-            currentStep = 1,
-            onBackClick = onBackClick,
-            onLoginClick = onNavigateToLogin
-        )
+
+
     }
 }
 
@@ -409,16 +516,18 @@ fun StepTwo(
         ) {
             Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
         }
-
+        Spacer(modifier = Modifier.height(16.dp))
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
+        }else{
+            LoginNavigationText(
+                currentStep = 2,
+                onBackClick = onBackClick,
+                onLoginClick = onNavigateToLogin
+            )
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        LoginNavigationText(
-            currentStep = 2,
-            onBackClick = onBackClick,
-            onLoginClick = onNavigateToLogin
-        )
+
+
     }
 }
 
@@ -465,9 +574,7 @@ fun StepThree(
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (errorMessage.isNotEmpty()) {
-            ErrorMessage(message = errorMessage)
-        }
+
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -481,11 +588,17 @@ fun StepThree(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        LoginNavigationText(
-            currentStep = 3,
-            onBackClick = onBackClick,
-            onLoginClick = onNavigateToLogin
-        )
+
+        if (errorMessage.isNotEmpty()) {
+            ErrorMessage(message = errorMessage)
+        }else{
+            LoginNavigationText(
+                currentStep = 3,
+                onBackClick = onBackClick,
+                onLoginClick = onNavigateToLogin
+            )
+        }
+
     }
 }
 
