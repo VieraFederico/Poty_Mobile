@@ -365,7 +365,7 @@ fun PaymentCardsCarousel(
             modifier = modifier
                 .fillMaxWidth()
                 .height(220.dp),
-            contentPadding = contentPadding // Apply dynamic padding here
+            contentPadding = contentPadding
         ) { page ->
             val item = allItems[page]
             if (item != null) {
@@ -412,43 +412,11 @@ fun CardsCarousel(
         }
         item {
             EmptyCreditCardView(
-                onAddCardClick = {onNavigateToAddCard}
+                onAddCardClick = {onNavigateToAddCard()}
             )
         }
     }
 }
 
 
-
-
-
-@Preview
-@Composable
-fun CardsCarouselPreview() {
-    val creditCards = listOf(
-        CardResponse(
-            id = 1,
-            number = "1234567812345678",
-            type = "Debito",
-            fullName = "Jason Bourne",
-            expirationDate = "09/26"
-        ),
-        CardResponse(
-            id = 2,
-            number = "8765432187654321",
-            type = "Credito",
-            fullName = "Ethan Hunt",
-            expirationDate = "07/27"
-        )
-    )
-    PotyTheme {
-        PaymentCardsCarousel(
-            creditCards = creditCards,
-            selectedCard = creditCards.firstOrNull(),
-            onCardSelected = {},
-            onNavigateToAddCard = {},
-            onDeleteCard = {}
-        )
-    }
-}
 
