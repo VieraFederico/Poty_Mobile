@@ -172,13 +172,13 @@ fun PaymentWithLinkScreen(
         }
     }
 }
-
 @Composable
 fun StepOne(
     link: String,
     onLinkChange: (String) -> Unit,
     onNext: () -> Unit,
     errorMessage: String,
+    validateLink: () -> Boolean, // Validación para el link
     windowSizeClass: WindowSizeClass,
 ) {
     var localLink by remember { mutableStateOf(link) }
@@ -195,7 +195,7 @@ fun StepOne(
         verticalArrangement = Arrangement.Center,
     ) {
         TextFieldWithLabel(
-            label = "Ingrese el Link de Pago ",
+            label = "Ingrese el Link de Pago",
             value = localLink,
             onValueChange = {
                 localLink = it
@@ -204,7 +204,9 @@ fun StepOne(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onNext() },
+            onClick = {
+                if (validateLink()) onNext() // Validación antes de avanzar
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
@@ -216,6 +218,7 @@ fun StepOne(
         }
     }
 }
+
 
 @Composable
 fun StepTwo(
@@ -508,7 +511,8 @@ fun ContentSection(
                     onLinkChange = { viewModel.updateLink(it) },
                     onNext = { viewModel.nextStep() },
                     errorMessage = state.errorMessage,
-                    windowSizeClass = windowSizeClass
+                    windowSizeClass = windowSizeClass,
+                    validateLink = { viewModel.validateLink() }
 
                 )
                 2 -> StepTwo(
