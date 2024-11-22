@@ -4,6 +4,9 @@ import hci.mobile.poty.data.network.api.UserApiService
 import hci.mobile.poty.data.network.model.NetworkCredentials
 import hci.mobile.poty.data.network.model.NetworkUser
 import hci.mobile.poty.SessionManager
+import hci.mobile.poty.data.network.model.NetworkCode
+import hci.mobile.poty.data.network.model.NetworkRegistrationUser
+import hci.mobile.poty.data.network.model.NetworkToken
 
 class UserRemoteDataSource(
     private val sessionManager: SessionManager,
@@ -26,8 +29,12 @@ class UserRemoteDataSource(
         return handleApiResponse { userApiService.getCurrentUser() }
     }
 
-    suspend fun register(user: NetworkUser): NetworkUser {
+    suspend fun register(user: NetworkRegistrationUser): NetworkUser {
         return handleApiResponse { userApiService.register(user) }
+    }
+
+    suspend fun verify(code: NetworkCode): NetworkUser {
+        return handleApiResponse { userApiService.verify(code) }
     }
 
 }

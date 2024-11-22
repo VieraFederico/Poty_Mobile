@@ -1,5 +1,8 @@
 package hci.mobile.poty.data.repository
 
+import hci.mobile.poty.data.model.Code
+import hci.mobile.poty.data.model.RegistrationUser
+import hci.mobile.poty.data.model.Token
 import hci.mobile.poty.data.model.User
 import hci.mobile.poty.data.network.UserRemoteDataSource
 import hci.mobile.poty.data.network.model.NetworkUser
@@ -35,8 +38,12 @@ class UserRepository(
         return currentUserMutex.withLock { this.currentUser }
     }
 
-    suspend fun register(user: User): User {
+    suspend fun register(user: RegistrationUser): User {
         return remoteDataSource.register(user.asNetworkModel()).asModel()
+    }
+
+    suspend fun verify(code: Code): User {
+        return remoteDataSource.verify(code.asNetworkModel()).asModel()
     }
 
 }

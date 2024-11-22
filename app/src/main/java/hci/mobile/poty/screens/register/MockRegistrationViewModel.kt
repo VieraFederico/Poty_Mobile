@@ -48,6 +48,13 @@ class MockRegistrationViewModel : ViewModel() {
                     _state.update { it.copy(isLoading = false) }
                 }
             }
+            RegistrationEvent.verifyCode -> {
+                _state.update { it.copy(isLoading = true) }
+                viewModelScope.launch {
+                    _isRegistrationSuccessful.value = true
+                    _state.update { it.copy(isLoading = false) }
+                }
+            }
         }
     }
 }
