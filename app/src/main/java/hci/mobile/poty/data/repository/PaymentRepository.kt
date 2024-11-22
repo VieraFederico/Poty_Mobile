@@ -12,6 +12,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import hci.mobile.poty.data.model.CardPayment
 import hci.mobile.poty.data.model.LinkPayment
+import hci.mobile.poty.data.model.NewPaymentLink
 import hci.mobile.poty.data.network.model.NetworkBalancePayment
 import hci.mobile.poty.data.network.model.NetworkCardPayment
 import hci.mobile.poty.data.model.Payment
@@ -46,8 +47,8 @@ class PaymentRepository (
             remoteDataSource.payWithCard(cardPayment.asNetworkModel())
         }
 
-        suspend fun payWithLink(linkPayment: LinkPayment){
-            remoteDataSource.payWithLink(linkPayment.asNetworkModel())
+        suspend fun generateLink(linkPayment: NewPaymentLink){
+            remoteDataSource.generateLink(linkPayment.asNetworkModel())
         }
 
 

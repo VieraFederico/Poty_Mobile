@@ -9,6 +9,7 @@ import hci.mobile.poty.data.network.model.NetworkBalancePayment
 import hci.mobile.poty.data.network.model.NetworkCard
 import hci.mobile.poty.data.network.model.NetworkCardPayment
 import hci.mobile.poty.data.network.model.NetworkLinkPayment
+import hci.mobile.poty.data.network.model.NetworkNewPaymentLink
 import hci.mobile.poty.data.network.model.NetworkPayment
 
 class PaymentRemoteDataSource (
@@ -27,9 +28,9 @@ class PaymentRemoteDataSource (
         }
     }
 
-    suspend fun payWithLink(linkPayment: NetworkLinkPayment){
+    suspend fun generateLink(linkPayment: NetworkNewPaymentLink){
         return handleApiResponse {
-            paymentApiService.payWithLink(linkPayment)
+            paymentApiService.generateLink(linkPayment)
         }
     }
 
