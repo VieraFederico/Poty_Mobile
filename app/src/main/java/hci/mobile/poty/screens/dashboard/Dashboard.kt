@@ -296,7 +296,8 @@ fun ContentSection(
     ) {
         Column(
             modifier = Modifier
-                .padding(contentPadding),
+                .padding(contentPadding)
+                .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(

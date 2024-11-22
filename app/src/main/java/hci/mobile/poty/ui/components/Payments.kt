@@ -35,7 +35,7 @@ fun PaymentHistory(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
+                .padding(end=8.dp,bottom = 8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary)
         ) {
@@ -52,7 +52,7 @@ fun PaymentHistory(
         LazyColumn(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(end = 16.dp),
+                .padding(end = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(payments) { payment ->
