@@ -124,12 +124,11 @@ fun LoginRegisterImageSection(
     ) {
         if (!isLandscape) {
             Image(
-                painter = painterResource(id = R.drawable.loginreg),
+                painter = painterResource(id = R.drawable.login2),
                 contentDescription = "Login Image",
                 modifier = Modifier
-                    .clip(shape)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop
+                    .fillMaxWidth().fillMaxHeight(0.4f),
+
             )
         } else {
             val height = if (windowSizeClass.isTablet()) 0.8f else 1f

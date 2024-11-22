@@ -59,10 +59,14 @@ fun LoginScreen(
                     modifier = Modifier
                         .padding(innerPadding)
                 ) {
+                    var title: String? = null
+                    title = if (!windowSizeClass.isTablet()) "Iniciar Sesión" else null
+
                     LoginRegisterImageSection(
                         modifier = Modifier
                             .fillMaxHeight(),
-                        windowSizeClass = windowSizeClass
+                        windowSizeClass = windowSizeClass,
+                        title = title
                     )
                 }
                 Column(modifier = Modifier
@@ -70,7 +74,7 @@ fun LoginScreen(
                 ){
                     LoginContentSection(
                         modifier = Modifier
-                            .fillMaxHeight(),
+                            .fillMaxHeight().fillMaxWidth(),
                         state = state,
                         viewModel = viewModel,
                         onNavigateToRegister = onNavigateToRegister,
@@ -137,12 +141,15 @@ fun LoginContentSection(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Inicio de Sesión",
-            style = if (windowSizeClass.isTablet()) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(bottom = 16.dp)
-        )
+        if(windowSizeClass.isTablet() || (!windowSizeClass.isTablet() && !windowSizeClass.isLandscape()) ){
+            Text(
+                text = "Iniciar Sesión",
+                style = if (windowSizeClass.isTablet()) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+            )
+
+        }
 
         TextFieldWithLabel(
             label = "Correo Electrónico",
@@ -160,17 +167,65 @@ fun LoginContentSection(
             modifier = Modifier.fillMaxWidth()
         )
 
-        TextButton(
-            onClick = onNavigateToRegister,
-            modifier = Modifier.align(Alignment.Start)
-        ) {
-            Text(
-                text = "Olvidé mi Contraseña",
-                style = MaterialTheme.typography.bodyMedium,
-            )
+        if(windowSizeClass != WindowSizeClass.MediumPhoneLandscape){
+            Spacer(modifier = Modifier.height(16.dp))
+        }else{
+            Spacer(modifier = Modifier.height(8.dp))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        if(windowSizeClass.isTablet() || !windowSizeClass.isTablet() && !windowSizeClass.isLandscape()){
+            TextButton(
+                onClick = onNavigateToRegister,
+                modifier = Modifier.align(Alignment.Start)
+            ) {
+                Text(
+                    text = "Olvidé mi Contraseña",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }else{
+            if (state.errorMessage.isNotEmpty()) {
+                Text(
+                    text = state.errorMessage,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }else{
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(
+                        onClick = onNavigateToRegister,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    ) {
+                        Text(
+                            text = "Olvidé mi Contraseña",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                    TextButton(
+                        onClick = onNavigateToRegister,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    ) {
+                        Text(
+                            text = "Registrarse",
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+            }
+        }
+
+        if(windowSizeClass != WindowSizeClass.MediumPhoneLandscape){
+            Spacer(modifier = Modifier.height(16.dp))
+        }else{
+            Spacer(modifier = Modifier.height(4.dp))
+        }
 
         Button(
             onClick = {
@@ -185,19 +240,22 @@ fun LoginContentSection(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        if(WindowSizeClass.MediumPhoneLandscape != windowSizeClass){
+            Spacer(modifier = Modifier.height(8.dp))
 
-        TextButton(
-            onClick = onNavigateToRegister,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = "Registrarse",
-                style = MaterialTheme.typography.bodyMedium,
-            )
+            TextButton(
+                onClick = onNavigateToRegister,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Registrarse",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+
         }
 
-        if (state.errorMessage.isNotEmpty()) {
+        if (state.errorMessage.isNotEmpty() && (windowSizeClass.isTablet() || !windowSizeClass.isTablet() && !windowSizeClass.isLandscape())) {
             Text(
                 text = state.errorMessage,
                 color = MaterialTheme.colorScheme.error,
@@ -208,60 +266,3 @@ fun LoginContentSection(
     }
 }
 
-
-
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun LoginScreenMediumPhonePortraitPreview() {
-    LoginScreen(
-        onLoginSuccess = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun LoginScreenMediumPhoneLandscapePreview() {
-    LoginScreen(
-        onLoginSuccess = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun LoginScreenMediumTabletPortraitPreview() {
-    LoginScreen(
-        onLoginSuccess = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun LoginScreenMediumTabletLandscapePreview() {
-    LoginScreen(
-        onLoginSuccess = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
-    )
-}
