@@ -1,4 +1,4 @@
-package hci.mobile.poty.screens.payment
+package hci.mobile.poty.screens.payment.menu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -39,17 +38,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.R
-import hci.mobile.poty.classes.CreditCard
-import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.FullCreditCardView
+import hci.mobile.poty.screens.payment.PaymentHistory
+import hci.mobile.poty.screens.payment.PaymentScreenState
+import hci.mobile.poty.screens.payment.PaymentScreenViewModel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.GreyDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.labelLargeLite
-import hci.mobile.poty.ui.theme.titleSmallSemiBold
-import hci.mobile.poty.utils.CompactDateFieldWithLabel
-import hci.mobile.poty.utils.TextFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 
@@ -227,7 +223,7 @@ fun ContentSection(
     bottomEnd: Dp = 0.dp
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onBackground,
         ),

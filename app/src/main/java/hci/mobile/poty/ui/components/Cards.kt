@@ -129,7 +129,8 @@ fun CreditCardView(
     Card: CardResponse,
     isSelected: Boolean = false,
     onCardClick: (CardResponse) -> Unit,
-    onDeleteCard: (Int) -> Unit
+    onDeleteCard: (Int) -> Unit,
+    isTiny: Boolean = false
 ) {
 
     var dropdownExpanded by remember { mutableStateOf(false) }
@@ -137,7 +138,12 @@ fun CreditCardView(
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
-            .padding(10.dp)
+            .padding(
+                when (isTiny) {
+                    true -> 5.dp
+                    else -> 10.dp
+                }
+            )
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(12.dp)
@@ -149,7 +155,12 @@ fun CreditCardView(
     ) {
         Column(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(
+                    when (isTiny) {
+                        true -> 5.dp
+                        else -> 10.dp
+                    }
+                )
                 .fillMaxWidth()
         ) {
             Row(
@@ -168,7 +179,13 @@ fun CreditCardView(
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                Spacer(modifier = Modifier.width(180.dp))
+                Spacer(modifier = Modifier.width(
+                    when (isTiny) {
+                        true -> 110.dp
+                        else -> 180.dp
+                    }
+                )
+                )
 
                 IconButton(onClick = { dropdownExpanded = true }) {
                     Icon(
@@ -181,7 +198,7 @@ fun CreditCardView(
 
 
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(35.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -194,7 +211,7 @@ fun CreditCardView(
                 )
             }
 
-            Spacer(modifier = Modifier.height(35.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -312,7 +329,8 @@ fun PaymentCardsCarousel(
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit,
     windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isTiny: Boolean = false
 ) {
     val allItems = creditCards + null
 
@@ -357,7 +375,8 @@ fun PaymentCardsCarousel(
                     Card = item,
                     isSelected = selectedCard?.id == item.id,
                     onCardClick = { onCardSelected(item) },
-                    onDeleteCard = {}
+                    onDeleteCard = {},
+                    isTiny = isTiny
                 )
             } else {
                 EmptyCreditCardView(
@@ -433,3 +452,4 @@ fun CardsCarouselPreview() {
         )
     }
 }
+
