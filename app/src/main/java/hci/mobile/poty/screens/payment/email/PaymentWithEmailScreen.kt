@@ -173,7 +173,6 @@ fun PaymentWithEmailScreen(
         }
     }
 }
-
 @Composable
 fun StepOne(
     email: String,
@@ -181,6 +180,7 @@ fun StepOne(
     onNext: () -> Unit,
     errorMessage: String,
     windowSizeClass: WindowSizeClass,
+    validateEmail: () -> Boolean // Se pasa la validación
 ) {
     var localEmail by remember { mutableStateOf(email) }
 
@@ -196,7 +196,7 @@ fun StepOne(
         verticalArrangement = Arrangement.Center,
     ) {
         TextFieldWithLabel(
-            label = "Ingrese el Correo Electronico al cual desea enviar dinero",
+            label = "Ingrese el Correo Electrónico al cual desea enviar dinero",
             value = localEmail,
             onValueChange = {
                 localEmail = it
@@ -205,7 +205,9 @@ fun StepOne(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onNext() },
+            onClick = {
+                if (validateEmail()) onNext() // Validación antes de avanzar
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
@@ -217,7 +219,6 @@ fun StepOne(
         }
     }
 }
-
 @Composable
 fun StepTwo(
     number: Double,
@@ -231,17 +232,19 @@ fun StepTwo(
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit,
     onSubmit: () -> Unit,
+    validateBalance: () -> Boolean, // Se pasa la validación de balance
     errorMessage: String,
     description: String,
     onDescriptionChange: (String) -> Unit,
     windowSizeClass: WindowSizeClass,
-    ) {
+) {
     var localNumber by remember { mutableStateOf(number) }
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
     var localPaymentMethod by remember { mutableStateOf(paymentMethod) }
-    when(windowSizeClass) {
+
+    when (windowSizeClass) {
         WindowSizeClass.MediumPhoneLandscape -> {
-            Row() {
+            Row {
                 Column(
                     modifier = Modifier
                         .padding(
@@ -266,7 +269,7 @@ fun StepTwo(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     TextFieldWithLabel(
-                        label = "Descripcion",
+                        label = "Descripción",
                         value = description,
                         onValueChange = onDescriptionChange,
                         modifier = Modifier.fillMaxWidth()
@@ -275,7 +278,9 @@ fun StepTwo(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Button(
-                        onClick = { onSubmit() },
+                        onClick = {
+                            if (validateBalance()) onSubmit() // Validación antes de enviar
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp)
@@ -291,10 +296,7 @@ fun StepTwo(
                     modifier = Modifier
                         .padding(
                             start = 16.dp,
-                            top = when (windowSizeClass) {
-                                WindowSizeClass.MediumTabletLandscape -> 16.dp
-                                else -> 0.dp
-                            },
+                            top = if (windowSizeClass == WindowSizeClass.MediumTabletLandscape) 16.dp else 0.dp,
                             end = 16.dp,
                             bottom = 16.dp
                         )
@@ -329,22 +331,15 @@ fun StepTwo(
                 }
             }
         }
+
         else -> {
             Column(
                 modifier = Modifier
                     .padding(
                         start = 16.dp,
-                        top = when (windowSizeClass) {
-                            WindowSizeClass.MediumTabletLandscape -> 10.dp
-
-                            else -> 0.dp
-                        },
+                        top = if (windowSizeClass == WindowSizeClass.MediumTabletLandscape) 10.dp else 0.dp,
                         end = 16.dp,
-                        bottom = when (windowSizeClass) {
-                            WindowSizeClass.MediumTabletLandscape -> 0.dp
-
-                            else -> 16.dp
-                        },
+                        bottom = if (windowSizeClass == WindowSizeClass.MediumTabletLandscape) 0.dp else 16.dp,
                     )
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -357,20 +352,19 @@ fun StepTwo(
                         onNumberChange(it)
                     }
                 )
-                when (windowSizeClass) {
-                    WindowSizeClass.MediumTabletLandscape -> Spacer(modifier = Modifier.height(0.dp))
-                    else ->Spacer(modifier = Modifier.height(16.dp))
-                }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 TextFieldWithLabel(
-                    label = "Descripcion",
+                    label = "Descripción",
                     value = description,
                     onValueChange = onDescriptionChange,
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
-                Box() {
+
+                Box {
                     SelectOptionTextButton(
                         selectedOption = localPaymentMethod,
                         onOptionSelected = { selectedOption ->
@@ -388,10 +382,7 @@ fun StepTwo(
                             onCardSelected = onCardSelected,
                             onNavigateToAddCard = onNavigateToAddCard,
                             onDeleteCard = onDeleteCard,
-                            isTiny = when (windowSizeClass) {
-                                WindowSizeClass.MediumPhone -> true
-                                else ->false
-                            }
+                            isTiny = windowSizeClass == WindowSizeClass.MediumPhone
                         )
                     }
 
@@ -401,7 +392,9 @@ fun StepTwo(
                 }
 
                 Button(
-                    onClick = { onSubmit() },
+                    onClick = {
+                        if (validateBalance()) onSubmit() // Validación antes de enviar
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -589,7 +582,8 @@ fun ContentSection(
                     onEmailChange = { viewModel.updateEmail(it) },
                     onNext = { viewModel.nextStep() },
                     errorMessage = state.errorMessage,
-                    windowSizeClass = windowSizeClass
+                    windowSizeClass = windowSizeClass,
+                    validateEmail = { viewModel.validateEmail() }
 
                 )
                 2 -> StepTwo(
@@ -608,7 +602,8 @@ fun ContentSection(
                     errorMessage = state.errorMessage,
                     description = state.description,
                     onDescriptionChange = {viewModel.onDescriptionChange(it)},
-                    windowSizeClass = windowSizeClass
+                    windowSizeClass = windowSizeClass,
+                    validateBalance = { viewModel.validateBalance() }
                 )
             }
         }

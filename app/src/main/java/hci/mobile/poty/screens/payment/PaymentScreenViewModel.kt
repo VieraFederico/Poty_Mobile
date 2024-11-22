@@ -59,6 +59,36 @@ class PaymentScreenViewModel(
         }
     }
 
+    fun validateEmail(): Boolean {
+        return if (_state.value.email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches()) {
+            setErrorMessage("El correo electrónico es inválido o está vacío.")
+            false
+        } else {
+            setErrorMessage("")
+            true
+        }
+    }
+
+    fun validateBalance(): Boolean {
+        return if ( _state.value.type == PaymentType.BALANCE && (_state.value.request.amount <= 0 || _state.value.request.amount > _state.value.balance)) {
+            setErrorMessage("El monto debe ser mayor a 0 y menor al balance disponible.")
+            false
+        } else {
+            setErrorMessage("")
+            true
+        }
+    }
+
+    fun validateLink(): Boolean {
+        return if (_state.value.paymentLink.isEmpty() || _state.value.paymentLink.length != 35) {
+            setErrorMessage("El link proporcionado es inválido o está vacío.")
+            false
+        } else {
+            setErrorMessage("")
+            true
+        }
+    }
+
     fun nextStep() {
         viewModelScope.launch {
             _state.value = _state.value.copy(currentStep = _state.value.currentStep + 1)
