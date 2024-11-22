@@ -33,7 +33,7 @@
     <string name="account_details">Account Details</string>
     <string name="alias" translatable="false">Alias</string>
     <string name="email">Email</string>
-    <string name="cbu">CBU</string>
+    <string name="cbu" translatable="false">CBU</string>
     <string name="good_morning">Good Morning,</string>
     <string name="good_afternoon">Good Afternoon,</string>
     <string name="good_night">Good Night,</string>
