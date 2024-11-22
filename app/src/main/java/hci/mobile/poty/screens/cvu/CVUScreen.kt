@@ -14,8 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCbrt
@@ -132,7 +130,7 @@ fun HeaderSection(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        text = (R.string.account_details),
+                        text = "Datos de cuenta",
                         style = MaterialTheme.typography.titleMedium,
                         color = White
                     )
@@ -191,7 +189,7 @@ fun ContentSection(
             ) {
 
                 DataTab(
-                    key = stringResource(R.string.alias),
+                    key = "Alias",
                     value = state.alias,
                     onCopyClick = { value ->
                         viewModel.copyToClipboard(context, value)
@@ -200,7 +198,7 @@ fun ContentSection(
                     firstRow = false
                 )
                 DataTab(
-                    key = stringResource(R.string.email),
+                    key = "Correo Electrónico",
                     value = state.email,
                     onCopyClick = { value ->
                         viewModel.copyToClipboard(context, value)
@@ -208,7 +206,7 @@ fun ContentSection(
                     windowSizeClass = windowSizeClass
                 )
                 DataTab(
-                    key = stringResource(R.string.cbu),
+                    key = "CBU",
                     value = state.cbu,
                     onCopyClick = { value ->
                         viewModel.copyToClipboard(context, value)
