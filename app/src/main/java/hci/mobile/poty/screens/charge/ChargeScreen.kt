@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BackButton
@@ -31,8 +32,14 @@ import hci.mobile.poty.utils.NumberFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.ui.components.ResponsiveNavBar
+import hci.mobile.poty.utils.ReadOnlyTextFieldWithLabel
 import hci.mobile.poty.utils.isLandscape
 import hci.mobile.poty.utils.isTablet
+import android.content.Context
+import android.content.Intent
+import android.content.ClipData
+import android.content.ClipboardManager
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ChargeScreen(
@@ -154,7 +161,7 @@ fun ChargeHeaderSection(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Cobrar Dinero",
+                    text = stringResource(R.string.charge_money),
                     style = if (windowSizeClass.isTablet()) {
                         MaterialTheme.typography.titleLarge
                     } else {
@@ -173,8 +180,10 @@ fun ChargeContentSection(
     state: ChargeScreenState,
     viewModel: ChargeScreenViewModel,
     contentPadding: Dp,
-    windowSizeClass: WindowSizeClass
+    windowSizeClass: WindowSizeClass,
+    isPreview: Boolean = false
 ) {
+    val context = LocalContext.current
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -191,13 +200,24 @@ fun ChargeContentSection(
         when (state.currentStep) {
             1 -> StepOne(
                 amount = state.amount,
-                UpdateAmount = { viewModel.onEvent(ChargeScreenEvent.UpdateAmount(it)) },
-                NextStep = { viewModel.onEvent(ChargeScreenEvent.NextStep) },
+                updateAmount = { viewModel.onEvent(ChargeScreenEvent.UpdateAmount(it)) },
+                nextStep = { viewModel.onEvent(ChargeScreenEvent.NextStep) },
                 errorMessage = state.errorMessage,
                 contentPadding = contentPadding,
                 windowSizeClass = windowSizeClass
             )
             2 -> StepTwo(
+                link = state.generatedLink,
+                onCopyLink = {
+                    if (!isPreview) {
+                        viewModel.onEvent(ChargeScreenEvent.ShareLink(context = context))
+                    }
+                },
+                onShareLink = {
+                    if (!isPreview) {
+                        viewModel.onEvent(ChargeScreenEvent.ShareLink(context = context))
+                    }
+                },
                 contentPadding = contentPadding,
                 windowSizeClass = windowSizeClass
             )
@@ -208,8 +228,8 @@ fun ChargeContentSection(
 @Composable
 fun StepOne(
     amount: String,
-    UpdateAmount: (String) -> Unit,
-    NextStep: () -> Unit,
+    updateAmount: (String) -> Unit,
+    nextStep: () -> Unit,
     errorMessage: String,
     contentPadding: Dp,
     windowSizeClass: WindowSizeClass
@@ -222,19 +242,19 @@ fun StepOne(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NumberFieldWithLabel(
-            label = "Monto a cobrar",
+            label = stringResource(R.string.amount_to_charge),
             value = amount.toFloatOrNull() ?: 0f,
-            onValueChange = { newValue -> UpdateAmount(newValue.toString()) }
+            onValueChange = { newValue -> updateAmount(newValue.toString()) }
         )
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { NextStep() },
+            onClick = { nextStep() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
@@ -244,15 +264,44 @@ fun StepOne(
 
 @Composable
 fun StepTwo(
+    link: String,
+    onCopyLink: () -> Unit,
+    onShareLink: () -> Unit,
     contentPadding: Dp,
     windowSizeClass: WindowSizeClass
-){
-    Text(
-        text = "STEP 2",
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.padding(contentPadding)
-    )
+) {
+    Column(
+        modifier = Modifier
+            .padding(contentPadding)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ReadOnlyTextFieldWithLabel(
+            value = link,
+            label = stringResource(R.string.link_generated_correctly),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { onCopyLink() },
+            modifier = Modifier.fillMaxWidth().height(50.dp)
+        ) {
+            Text(text = stringResource(R.string.copy_link), color = MaterialTheme.colorScheme.onBackground)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = { onShareLink() },
+            modifier = Modifier.fillMaxWidth().height(50.dp)
+        ) {
+            Text(text = stringResource(R.string.share_link), color = MaterialTheme.colorScheme.onBackground)
+        }
+    }
 }
+
 
 
 

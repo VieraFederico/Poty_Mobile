@@ -53,7 +53,11 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+
 import hci.mobile.poty.data.model.CardType
+
+import androidx.compose.ui.res.stringResource
+
 import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.utils.WindowSizeClass
 
@@ -79,16 +83,10 @@ fun CreditCardViewPreview(){
     }
 }
 
-@Preview
-@Composable
-fun EmptyCreditCardViewPreview(){
-    PotyTheme {
-        EmptyCreditCardView(onAddCardClick = { /* Define your click action here */ })
-    }
-}
+
 
 @Composable
-fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
+fun EmptyCreditCardView(onAddCardClick: () -> Unit, isTiny: Boolean = false) {
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
@@ -118,12 +116,15 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
                     modifier = Modifier.size(80.dp)
                 )
             }
-            Text(
-                text = "Agregar una nueva tarjeta",
-                modifier = Modifier.padding(top=10.dp),
-                style = MaterialTheme.typography.labelLarge,
-                color = White,
-            )
+            if(!isTiny){
+                Text(
+                    text = stringResource(R.string.add_card),
+                    modifier = Modifier.padding(top=10.dp),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = White,
+                )
+            }
+
         }
     }
 }
@@ -234,7 +235,7 @@ fun CreditCardView(
                 onDismissRequest = { dropdownExpanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("Borrar Tarjeta") },
+                    text = { stringResource(R.string.delete_card) },
                     onClick = {
                         dropdownExpanded = false
                         Card.id?.let { onDeleteCard(it) }
@@ -329,7 +330,7 @@ fun PaymentCardsCarousel(
     onDeleteCard: (Int) -> Unit,
     windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone,
     modifier: Modifier = Modifier,
-    isTiny: Boolean = false
+    isTiny: Boolean = false,
 ) {
     val allItems = creditCards + null
 
@@ -366,7 +367,7 @@ fun PaymentCardsCarousel(
             modifier = modifier
                 .fillMaxWidth()
                 .height(220.dp),
-            contentPadding = contentPadding // Apply dynamic padding here
+            contentPadding = contentPadding
         ) { page ->
             val item = allItems[page]
             if (item != null) {
@@ -379,7 +380,8 @@ fun PaymentCardsCarousel(
                 )
             } else {
                 EmptyCreditCardView(
-                    onAddCardClick = { onNavigateToAddCard() }
+                    onAddCardClick = { onNavigateToAddCard() },
+                    isTiny = isTiny
                 )
             }
         }
@@ -412,12 +414,11 @@ fun CardsCarousel(
         }
         item {
             EmptyCreditCardView(
-                onAddCardClick = {onNavigateToAddCard}
+                onAddCardClick = {onNavigateToAddCard()}
             )
         }
     }
 }
-
 
 
 

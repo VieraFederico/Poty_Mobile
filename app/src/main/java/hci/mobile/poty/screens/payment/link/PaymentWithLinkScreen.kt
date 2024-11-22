@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.MyApplication
@@ -47,49 +48,60 @@ import hci.mobile.poty.ui.theme.GreenLight
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleMediumLite
+import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.ReadOnlyNumberFieldWithLabel
 import hci.mobile.poty.utils.TextFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
+import hci.mobile.poty.utils.isLandscape
+import hci.mobile.poty.utils.isTablet
 
-@Preview
-@Composable
-fun PaymentWithLinkScreenPreview(){
-    PaymentWithLinkScreen()
-}
 @Composable
 fun PaymentWithLinkScreen(
     viewModel: PaymentScreenViewModel = viewModel(factory = PaymentScreenViewModel.provideFactory(
         LocalContext.current.applicationContext as MyApplication
     )),
     mockWindowSizeClass: WindowSizeClass? = null,
-    onNavigateToDashboard: () -> Unit = {}
+    onNavigateToDashboard: () -> Unit = {},
+    onNavigateToAddCard: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
 
-    val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet ||
-        windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
-    val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape ||
-            windowSizeClass == WindowSizeClass.MediumTabletLandscape
+    val contentPadding = when (windowSizeClass) {
+        WindowSizeClass.MediumTablet,
+        WindowSizeClass.MediumTabletLandscape -> 32.dp
+        else -> 16.dp
+    }
+
+    val isLandscape = windowSizeClass in listOf(
+        WindowSizeClass.MediumPhoneLandscape,
+        WindowSizeClass.MediumTabletLandscape
+    )
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
         ResponsiveNavBar(
             onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass
+            mockWindowSizeClass = mockWindowSizeClass,
         ) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                containerColor = MaterialTheme.colorScheme.secondary,
-            ) { innerPadding ->
-                if(isLandscape) {
-                    Column(
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            containerColor = MaterialTheme.colorScheme.secondary,
+        ) { innerPadding ->
+            if (isLandscape) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        verticalArrangement = Arrangement.Top
+                            .weight(0.53f)
+                            .fillMaxHeight()
+                            .padding(contentPadding)
                     ) {
+
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -121,26 +133,53 @@ fun PaymentWithLinkScreen(
 
                             )
                         }
+
+                        HeaderSection(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = contentPadding,
+                            state = state,
+                            windowSizeClass = windowSizeClass
+                        )
+
                     }
-                } else {
-                    Column(
+
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        verticalArrangement = Arrangement.Top
+                            .weight(2f)
+                            .fillMaxHeight()
+                            .padding(contentPadding)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .weight(0.8f)
-                                .fillMaxWidth()
-                        ) {
-                            HeaderSection(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = contentPadding,
-                                state = state,
-                                windowSizeClass = windowSizeClass
-                            )
-                        }
+                        ContentSection(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = contentPadding,
+                            state = state,
+                            viewModel = viewModel,
+                            windowSizeClass = windowSizeClass,
+                            onNavigateToDashboard = onNavigateToDashboard,
+                            onNavigateToAddCard = onNavigateToAddCard
+                        )
+                    }
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(contentPadding)
+                    ) {
+                        HeaderSection(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = contentPadding,
+                            state = state,
+                            windowSizeClass = windowSizeClass
+                        )
+                    }
+
 
                         Box(
                             modifier = Modifier
@@ -160,12 +199,33 @@ fun PaymentWithLinkScreen(
 
                             )
                         }
+
+                    Box(
+                        modifier = Modifier
+                            .weight(3.5f)
+                            .fillMaxWidth()
+                            .padding(contentPadding)
+                    ) {
+                        ContentSection(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = contentPadding,
+                            state = state,
+                            viewModel = viewModel,
+                            windowSizeClass = windowSizeClass,
+                            onNavigateToDashboard = onNavigateToDashboard,
+                            onNavigateToAddCard = onNavigateToAddCard
+                        )
+
                     }
                 }
             }
         }
+        }
     }
 }
+
+
+
 @Composable
 fun StepOne(
     link: String,
@@ -191,7 +251,7 @@ fun StepOne(
         verticalArrangement = Arrangement.Center,
     ) {
         TextFieldWithLabel(
-            label = "Ingrese el Link de Pago",
+            label = stringResource(R.string.enter_payment_link),
             value = localLink,
             onValueChange = {
                 localLink = it
@@ -212,7 +272,7 @@ fun StepOne(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
@@ -254,21 +314,26 @@ fun StepTwo(
                             start = 16.dp,
                             top = 5.dp,
                             end = 16.dp,
-                            bottom = 0.dp
+                            bottom = 15.dp
                         )
                         .fillMaxSize()
                         .weight(1f),
                     verticalArrangement = Arrangement.Center,
                 ) {
                     ReadOnlyNumberFieldWithLabel(
+
                         label = "Monto a Enviar",
                         value = localNumber,
+
+                        label = stringResource(R.string.amount_to_send),
+                        value = localNumber.toFloat(),
+
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     TextFieldWithLabel(
-                        label = "Descripcion",
+                        label = stringResource(R.string.description),
                         value = description,
                         onValueChange = onDescriptionChange,
                         modifier = Modifier.fillMaxWidth()
@@ -283,7 +348,7 @@ fun StepTwo(
                             .fillMaxWidth()
                             .height(50.dp)
                     ) {
-                        Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+                        Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
                     }
 
                     if (errorMessage.isNotEmpty()) {
@@ -355,7 +420,7 @@ fun StepTwo(
                 verticalArrangement = Arrangement.Center,
             ) {
                 ReadOnlyNumberFieldWithLabel(
-                    label = "Monto a Enviar",
+                    label = stringResource(R.string.amount_to_send),
                     value = localNumber.toFloat(),
                 )
 
@@ -365,7 +430,7 @@ fun StepTwo(
                 }
 
                 TextFieldWithLabel(
-                    label = "Descripcion",
+                    label = stringResource(R.string.description),
                     value = description,
                     onValueChange = onDescriptionChange,
                     modifier = Modifier.fillMaxWidth()
@@ -413,7 +478,7 @@ fun StepTwo(
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+                    Text(text = stringResource(R.string.send), color = MaterialTheme.colorScheme.onBackground)
                 }
 
                 if (errorMessage.isNotEmpty()) {
@@ -423,6 +488,7 @@ fun StepTwo(
         }
     }
 }
+
 @Composable
 fun HeaderSection(
     modifier: Modifier,
@@ -466,14 +532,26 @@ fun HeaderSection(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
+                    if(windowSizeClass.isLandscape() && !windowSizeClass.isTablet()){
+                        Text(
+                            text=stringResource(R.string.pay_money),
+                            style = MaterialTheme.typography.titleSmallSemiBold,
+                            color = White
+                        )
+
+                    }else {
+                        Text(
+                            text = stringResource(R.string.pay_money),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text="Enviar Dinero",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = White
-                    )
-                    Text(
-                        text="Por Link de Pago",
-                        style = MaterialTheme.typography.titleMediumLite,
+                        text=stringResource(R.string.using_payment_link),
+                        style = MaterialTheme.typography.titleSmall,
+                        softWrap = true,
                         color = White
                     )
                 }
@@ -489,34 +567,42 @@ fun ContentSection(
     state: PaymentScreenState,
     viewModel: PaymentScreenViewModel,
     windowSizeClass: WindowSizeClass,
+
     topStart: Dp = 0.dp,
     topEnd: Dp = 0.dp,
     bottomStart: Dp = 0.dp,
     bottomEnd: Dp = 0.dp,
     onNavigateToDashboard: () -> Unit,
     onNavigateToAddaCard: () -> Unit
+
+
+    onNavigateToDashboard: () -> Unit,
+    onNavigateToAddCard: () -> Unit
+
 ) {
+    val isLandscape = windowSizeClass in listOf(
+        WindowSizeClass.MediumPhoneLandscape,
+        WindowSizeClass.MediumTabletLandscape
+    )
+
 
     Card(
         modifier = Modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onBackground,
         ),
-        shape = RoundedCornerShape(
+        shape =  RoundedCornerShape(
             topStart = 30.dp,
-            topEnd = 30.dp,
-            bottomEnd = 0.dp,
-            bottomStart = 0.dp),
+            topEnd =     if (!windowSizeClass.isLandscape()) 30.dp else 0.dp,
+            bottomStart = if (windowSizeClass.isLandscape()) 30.dp else 0.dp,
+            bottomEnd =  0.dp,
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    start = 15.dp,
-                    end = 15.dp,
-                    bottom = 15.dp,
-                )
+                .padding(contentPadding)
         ) {
             when (state.currentStep) {
                 1 -> StepOne(
@@ -525,9 +611,12 @@ fun ContentSection(
                     onNext = { viewModel.nextStep() },
                     errorMessage = state.errorMessage,
                     windowSizeClass = windowSizeClass,
+
                     validateLink = { viewModel.validateLink() },
                     fetchPaymentData = { viewModel.getPaymentData(it) }
 
+
+                    validateLink = { viewModel.validateLink() }
 
                 )
                 2 -> StepTwo(
@@ -537,12 +626,18 @@ fun ContentSection(
                     selectedCard = state.selectedCard,
                     onCardSelected = { viewModel.selectCard(it) },
                     paymentMethod = state.type,
+
                     onPaymentTypeChange = {viewModel.onPaymentTypeChange(it)},
                     onNavigateToAddCard = { onNavigateToAddaCard()  },
+
+                    onPaymentTypeChange = { viewModel.onPaymentTypeChange(it) },
+                    onNavigateToAddCard = { onNavigateToAddCard() },
+
                     onDeleteCard = { viewModel.onDeleteCard(it) },
                     onSubmit = { viewModel.onSubmitPayment() },
                     errorMessage = state.errorMessage,
                     description = state.description,
+
                     onDescriptionChange = {viewModel.onDescriptionChange(it)},
                     windowSizeClass = windowSizeClass,
                     onSettlePayment = { linkUuid -> viewModel.settlePayment(linkUuid) },
@@ -551,57 +646,16 @@ fun ContentSection(
 
 
                     )
+
+                    onDescriptionChange = { viewModel.onDescriptionChange(it) },
+                    windowSizeClass = windowSizeClass
+                )
+
             }
         }
     }
 }
 
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletPortraitPreview() {
-    PaymentWithLinkScreen(
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun MediumTabletLandscapePreview() {
-    PaymentWithLinkScreen(
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
-    )
-}
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhonePortraitPreview() {
-    PaymentWithLinkScreen(
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun MediumPhoneLandscapePreview() {
-    PaymentWithLinkScreen(
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
-    )
-}
 
 @Composable
 fun SelectOptionTextButton(

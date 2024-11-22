@@ -11,9 +11,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
+import hci.mobile.poty.ui.theme.GreyDark
 import hci.mobile.poty.navigation.LocalNavController
 import hci.mobile.poty.navigation.Routes
 import hci.mobile.poty.ui.theme.GreyLight
@@ -46,9 +48,9 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     Icons.Default.Notifications,
-                    contentDescription = "Notifications",
+                    contentDescription = stringResource(R.string.notifications),
                     modifier = Modifier.size(25.dp),
-                    tint = Color.DarkGray
+                    tint = GreyDark
                 )
             },
             selected = false,
@@ -59,9 +61,9 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     Icons.Default.Home,
-                    contentDescription = "Home",
+                    contentDescription = stringResource(R.string.home),
                     modifier = Modifier.size(25.dp),
-                    tint = Color.DarkGray
+                    tint = GreyDark
                 )
             },
             selected = false,
@@ -91,8 +93,8 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.trending_up),
-                    contentDescription = "Investments",
-                    tint = Color.DarkGray,
+                    contentDescription = stringResource(R.string.investments),
+                    tint = GreyDark,
                     modifier = Modifier.size(25.dp)
                 )
             },
@@ -104,9 +106,9 @@ fun BottomNavBar(
             icon = {
                 Icon(
                     Icons.Default.Settings,
-                    contentDescription = "Settings",
+                    contentDescription = stringResource(R.string.settings),
                     modifier = Modifier.size(25.dp),
-                    tint = Color.DarkGray
+                    tint = GreyDark
                 )
             },
             selected = false,

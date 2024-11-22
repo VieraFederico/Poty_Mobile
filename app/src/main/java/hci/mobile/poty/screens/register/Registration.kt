@@ -38,8 +38,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 
 import hci.mobile.poty.MyApplication
+import hci.mobile.poty.R
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.TextFieldWithLabel
 
@@ -90,8 +92,8 @@ fun RegistrationScreen(
                     var title: String? = null
                     if (windowSizeClass.isLandscape() && !windowSizeClass.isTablet()) {
                         title = when (state.currentStep) {
-                            1, 2 -> "Registrarse"
-                            3 ->  "¡Ya Casi!"
+                            1, 2 -> stringResource(R.string.sign_up)
+                            3 ->  stringResource(R.string.almost_there)
                             else -> null
                         }
                     }
@@ -161,7 +163,7 @@ fun LoginNavigationText(
                     .height(50.dp)
             ) {
                 Text(
-                    text = "Volver para atrás",
+                    text = stringResource(R.string.go_back),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.secondary
                 )
@@ -177,14 +179,14 @@ fun LoginNavigationText(
             ) {
                 Text(
                     text = buildAnnotatedString {
-                        append("¿Ya tenés una cuenta? ")
+                        append(stringResource(R.string.already_have_an_account))
                         withStyle(
                             style = SpanStyle(
                                 textDecoration = TextDecoration.Underline,
                                 color = MaterialTheme.colorScheme.secondary
                             )
                         ) {
-                            append("Iniciar sesión")
+                            append(stringResource(R.string.log_in))
                         }
                     },
                     style = MaterialTheme.typography.bodyLarge,
@@ -214,7 +216,6 @@ fun RegistrationContentSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (isLandscapeAndNotTablet) {
-            // Use substeps for landscape and non-tablet devices
             when (state.currentStep) {
                 1 -> when (state.currentSubStep) {
                     0 -> SubStepOnePartOne(
@@ -324,7 +325,7 @@ fun SubStepOnePartOne(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextFieldWithLabel(
-            label = "Nombre",
+            label = stringResource(R.string.name),
             value = name,
             onValueChange = onNameChange,
             modifier = Modifier.fillMaxWidth()
@@ -332,7 +333,7 @@ fun SubStepOnePartOne(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextFieldWithLabel(
-            label = "Apellido",
+            label = stringResource(R.string.surname),
             value = surname,
             onValueChange = onSurnameChange,
             modifier = Modifier.fillMaxWidth()
@@ -344,7 +345,7 @@ fun SubStepOnePartOne(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -378,7 +379,7 @@ fun SubStepOnePartTwo(
     ) {
 
         CompactDateFieldWithLabel(
-            label = "Fecha de Nacimiento (DD/MM/AAAA)",
+            label = stringResource(R.string.date_of_birth),
             value = birthDate,
             onValueChange = onBirthdayChange,
             showCal = false
@@ -386,7 +387,7 @@ fun SubStepOnePartTwo(
         Spacer(modifier = Modifier.height(16.dp))
 
         TextFieldWithLabel(
-            label = "Correo Electrónico",
+            label = stringResource(R.string.email),
             value = email,
             onValueChange = onEmailChange,
             modifier = Modifier.fillMaxWidth()
@@ -399,7 +400,7 @@ fun SubStepOnePartTwo(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
         Spacer(modifier = Modifier.height(16.dp))
         LoginNavigationText(
@@ -429,7 +430,7 @@ fun SubStepTwo(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PasswordFieldWithLabel(
-            label = "Contraseña",
+            label = stringResource(R.string.password),
             value = password,
             onValueChange = {
                 onPasswordChange(it)
@@ -441,7 +442,7 @@ fun SubStepTwo(
         Spacer(modifier = Modifier.height(8.dp))
 
         PasswordFieldWithLabel(
-            label = "Confirmar Contraseña",
+            label = stringResource(R.string.confirm_password),
             value = localPasswordCheck,
             onValueChange = {
                 localPasswordCheck = it
@@ -466,7 +467,7 @@ fun SubStepTwo(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -482,7 +483,7 @@ fun SubStepTwo(
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
         }else if (passwordMismatchError) {
-            ErrorMessage(message = "Las contraseñas no coinciden.")
+            ErrorMessage(message = stringResource(R.string.passwords_dont_match))
 
         }
     }
@@ -522,14 +523,14 @@ fun StepOne(
         }
 
         TextFieldWithLabel(
-            label = "Nombre",
+            label = stringResource(R.string.name),
             value = name,
             onValueChange = onNameChange,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         TextFieldWithLabel(
-            label = "Apellido",
+            label = stringResource(R.string.surname),
             value = surname,
             onValueChange = onSurnameChange,
             modifier = Modifier.fillMaxWidth()
@@ -539,7 +540,7 @@ fun StepOne(
 
         val showCal =   if(!windowSizeClass.isTablet() && windowSizeClass.isLandscape()) false else true
         CompactDateFieldWithLabel(
-            label = "Fecha de Nacimiento (DD/MM/AAAA)",
+            label = stringResource(R.string.date_of_birth),
             value = birthDate,
             onValueChange = onBirthdayChange,
             showCal = showCal
@@ -552,7 +553,7 @@ fun StepOne(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
         Spacer(modifier = Modifier.height(16.dp))
         if (errorMessage.isNotEmpty()) {
@@ -600,7 +601,7 @@ fun StepTwo(
         }
 
         TextFieldWithLabel(
-            label = "Correo Electrónico",
+            label = stringResource(R.string.email),
             value = email,
             onValueChange = onEmailChange,
             modifier = Modifier.fillMaxWidth()
@@ -609,7 +610,7 @@ fun StepTwo(
         Spacer(modifier = Modifier.height(16.dp))
 
         PasswordFieldWithLabel(
-            label = "Contraseña",
+            label = stringResource(R.string.password),
             value = password,
             onValueChange = {
                 onPasswordChange(it)
@@ -621,7 +622,7 @@ fun StepTwo(
         Spacer(modifier = Modifier.height(16.dp))
 
         PasswordFieldWithLabel(
-            label = "Confirmar Contraseña",
+            label = stringResource(R.string.confirm_password),
             value = localPasswordCheck,
             onValueChange = {
                 localPasswordCheck = it
@@ -645,7 +646,7 @@ fun StepTwo(
                 .fillMaxWidth()
                 .height(50.dp)
         ) {
-            Text(text = "Siguiente", color = MaterialTheme.colorScheme.onBackground)
+            Text(text = stringResource(R.string.next), color = MaterialTheme.colorScheme.onBackground)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -653,7 +654,7 @@ fun StepTwo(
         if (errorMessage.isNotEmpty()) {
             ErrorMessage(message = errorMessage)
         } else if (passwordMismatchError)  {
-            ErrorMessage(message = "Las contraseñas no coinciden.")
+            ErrorMessage(message = stringResource(R.string.passwords_dont_match))
         }else {
             LoginNavigationText(
                 currentStep = 2,
@@ -699,7 +700,7 @@ fun StepThree(
             )
         }
         Text(
-            text = "Para finalizar tu registro, ingresá el código que fue enviado a:",
+            text = stringResource(R.string.to_complete_your_registration),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
@@ -734,7 +735,7 @@ fun StepThree(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Registrarse",
+                text = stringResource(R.string.sign_up),
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
@@ -767,7 +768,7 @@ fun RegistrationTitle(
     modifier: Modifier = Modifier
 ) {
     Text(
-        text = if (currentStep < 3) "Registrarse" else "¡Ya Casi!",
+        text = if (currentStep < 3) stringResource(R.string.sign_up) else stringResource(R.string.almost_there),
         style = if (windowSizeClass.isTablet()) MaterialTheme.typography.titleLarge else if(!windowSizeClass.isTablet() && windowSizeClass.isLandscape() ) MaterialTheme.typography.titleSmall else MaterialTheme.typography.titleMedium ,
         modifier = modifier
             .padding(top = 20.dp, bottom = 10.dp)

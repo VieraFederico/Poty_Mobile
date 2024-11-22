@@ -1,77 +1,40 @@
 package hci.mobile.poty.screens.cvu
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import hci.mobile.poty.ui.theme.PotyTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastCbrt
 import hci.mobile.poty.R
-import hci.mobile.poty.classes.CreditCard
 import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.components.FullCreditCardView
-import hci.mobile.poty.ui.theme.GreenDark
-import hci.mobile.poty.ui.theme.GreyDark
+import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
-import hci.mobile.poty.ui.theme.GreyLight
-import hci.mobile.poty.ui.theme.bodyLargeSemibold
-import hci.mobile.poty.ui.theme.labelLargeLite
-import hci.mobile.poty.ui.theme.bodyLargeSemibold
-import hci.mobile.poty.ui.theme.titleSmallSemiBold
-import hci.mobile.poty.utils.CompactDateFieldWithLabel
-import hci.mobile.poty.utils.TextFieldWithLabel
+import hci.mobile.poty.utils.WindowSizeClass
+import hci.mobile.poty.utils.calculateWindowSizeClass
 
-@Preview
-@Composable
-fun CVUScreenPreview(){
-    CVUScreen()
-}
 @Composable
 fun CVUScreen(
-    viewModel: CVUViewModel = CVUViewModel()
+    viewModel: CVUViewModel = CVUViewModel(),
+    mockWindowSizeClass: WindowSizeClass? = null
 ) {
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+
+    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserData()
@@ -83,80 +46,94 @@ fun CVUScreen(
             containerColor = MaterialTheme.colorScheme.secondary,
             bottomBar = { BottomNavBar(onNavigate = { }) }
         ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.Top
-            ) {
-                Box(
+            if (isLandscape) {
+                Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
+                        .fillMaxSize()
+                        .padding(innerPadding)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.background_scaffolding),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
+                    HeaderSection(
+                        modifier = Modifier
+                            .fillMaxHeight().fillMaxWidth(0.3f)
+                            .weight(1f),
                     )
-
-                    BackButton()
-                    Column(
+                    ContentSection(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f)
+                            .padding(horizontal = 15.dp),
+                        state = state,
+                        viewModel = viewModel,
+                        context = context,
+                        windowSizeClass = windowSizeClass
+                    )
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                ) {
+                    HeaderSection(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.TopCenter)
-                            .padding(start=15.dp, end=15.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
+                            .fillMaxHeight(0.3f),
+                    )
+                    ContentSection(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        state = state,
+                        viewModel = viewModel,
+                        context = context,
+                        windowSizeClass = windowSizeClass
+                    )
+                }
+            }
+        }
+    }
+}
 
-                        Spacer(modifier = Modifier.height(200.dp))
+@Composable
+fun HeaderSection(
+    modifier: Modifier,
+    contentPadding: Dp = 16.dp,
+) {
+    Box(
+        modifier = modifier
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.background_scaffolding),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.onBackground,
-                            ),
-                            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomEnd = 30.dp, bottomStart = 30.dp),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(5.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Text(
-                                    text = "Datos de Cuenta",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-
-                                Spacer(modifier = Modifier.height(10.dp))
-                                DataTab(
-                                    key = "Alias",
-                                    value = state.alias,
-                                    onCopyClick = { value ->
-                                        viewModel.copyToClipboard(context, value)
-                                    }
-                                )
-                                DataTab(
-                                    key = "Correo Electronico",
-                                    value = state.email,
-                                    onCopyClick = { value ->
-                                        viewModel.copyToClipboard(context, value)
-                                    }
-                                )
-                                DataTab(
-                                    key = "CBU",
-                                    value = state.cbu,
-                                    onCopyClick = { value ->
-                                        viewModel.copyToClipboard(context, value)
-                                    }
-                                )
-                            }
-                        }
-                    }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top
+        ) {
+            BackButton()
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(contentPadding),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.Transparent
+                ),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = "Datos de cuenta",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = White
+                    )
                 }
             }
         }
@@ -165,19 +142,105 @@ fun CVUScreen(
 
 
 
+@Composable
+fun ContentSection(
+    modifier: Modifier,
+    state: CVUScreenState,
+    viewModel: CVUViewModel,
+    context: Context,
+    windowSizeClass: WindowSizeClass
+) {
+    val spacerHeight = when (windowSizeClass) {
+        WindowSizeClass.MediumPhone -> 50.dp
+        WindowSizeClass.MediumPhoneLandscape -> 20.dp
+        WindowSizeClass.MediumTablet -> 100.dp
+        WindowSizeClass.MediumTabletLandscape -> 50.dp
+        else -> 50.dp
+    }
+
+    val cardPadding = if (windowSizeClass == WindowSizeClass.MediumPhone ||
+        windowSizeClass == WindowSizeClass.MediumTablet
+    ) {
+        Modifier.padding(horizontal = 16.dp)
+    } else {
+        Modifier
+    }
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(spacerHeight))
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(cardPadding),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.onBackground,
+            ),
+            shape = RoundedCornerShape(30.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+
+                DataTab(
+                    key = "Alias",
+                    value = state.alias,
+                    onCopyClick = { value ->
+                        viewModel.copyToClipboard(context, value)
+                    },
+                    windowSizeClass = windowSizeClass,
+                    firstRow = false
+                )
+                DataTab(
+                    key = "Correo Electrónico",
+                    value = state.email,
+                    onCopyClick = { value ->
+                        viewModel.copyToClipboard(context, value)
+                    },
+                    windowSizeClass = windowSizeClass
+                )
+                DataTab(
+                    key = "CBU",
+                    value = state.cbu,
+                    onCopyClick = { value ->
+                        viewModel.copyToClipboard(context, value)
+                    },
+                    windowSizeClass = windowSizeClass
+                )
+            }
+        }
+    }
+}
 
 @Composable
 fun DataTab(
     key: String,
     value: String,
-    onCopyClick: (String) -> Unit
+    onCopyClick: (String) -> Unit,
+    firstRow: Boolean = true,
+    windowSizeClass: WindowSizeClass
+) {
+    val padding = when (windowSizeClass) {
+        WindowSizeClass.MediumTablet, WindowSizeClass.MediumTabletLandscape -> 24.dp
+        else -> 16.dp
+    }
 
-){
-    HorizontalDivider(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        thickness = 2.dp,
-        color = GreyLight,
-    )
+    if(firstRow){
+        HorizontalDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = padding),
+            thickness = 2.dp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -190,32 +253,29 @@ fun DataTab(
         ) {
             Text(
                 text = key,
-                style = MaterialTheme.typography.bodyLargeSemibold,
-                color = GreyDark
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = value,
-                style = MaterialTheme.typography.bodyLarge,
-                color = GreyLight
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
-        Column(
-            modifier = Modifier.weight(0.5f),
-            verticalArrangement = Arrangement.Center
-
+        IconButton(
+            onClick = { onCopyClick(value) },
+            modifier = Modifier
+                .weight(0.5f)
+                .size(80.dp)
+                .align(Alignment.CenterVertically)
         ) {
-            IconButton(
-                onClick = { onCopyClick(value) },
-                modifier = Modifier.size(80.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ContentCopy,
-                    contentDescription = "Botón de ícono",
-                    tint = Color.Black,
-                    modifier = Modifier.size(40.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.Filled.ContentCopy,
+                contentDescription = "Copiar",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(40.dp)
+            )
         }
     }
 }

@@ -12,6 +12,7 @@ import hci.mobile.poty.screens.landing.LandingScreen
 import hci.mobile.poty.screens.login.LoginScreen
 import hci.mobile.poty.screens.register.RegistrationScreen
 import hci.mobile.poty.screens.charge.ChargeScreen
+import hci.mobile.poty.screens.cvu.CVUScreen
 import hci.mobile.poty.screens.deposit.DepositScreen
 import hci.mobile.poty.screens.payment.email.PaymentWithEmailScreen
 import hci.mobile.poty.screens.payment.link.PaymentWithLinkScreen
@@ -55,7 +56,8 @@ fun AppNavGraph(navController: NavHostController, ) {
                 onNavigateToCharge = { navController.navigate(Routes.CHARGE_SCREEN) },
                 onNavigateToDeposit = { navController.navigate(Routes.DEPOSIT_SCREEN) },
                 onNavigateToAddCard = { navController.navigate(Routes.ADD_CARD_SCREEN) },
-                onNavigateToPayment = { navController.navigate(Routes.PAYMENT_SCREEN) }
+                onNavigateToPayment = { navController.navigate(Routes.PAYMENT_SCREEN) },
+                onNavigateToCvu = {navController.navigate(Routes.CVU_SCREEN)}
             )
         }
 
@@ -64,7 +66,6 @@ fun AppNavGraph(navController: NavHostController, ) {
                     onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) },
                     onBackClick = {
                         val popped = navController.popBackStack()
-                        println("Navigation" + "Backstack popped: $popped")
                         if (!popped) {
                             navController.navigate(Routes.DASHBOARD)
                         }
@@ -94,19 +95,27 @@ fun AppNavGraph(navController: NavHostController, ) {
 
             )
         }
+            composable(route = Routes.CVU_SCREEN) {
+                CVUScreen(
+
+                )
+            }
 
         composable(route = Routes.EMAIL_SCREEN) {
             PaymentWithEmailScreen(
-                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) },
+                onNavigateToAddCard = {navController.navigate(Routes.ADD_CARD_SCREEN)}
             )
         }
 
         composable(route = Routes.LINK_SCREEN) {
             PaymentWithLinkScreen(
-                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) },
+                onNavigateToAddCard = {navController.navigate(Routes.ADD_CARD_SCREEN)}
 
             )
         }
+
     }
     }
 }

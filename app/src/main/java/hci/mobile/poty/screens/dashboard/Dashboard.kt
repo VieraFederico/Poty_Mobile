@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -64,6 +65,7 @@ fun Dashboard(
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
     onNavigateToPayment: () -> Unit = {},
+    onNavigateToCvu: () -> Unit,
     mockWindowSizeClass: WindowSizeClass? = null
 ) {
     val state by viewModel.state.collectAsState()
@@ -116,7 +118,8 @@ fun Dashboard(
                             windowSizeClass = windowSizeClass,
                             showTransactionHistory = windowSizeClass != WindowSizeClass.MediumPhoneLandscape,
                             topStart = 30.dp,
-                            bottomStart =  30.dp
+                            bottomStart =  30.dp,
+                            onNavigateToCvu = onNavigateToCvu
 
                         )
                     }
@@ -128,7 +131,8 @@ fun Dashboard(
                     ) {
                         HeaderSection(
                             modifier = Modifier
-                                .fillMaxWidth().fillMaxHeight(if (windowSizeClass == WindowSizeClass.MediumPhone) 0.22f else 0.3f),
+                                .fillMaxWidth()
+                                .fillMaxHeight(if (windowSizeClass == WindowSizeClass.MediumPhone) 0.22f else 0.3f),
 
                             contentPadding = contentPadding,
                             state = state,
@@ -139,7 +143,8 @@ fun Dashboard(
 
                         ContentSection(
                             modifier = Modifier
-                                .fillMaxWidth().fillMaxHeight(),
+                                .fillMaxWidth()
+                                .fillMaxHeight(),
                             contentPadding = contentPadding,
                             state = state,
                             onNavigateToCharge = onNavigateToCharge,
@@ -149,7 +154,8 @@ fun Dashboard(
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             topStart = 30.dp,
-                            topEnd = 30.dp
+                            topEnd = 30.dp,
+                            onNavigateToCvu = onNavigateToCvu
                         )
                     }
                 }
@@ -214,9 +220,9 @@ fun Greeting(
     val currentTime = LocalTime.now().hour
 
     val greeting = when {
-        currentTime in 5..11 -> "¡Buenos Días,"
-        currentTime in 12..17 -> "¡Buenas Tardes,"
-        else -> "¡Buenas Noches,"
+        currentTime in 5..11 -> stringResource(R.string.good_morning)
+        currentTime in 12..17 -> stringResource(R.string.good_afternoon)
+        else -> stringResource(R.string.good_night)
     }
 
     val textStyle = when (windowSizeClass) {
@@ -277,6 +283,7 @@ fun ContentSection(
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
     onNavigateToPayment: () -> Unit,
+    onNavigateToCvu: () -> Unit,
     viewModel: DashboardViewModel,
     windowSizeClass: WindowSizeClass,
     showTransactionHistory: Boolean = true,
@@ -313,25 +320,25 @@ fun ContentSection(
                 DashboardButton(
                     onClick = onNavigateToDeposit,
                     iconResId = R.drawable.corner_right_down,
-                    contentDescription = "Ingresar"
+                    contentDescription = stringResource(R.string.deposit)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick = onNavigateToCharge,
                     iconResId = R.drawable.dollar_sign,
-                    contentDescription = "Cobrar"
+                    contentDescription = stringResource(R.string.charge)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick =  onNavigateToPayment,
                     iconResId = R.drawable.corner_right_up,
-                    contentDescription = "Enviar"
+                    contentDescription = stringResource(R.string.pay)
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
-                    onClick = { /* TODO */ },
+                    onClick = { onNavigateToCvu() },
                     iconResId = R.drawable.user,
-                    contentDescription = "CVU"
+                    contentDescription = stringResource(R.string.cbu)
                 )
             }
             if(windowSizeClass.isTablet()){
