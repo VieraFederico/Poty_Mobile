@@ -131,7 +131,8 @@ fun Dashboard(
                     ) {
                         HeaderSection(
                             modifier = Modifier
-                                .fillMaxWidth().fillMaxHeight(if (windowSizeClass == WindowSizeClass.MediumPhone) 0.22f else 0.3f),
+                                .fillMaxWidth()
+                                .fillMaxHeight(if (windowSizeClass == WindowSizeClass.MediumPhone) 0.22f else 0.3f),
 
                             contentPadding = contentPadding,
                             state = state,
@@ -142,7 +143,8 @@ fun Dashboard(
 
                         ContentSection(
                             modifier = Modifier
-                                .fillMaxWidth().fillMaxHeight(),
+                                .fillMaxWidth()
+                                .fillMaxHeight(),
                             contentPadding = contentPadding,
                             state = state,
                             onNavigateToCharge = onNavigateToCharge,

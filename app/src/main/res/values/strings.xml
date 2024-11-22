@@ -44,7 +44,7 @@
     <string name="amount_to_deposit">Amount to Deposit</string>
     <string name="with_Poty">With Poty</string>
     <string name="you_can_rest_easy">You can rest easy,</string>
-    <string name="your_money_is_in">your money is in</string>
+    <string name="your_money_is_in">your money is safe.</string>
     <string name="the_">the </string>
     <string name="pot">Pot</string>
     <string name="log_in">Log In</string>
@@ -76,5 +76,4 @@
     <string name="link_generated_correctly">Link generated Successfully!</string>
     <string name="copy_link">Copy Link</string>
     <string name="share_link">Share Link</string>
-
 </resources>
