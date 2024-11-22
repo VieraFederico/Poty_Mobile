@@ -73,4 +73,6 @@
     <string name="selectec_option">Option Sélectionnée : </string>
     <string name="card">Carte</string>
     <string name="using_email">Via E-mail</string>
+    <string name="test">Testue</string>
+
 </resources>

@@ -30,7 +30,7 @@
     <string name="charge_money">Raccogli Denaro</string>
     <string name="amount_to_charge">Importo da Raccogliere</string>
     <string name="next">Avanti</string>
-    <string name="account_details">Dati dell'Account</string>
+    <string name="account_details">Dati dell\'Account</string>
     <string name="alias" translatable="false">Alias</string>
     <string name="email">E-mail</string>
     <string name="cbu">CBU</string>
@@ -69,8 +69,9 @@
     <string name="description">Descrizione</string>
     <string name="send">Invia</string>
     <string name="using_payment_link">Con Link di Pagamento</string>
-    <string name="enter_email">Inserisci l'e-mail a cui vuoi inviare denaro</string>
+    <string name="enter_email">Inserisci l\'e-mail a cui vuoi inviare denaro</string>
     <string name="selectec_option">Opzione selezionata: </string>
     <string name="card">Carta</string>
     <string name="using_email">Con E-mail</string>
+    <string name="test">Testion</string>
 </resources>
