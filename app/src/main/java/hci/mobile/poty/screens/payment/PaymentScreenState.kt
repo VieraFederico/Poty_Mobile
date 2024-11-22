@@ -7,7 +7,7 @@ import hci.mobile.poty.classes.PaymentResponse
 
 data class PaymentScreenState(
     val currentStep: Int = 1,
-    val balance: Double = 567.0, //Llamada API?
+    val balance: Float = 567.0f, //Llamada API?
     val selectedCard: CardResponse? = null,
     val creditCards: List<CardResponse> = mutableStateListOf(
         CardResponse(

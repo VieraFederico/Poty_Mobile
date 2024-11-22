@@ -1,7 +1,10 @@
 package hci.mobile.poty.data.network.api
 
+
 import hci.mobile.poty.data.network.model.NetworkBalance
 import hci.mobile.poty.data.network.model.NetworkCard
+import hci.mobile.poty.data.network.model.NetworkRechargeRequest
+import hci.mobile.poty.data.network.model.NetworkRechargeResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -22,4 +25,9 @@ interface WalletApiService {
 
     @GET("wallet/balance")
     suspend fun getBalance() : Response<NetworkBalance>
+
+    @POST("wallet/recharge")
+    suspend fun recharge(@Body rechargeRequest: NetworkRechargeRequest) : Response<NetworkRechargeResponse>
+
+
 }

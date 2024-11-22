@@ -13,6 +13,9 @@ import hci.mobile.poty.screens.login.LoginScreen
 import hci.mobile.poty.screens.register.RegistrationScreen
 import hci.mobile.poty.screens.charge.ChargeScreen
 import hci.mobile.poty.screens.deposit.DepositScreen
+import hci.mobile.poty.screens.payment.email.PaymentWithEmailScreen
+import hci.mobile.poty.screens.payment.link.PaymentWithLinkScreen
+import hci.mobile.poty.screens.payment.menu.PaymentScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController, ) {
@@ -46,14 +49,15 @@ fun AppNavGraph(navController: NavHostController, ) {
             }
 
 
-            // Pantalla principal (Dashboard)
-            composable(route = Routes.DASHBOARD) {
-                Dashboard(
-                    onNavigateToCharge = { navController.navigate(Routes.CHARGE_SCREEN) },
-                    onNavigateToDeposit = { navController.navigate(Routes.DEPOSIT_SCREEN) },
-                    onNavigateToAddCard = { navController.navigate(Routes.ADD_CARD_SCREEN) }
-                )
-            }
+        // Pantalla principal (Dashboard)
+        composable(route = Routes.DASHBOARD) {
+            Dashboard(
+                onNavigateToCharge = { navController.navigate(Routes.CHARGE_SCREEN) },
+                onNavigateToDeposit = { navController.navigate(Routes.DEPOSIT_SCREEN) },
+                onNavigateToAddCard = { navController.navigate(Routes.ADD_CARD_SCREEN) },
+                onNavigateToPayment = { navController.navigate(Routes.PAYMENT_SCREEN) }
+            )
+        }
 
             composable(route = Routes.ADD_CARD_SCREEN) {
                 AddCardScreen(
@@ -80,6 +84,28 @@ fun AppNavGraph(navController: NavHostController, ) {
                     onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
                 )
             }
+        }
+
+        composable(route = Routes.PAYMENT_SCREEN) {
+            PaymentScreen(
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) },
+                onNavigateToEmail = { navController.navigate(Routes.EMAIL_SCREEN) },
+                onNavigateToLink = { navController.navigate(Routes.LINK_SCREEN) }
+
+            )
+        }
+
+        composable(route = Routes.EMAIL_SCREEN) {
+            PaymentWithEmailScreen(
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
+            )
+        }
+
+        composable(route = Routes.LINK_SCREEN) {
+            PaymentWithLinkScreen(
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
+
+            )
         }
     }
 }
