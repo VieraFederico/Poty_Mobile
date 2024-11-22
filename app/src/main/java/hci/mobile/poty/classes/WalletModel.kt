@@ -1,11 +1,11 @@
 package hci.mobile.poty.classes
 
 data class BalanceResponse(val balance: Float)
-data class RechargeRequest(val amount: Double)
+data class RechargeRequest(val amount: Float)
 
 data class InvestmentResponse(val investment: Double)
-data class InvestRequest(val amount: Double)
-data class DivestRequest(val amount: Double)
+data class InvestRequest(val amount: Float)
+data class DivestRequest(val amount: Float)
 
 data class CardResponse(
     val id: Int,
@@ -27,19 +27,19 @@ data class DeleteResponse(val status: String)
 
 data class DailyReturnResponse(
     val id: Int,
-    val returnGiven: Double,
-    val balanceBefore: Double,
-    val balanceAfter: Double,
+    val returnGiven: Float,
+    val balanceBefore: Float,
+    val balanceAfter: Float,
     val createdAt: String
 )
 
-data class InterestResponse(val interest: Double)
+data class InterestResponse(val interest: Float)
 
 data class AliasUpdateRequest(val alias: String)
 data class WalletDetailsResponse(
     val id: Int,
     val balance: Float,
-    val invested: Double,
+    val invested: Float,
     val cbu: String,
     val alias: String
 )
@@ -47,9 +47,9 @@ data class WalletDetailsResponse(
 data class PaymentResponse(
     val id: Int,
     val type: String,
-    val amount: Double,
-    val balanceBefore: Double,
-    val balanceAfter: Double,
+    val amount: Float,
+    val balanceBefore: Float,
+    val balanceAfter: Float,
     val pending: Boolean,
     val linkUuid: String?,
     val createdAt: String,

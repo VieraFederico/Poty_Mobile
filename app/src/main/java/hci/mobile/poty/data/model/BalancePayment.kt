@@ -3,7 +3,7 @@ package hci.mobile.poty.data.model
 import hci.mobile.poty.data.network.model.NetworkBalancePayment
 
 class BalancePayment  (
-    val amount: Double,
+    val amount: Float,
     val description: String,
     val type: String,
     val receiverEmail: String

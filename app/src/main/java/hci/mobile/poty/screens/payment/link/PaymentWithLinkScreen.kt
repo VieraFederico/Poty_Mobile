@@ -10,19 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -40,22 +33,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
-import hci.mobile.poty.classes.CardResponse
+import hci.mobile.poty.data.model.Card
+import hci.mobile.poty.data.model.LinkPaymentType
+import hci.mobile.poty.data.network.model.NetworkLinkPayment
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
 import hci.mobile.poty.screens.payment.PaymentType
 import hci.mobile.poty.ui.components.BackButton
-import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
-import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.GreenLight
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleMediumLite
 import hci.mobile.poty.utils.ErrorMessage
-import hci.mobile.poty.utils.NumberFieldWithLabel
 import hci.mobile.poty.utils.ReadOnlyNumberFieldWithLabel
 import hci.mobile.poty.utils.TextFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
@@ -124,7 +116,8 @@ fun PaymentWithLinkScreen(
                                 windowSizeClass = windowSizeClass,
                                 topStart = 30.dp,
                                 bottomStart = 30.dp,
-                                onNavigateToDashboard = onNavigateToDashboard
+                                onNavigateToDashboard = onNavigateToDashboard,
+                                onNavigateToAddaCard = {}
 
                             )
                         }
@@ -162,7 +155,8 @@ fun PaymentWithLinkScreen(
                                 windowSizeClass = windowSizeClass,
                                 topStart = 30.dp,
                                 bottomStart = 30.dp,
-                                onNavigateToDashboard = onNavigateToDashboard
+                                onNavigateToDashboard = onNavigateToDashboard,
+                                onNavigateToAddaCard = {}
 
                             )
                         }
@@ -180,6 +174,8 @@ fun StepOne(
     errorMessage: String,
     validateLink: () -> Boolean, // Validación para el link
     windowSizeClass: WindowSizeClass,
+    fetchPaymentData: (String) -> Unit, // Agregado para llamar al método
+
 ) {
     var localLink by remember { mutableStateOf(link) }
 
@@ -205,7 +201,12 @@ fun StepOne(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                if (validateLink()) onNext() // Validación antes de avanzar
+                if (validateLink()) {
+                    fetchPaymentData(localLink)
+                    onNext()
+                }
+
+
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -222,13 +223,13 @@ fun StepOne(
 
 @Composable
 fun StepTwo(
-    number: Double,
+    number: Float,
     balance: Float,
-    creditCards: List<CardResponse>,
-    selectedCard: CardResponse? = null,
-    onCardSelected: (CardResponse) -> Unit,
-    paymentMethod: PaymentType,
-    onPaymentTypeChange: (PaymentType) -> Unit,
+    creditCards: List<Card>,
+    selectedCard: Card? = null,
+    onCardSelected: (Card) -> Unit,
+    paymentMethod: LinkPaymentType,
+    onPaymentTypeChange: (LinkPaymentType) -> Unit,
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit,
     onSubmit: () -> Unit,
@@ -236,7 +237,11 @@ fun StepTwo(
     description: String,
     onDescriptionChange: (String) -> Unit,
     windowSizeClass: WindowSizeClass,
-) {
+    onSettlePayment: (String) -> Unit,
+    linkUuid: String,
+    onNavigateToDashboard: () -> Unit
+
+    ) {
     var localNumber by remember { mutableStateOf(number) }
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
     var localPaymentMethod by remember { mutableStateOf(paymentMethod) }
@@ -257,7 +262,7 @@ fun StepTwo(
                 ) {
                     ReadOnlyNumberFieldWithLabel(
                         label = "Monto a Enviar",
-                        value = localNumber.toFloat(),
+                        value = localNumber,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -309,7 +314,7 @@ fun StepTwo(
                     )
 
                     when (localPaymentMethod) {
-                        PaymentType.CARD -> {
+                        LinkPaymentType.CARD -> {
                             PaymentCardsCarousel(
                                 creditCards = creditCards,
                                 selectedCard = localSelectedCard,
@@ -320,9 +325,11 @@ fun StepTwo(
                             )
                         }
 
-                        PaymentType.BALANCE -> {
+                        LinkPaymentType.BALANCE -> {
                             PaymentBalanceCard(balance)
                         }
+
+                        LinkPaymentType.LINK -> TODO()
                     }
                 }
             }
@@ -376,7 +383,7 @@ fun StepTwo(
                 }
 
                 when (localPaymentMethod) {
-                    PaymentType.CARD -> {
+                    LinkPaymentType.CARD -> {
                         PaymentCardsCarousel(
                             creditCards = creditCards,
                             selectedCard = localSelectedCard,
@@ -390,13 +397,18 @@ fun StepTwo(
                         )
                     }
 
-                    PaymentType.BALANCE -> {
+                    LinkPaymentType.BALANCE -> {
                         PaymentBalanceCard(balance)
                     }
+
+                    LinkPaymentType.LINK -> TODO()
                 }
 
                 Button(
-                    onClick = { onSubmit() },
+                    onClick = {
+                        onSettlePayment(linkUuid)
+                        onNavigateToDashboard()
+                        },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -481,7 +493,8 @@ fun ContentSection(
     topEnd: Dp = 0.dp,
     bottomStart: Dp = 0.dp,
     bottomEnd: Dp = 0.dp,
-    onNavigateToDashboard: () -> Unit
+    onNavigateToDashboard: () -> Unit,
+    onNavigateToAddaCard: () -> Unit
 ) {
 
     Card(
@@ -512,7 +525,9 @@ fun ContentSection(
                     onNext = { viewModel.nextStep() },
                     errorMessage = state.errorMessage,
                     windowSizeClass = windowSizeClass,
-                    validateLink = { viewModel.validateLink() }
+                    validateLink = { viewModel.validateLink() },
+                    fetchPaymentData = { viewModel.getPaymentData(it) }
+
 
                 )
                 2 -> StepTwo(
@@ -523,14 +538,19 @@ fun ContentSection(
                     onCardSelected = { viewModel.selectCard(it) },
                     paymentMethod = state.type,
                     onPaymentTypeChange = {viewModel.onPaymentTypeChange(it)},
-                    onNavigateToAddCard = { /* Hay que agregar esto xd */ },
+                    onNavigateToAddCard = { onNavigateToAddaCard()  },
                     onDeleteCard = { viewModel.onDeleteCard(it) },
                     onSubmit = { viewModel.onSubmitPayment() },
                     errorMessage = state.errorMessage,
                     description = state.description,
                     onDescriptionChange = {viewModel.onDescriptionChange(it)},
-                    windowSizeClass = windowSizeClass
-                )
+                    windowSizeClass = windowSizeClass,
+                    onSettlePayment = { linkUuid -> viewModel.settlePayment(linkUuid) },
+                    linkUuid = state.paymentLink,
+                    onNavigateToDashboard = { onNavigateToDashboard() }
+
+
+                    )
             }
         }
     }
@@ -585,8 +605,8 @@ fun MediumPhoneLandscapePreview() {
 
 @Composable
 fun SelectOptionTextButton(
-    selectedOption: PaymentType,
-    onOptionSelected: (PaymentType) -> Unit
+    selectedOption: LinkPaymentType,
+    onOptionSelected: (LinkPaymentType) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -600,22 +620,22 @@ fun SelectOptionTextButton(
         horizontalArrangement = Arrangement.Center
     ) {
         TextButton(
-            onClick = { onOptionSelected(PaymentType.CARD) },
+            onClick = { onOptionSelected(LinkPaymentType.CARD) },
             modifier = Modifier.padding(end = 8.dp)
         ) {
             Text(
                 text = "Tarjeta",
-                color = if (selectedOption == PaymentType.CARD) GreenLight else GreyLight
+                color = if (selectedOption == LinkPaymentType.CARD) GreenLight else GreyLight
             )
         }
 
         TextButton(
-            onClick = { onOptionSelected(PaymentType.BALANCE) },
+            onClick = { onOptionSelected(LinkPaymentType.BALANCE) },
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text(
                 text = "Balance",
-                color = if (selectedOption == PaymentType.BALANCE) GreenLight else GreyLight
+                color = if (selectedOption == LinkPaymentType.BALANCE) GreenLight else GreyLight
             )
         }
     }

@@ -12,10 +12,14 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import hci.mobile.poty.data.model.CardPayment
 import hci.mobile.poty.data.model.LinkPayment
+import hci.mobile.poty.data.model.LinkPaymentData
+import hci.mobile.poty.data.model.LinkPaymentResponse
 import hci.mobile.poty.data.model.NewPaymentLink
 import hci.mobile.poty.data.network.model.NetworkBalancePayment
 import hci.mobile.poty.data.network.model.NetworkCardPayment
 import hci.mobile.poty.data.model.Payment
+import hci.mobile.poty.data.network.model.NetworkLinkPaymentData
+import hci.mobile.poty.data.network.model.NetworkLinkPaymentResponse
 import kotlinx.coroutines.sync.withLock
 
 class PaymentRepository (
@@ -43,13 +47,21 @@ class PaymentRepository (
             remoteDataSource.payWithBalance(balancePayment.asNetworkModel())
         }
 
-        suspend fun payWithCard(cardPayment: CardPayment) {
-            remoteDataSource.payWithCard(cardPayment.asNetworkModel())
-        }
+    suspend fun payWithCard(cardPayment: CardPayment) {
+        remoteDataSource.payWithCard(cardPayment.asNetworkModel())
+    }
 
-        suspend fun generateLink(linkPayment: NewPaymentLink){
-            remoteDataSource.generateLink(linkPayment.asNetworkModel())
-        }
+    suspend fun generateLink(linkPayment: NewPaymentLink){
+        remoteDataSource.generateLink(linkPayment.asNetworkModel())
+    }
+
+    suspend fun settlePayment(linkPayment: LinkPayment, linkUuid: String): LinkPaymentResponse {
+        return remoteDataSource.settlePayment(linkPayment.asNetworkModel(), linkUuid).asModel()
+    }
+
+    suspend fun getPaymentData(linkUuid: String): LinkPaymentData {
+        return remoteDataSource.getPaymentData(linkUuid).asModel()
+    }
 
 
 

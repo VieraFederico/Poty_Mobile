@@ -2,10 +2,13 @@ package hci.mobile.poty.data.network.api
 
 
 
+import hci.mobile.poty.data.model.LinkPaymentResponse
 import hci.mobile.poty.data.network.model.NetworkBalancePayment
 import hci.mobile.poty.data.network.model.NetworkCard
 import hci.mobile.poty.data.network.model.NetworkCardPayment
 import hci.mobile.poty.data.network.model.NetworkLinkPayment
+import hci.mobile.poty.data.network.model.NetworkLinkPaymentData
+import hci.mobile.poty.data.network.model.NetworkLinkPaymentResponse
 import hci.mobile.poty.data.network.model.NetworkNewPaymentLink
 import hci.mobile.poty.data.network.model.NetworkPayment
 import retrofit2.Response
@@ -27,4 +30,11 @@ interface PaymentApiService {
 
    @GET("payment")
    suspend fun getPayments(): Response<List<NetworkPayment>>
+
+   @POST("payment/link/{linkUuid}")
+   suspend fun settlePayment(@Body linkPayment: NetworkLinkPayment, @Path("linkUuid") linkUuid: String): Response<NetworkLinkPaymentResponse>
+
+   @GET("payment/link/{linkUuid}")
+   suspend fun getPaymentData(@Path("linkUuid") linkUuid: String): Response<NetworkLinkPaymentData>
+
 }

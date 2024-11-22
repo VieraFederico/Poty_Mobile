@@ -342,7 +342,7 @@ fun ContentSection(
                 selectedCard = null,
                 onCardSelected = {},
                 onNavigateToAddCard = onNavigateToAddCard,
-                onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) },
+                onDeleteCard = { cardId -> viewModel.DeleteCard(cardId) },
                 windowSizeClass = windowSizeClass
             )
             if (showTransactionHistory) {

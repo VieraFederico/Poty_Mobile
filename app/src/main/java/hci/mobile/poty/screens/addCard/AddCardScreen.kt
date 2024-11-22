@@ -23,9 +23,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.layout.WindowMetricsCalculator
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
 import hci.mobile.poty.classes.CreditCard
+import hci.mobile.poty.screens.dashboard.DashboardViewModel
 import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.FullCreditCardView
@@ -43,7 +46,9 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 
 @Composable
 fun AddCardScreen(
-    viewModel: AddCardScreenViewModel = remember { AddCardScreenViewModel() },
+    viewModel: AddCardScreenViewModel = viewModel(factory = AddCardScreenViewModel.provideFactory(
+            LocalContext.current.applicationContext as MyApplication
+        )),
     mockWindowSizeClass: WindowSizeClass? = null,
     onNavigateToDashboard: () -> Unit,
     onBackClick: () ->Unit

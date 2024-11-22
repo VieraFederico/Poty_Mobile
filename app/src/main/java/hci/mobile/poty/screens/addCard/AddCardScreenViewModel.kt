@@ -1,12 +1,21 @@
 package hci.mobile.poty.screens.addCard
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import hci.mobile.poty.MyApplication
 import hci.mobile.poty.classes.CreditCard
+import hci.mobile.poty.data.model.Card
+import hci.mobile.poty.data.repository.WalletRepository
+import hci.mobile.poty.screens.deposit.DepositScreenViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class AddCardScreenViewModel : ViewModel() {
+class AddCardScreenViewModel(
+    private val walletRepository: WalletRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(AddCardScreenState())
     val state: StateFlow<AddCardScreenState> = _state
@@ -21,8 +30,25 @@ class AddCardScreenViewModel : ViewModel() {
             return
         }
 
-        onAddCardSuccess?.invoke()
-        // Llamada de API
+        viewModelScope.launch {
+            try {
+                // Mapea los datos ingresados a un modelo `Card` y llama al repositorio
+                val card = Card(
+                   fullName = currentState.owner,
+                    cvv = currentState.cvv,
+                    number = currentState.number,
+                    expirationDate = currentState.exp,
+                    type = currentState.type
+                )
+                walletRepository.addCard(card)
+
+
+                _state.update { AddCardScreenState() }
+                onAddCardSuccess?.invoke()
+            } catch (e: Exception) {
+                _state.update { it.copy(errorMessage = "Error al agregar la tarjeta: ${e.message}") }
+            }
+        }
     }
 
     fun onBankChange(newBank: String) {
@@ -72,12 +98,19 @@ class AddCardScreenViewModel : ViewModel() {
         _state.update { it.copy(isValid = isValid, errorMessage = errorMessage) }
     }
 
-    fun addCard() {
-        if (_state.value.isValid) {
-            // TODO: Implementar lógica para guardar la tarjeta
-            println("Tarjeta agregada exitosamente: ${_state.value}")
-        } else {
-            println("Detalles de la tarjeta inválidos: ${_state.value.errorMessage}")
+
+    companion object {
+        const val TAG = "UI Layer"
+
+        fun provideFactory(
+            app: MyApplication
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return AddCardScreenViewModel(
+                    app.walletRepository
+                ) as T
+            }
         }
     }
 }

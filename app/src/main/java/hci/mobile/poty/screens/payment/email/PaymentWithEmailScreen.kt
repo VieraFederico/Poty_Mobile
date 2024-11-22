@@ -1,6 +1,6 @@
 package hci.mobile.poty.screens.payment.email
 
-import hci.mobile.poty.classes.CardResponse
+import hci.mobile.poty.data.model.Card
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,19 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -42,7 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
-import hci.mobile.poty.screens.payment.PaymentHistory
+import hci.mobile.poty.data.model.LinkPaymentType
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
 import hci.mobile.poty.screens.payment.PaymentType
@@ -50,12 +43,9 @@ import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
-import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.GreenLight
-import hci.mobile.poty.ui.theme.GreyDark
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
-import hci.mobile.poty.ui.theme.labelLargeLite
 import hci.mobile.poty.ui.theme.titleMediumLite
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.NumberFieldWithLabel
@@ -222,14 +212,14 @@ fun StepOne(
 }
 @Composable
 fun StepTwo(
-    number: Double,
+    number: Float,
     balance: Float,
     onNumberChange: (Float) -> Unit,
-    creditCards: List<CardResponse>,
-    selectedCard: CardResponse? = null,
-    onCardSelected: (CardResponse) -> Unit,
-    paymentMethod: PaymentType,
-    onPaymentTypeChange: (PaymentType) -> Unit,
+    creditCards: List<Card>,
+    selectedCard: Card? = null,
+    onCardSelected: (Card) -> Unit,
+    paymentMethod: LinkPaymentType,
+    onPaymentTypeChange: (LinkPaymentType) -> Unit,
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit,
     onSubmit: () -> Unit,
@@ -238,6 +228,7 @@ fun StepTwo(
     description: String,
     onDescriptionChange: (String) -> Unit,
     windowSizeClass: WindowSizeClass,
+    onNavigateToDashboard: () -> Unit
 ) {
     var localNumber by remember { mutableStateOf(number) }
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
@@ -262,7 +253,7 @@ fun StepTwo(
                         label = "Monto a Enviar",
                         value = localNumber.toFloat(),
                         onValueChange = {
-                            localNumber = it.toDouble()
+                            localNumber = it
                             onNumberChange(it)
                         }
                     )
@@ -314,7 +305,7 @@ fun StepTwo(
                     )
 
                     when (localPaymentMethod) {
-                        PaymentType.CARD -> {
+                        LinkPaymentType.CARD -> {
                             PaymentCardsCarousel(
                                 creditCards = creditCards,
                                 selectedCard = localSelectedCard,
@@ -325,9 +316,11 @@ fun StepTwo(
                             )
                         }
 
-                        PaymentType.BALANCE -> {
+                        LinkPaymentType.BALANCE -> {
                             PaymentBalanceCard(balance)
                         }
+
+                        LinkPaymentType.LINK -> TODO()
                     }
                 }
             }
@@ -349,7 +342,7 @@ fun StepTwo(
                     label = "Monto a Enviar",
                     value = localNumber.toFloat(),
                     onValueChange = {
-                        localNumber = it.toDouble()
+                        localNumber = it
                         onNumberChange(it)
                     }
                 )
@@ -376,7 +369,7 @@ fun StepTwo(
                 }
 
                 when (localPaymentMethod) {
-                    PaymentType.CARD -> {
+                    LinkPaymentType.CARD -> {
                         PaymentCardsCarousel(
                             creditCards = creditCards,
                             selectedCard = localSelectedCard,
@@ -387,14 +380,17 @@ fun StepTwo(
                         )
                     }
 
-                    PaymentType.BALANCE -> {
+                    LinkPaymentType.BALANCE -> {
                         PaymentBalanceCard(balance)
                     }
+
+                    LinkPaymentType.LINK -> TODO()
                 }
 
                 Button(
                     onClick = {
-                        if (validateBalance()) onSubmit() // Validación antes de enviar
+                        if (validateBalance()) onSubmit()
+                        onNavigateToDashboard()
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -413,8 +409,8 @@ fun StepTwo(
 
 @Composable
 fun SelectOptionTextButton(
-    selectedOption: PaymentType,
-    onOptionSelected: (PaymentType) -> Unit
+    selectedOption: LinkPaymentType,
+    onOptionSelected: (LinkPaymentType) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -428,22 +424,22 @@ fun SelectOptionTextButton(
         horizontalArrangement = Arrangement.Center
     ) {
         TextButton(
-            onClick = { onOptionSelected(PaymentType.CARD) },
+            onClick = { onOptionSelected(LinkPaymentType.CARD) },
             modifier = Modifier.padding(end = 8.dp)
         ) {
             Text(
                 text = "Tarjeta",
-                color = if (selectedOption == PaymentType.CARD) GreenLight else GreyLight
+                color = if (selectedOption == LinkPaymentType.CARD) GreenLight else GreyLight
             )
         }
 
         TextButton(
-            onClick = { onOptionSelected(PaymentType.BALANCE) },
+            onClick = { onOptionSelected(LinkPaymentType.BALANCE) },
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text(
                 text = "Balance",
-                color = if (selectedOption == PaymentType.BALANCE) GreenLight else GreyLight
+                color = if (selectedOption == LinkPaymentType.BALANCE) GreenLight else GreyLight
             )
         }
     }
@@ -453,7 +449,7 @@ fun SelectOptionTextButton(
 @Preview
 @Composable
 fun SelectOptionButtonPreview() {
-    var selectedOption by remember { mutableStateOf(PaymentType.CARD) }
+    var selectedOption by remember { mutableStateOf(LinkPaymentType.CARD) }
     SelectOptionTextButton(
         selectedOption = selectedOption,
         onOptionSelected = { selectedOption = it }
@@ -571,7 +567,7 @@ fun ContentSection(
                 2 -> StepTwo(
                     number = state.request.amount,
                     balance = state.balance,
-                    onNumberChange = { viewModel.updateAmount(it.toDouble()) },
+                    onNumberChange = { viewModel.updateAmount(it) },
                     creditCards = state.creditCards,
                     selectedCard = state.selectedCard,
                     onCardSelected = { viewModel.selectCard(it) },
@@ -585,7 +581,8 @@ fun ContentSection(
                     description = state.description,
                     onDescriptionChange = {viewModel.onDescriptionChange(it)},
                     windowSizeClass = windowSizeClass,
-                    validateBalance = { viewModel.validateBalance() }
+                    validateBalance = { viewModel.validateBalance() },
+                    onNavigateToDashboard = onNavigateToDashboard
                 )
             }
         }

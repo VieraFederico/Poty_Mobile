@@ -9,7 +9,7 @@ import java.util.Locale
 
 @Serializable
 class NetworkBalancePayment (
-    val amount: Double,
+    val amount: Float,
     val description: String,
     val type: String,
     val receiverEmail: String

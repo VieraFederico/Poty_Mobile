@@ -147,9 +147,9 @@ fun PaymentHistoryPreview() {
         PaymentResponse(
             id = 1,
             type = "CARD",
-            amount = 150.0,
-            balanceBefore = 0.0,
-            balanceAfter = 0.0,
+            amount = 150.0f,
+            balanceBefore = 0.0f,
+            balanceAfter = 0.0f,
             pending = true,
             linkUuid = null,
             createdAt = "2023-12-23",

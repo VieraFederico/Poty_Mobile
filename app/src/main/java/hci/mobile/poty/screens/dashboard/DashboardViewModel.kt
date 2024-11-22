@@ -1,12 +1,11 @@
 package hci.mobile.poty.screens.dashboard
 
-import hci.mobile.poty.classes.CardResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import hci.mobile.poty.MyApplication
-import hci.mobile.poty.SessionManager
 import hci.mobile.poty.classes.Transaction
+import hci.mobile.poty.data.model.Card
 import hci.mobile.poty.data.repository.WalletRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val walletRepository: WalletRepository,
-    private val sessionManager: SessionManager
+
 ) : ViewModel() {
     // MutableStateFlow for state management
     private val _state = MutableStateFlow(DashboardState())
@@ -24,6 +23,7 @@ class DashboardViewModel(
     init{
         viewModelScope.launch {
             fetchBalance()
+            fetchCreditCards()
         }
     }
 
@@ -44,29 +44,47 @@ class DashboardViewModel(
     }
 
 
+    private fun fetchCreditCards() {
+        viewModelScope.launch {
+            try {
+                val cards = walletRepository.getCards(refresh = true)
+                _state.update { currentState ->
+                    currentState.copy(creditCards = cards)
+                }
+            } catch (e: Exception) {
+                _state.update { currentState ->
+                    currentState.copy(errorMessage = "Error al cargar las tarjetas: ${e.message}")
+                }
+            }
+        }
+    }
+
+    fun DeleteCard(cardId: Int) {
+        viewModelScope.launch {
+            try {
+                walletRepository.deleteCard(cardId)
+                val updatedCards = walletRepository.getCards(refresh = true) // Refresca las tarjetas
+                _state.update { currentState ->
+                    currentState.copy(creditCards = updatedCards)
+                }
+            } catch (e: Exception) {
+                _state.update { currentState ->
+                    currentState.copy(errorMessage = "Error al eliminar la tarjeta: ${e.message}")
+                }
+            }
+        }
+    }
+
+
+
+
     fun toggleBalanceVisibility() {
         _state.update { currentState ->
             currentState.copy(isBalanceVisible = !currentState.isBalanceVisible)
         }
     }
 
-    fun addCreditCard(newCard: CardResponse) {
-        _state.update { currentState ->
-            currentState.copy(creditCards = currentState.creditCards + newCard)
-        }
-    }
 
-    fun deleteCreditCard(cardId: Int) {
-        _state.update { currentState ->
-            currentState.copy(creditCards = currentState.creditCards.filter { it.id != cardId })
-        }
-    }
-
-    fun addTransaction(newTransaction: Transaction) {
-        _state.update { currentState ->
-            currentState.copy(transactions = currentState.transactions + newTransaction)
-        }
-    }
 
     companion object {
         const val TAG = "UI Layer"
@@ -77,8 +95,7 @@ class DashboardViewModel(
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return DashboardViewModel(
-                    app.walletRepository,
-                    app.sessionManager
+                    app.walletRepository
                 ) as T
             }
         }

@@ -2,7 +2,10 @@ package hci.mobile.poty.data.network.model
 
 import hci.mobile.poty.data.model.LinkPaymentData
 import hci.mobile.poty.data.model.LinkPaymentType
+import kotlinx.serialization.Serializable
 
+
+@Serializable
 class NetworkLinkPaymentData (
     val id: Int,
     val type: String,

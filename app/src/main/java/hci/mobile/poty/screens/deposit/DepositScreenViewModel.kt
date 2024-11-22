@@ -1,6 +1,6 @@
 package hci.mobile.poty.screens.deposit
 
-import hci.mobile.poty.classes.CardResponse
+import hci.mobile.poty.data.model.Card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -23,7 +23,26 @@ class DepositScreenViewModel(
 
     var onDepositSuccess: (() -> Unit)? = null // Callback para navegar al Dashboard
 
+    init{
+        viewModelScope.launch {
+            fetchCreditCards()
+        }
+    }
 
+    private fun fetchCreditCards() {
+        viewModelScope.launch {
+            try {
+                val cards = walletRepository.getCards(refresh = true)
+                _state.update { currentState ->
+                    currentState.copy(creditCards = cards)
+                }
+            } catch (e: Exception) {
+                _state.update { currentState ->
+                    currentState.copy(errorMessage = "Error al cargar las tarjetas: ${e.message}")
+                }
+            }
+        }
+    }
     fun onNumberChange(newNumber: Float) {
         _state.value = _state.value.copy(number = newNumber)
     }
@@ -59,11 +78,11 @@ class DepositScreenViewModel(
         }
     }
 
-    fun onCardSelect(card: CardResponse) {
+    fun onCardSelect(card: Card) {
         _state.value = _state.value.copy(selectedCard = card)
     }
 
-    fun addCreditCard(newCard: CardResponse) {
+    fun addCreditCard(newCard: Card) {
         _state.update { currentState ->
             currentState.copy(creditCards = currentState.creditCards + newCard)
         }

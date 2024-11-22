@@ -52,7 +52,7 @@ class InvestmentScreenViewModel : ViewModel() {
                 val transaction = Transaction(
                     id = "${_state.value.transactions.size + 1}",
                     type = TransactionType.DEPOSIT,
-                    amount = amount.toDouble(),
+                    amount = amount,
                     description = "Inversión realizada",
                     timestamp = LocalDateTime.now(),
                     status = TransactionStatus.COMPLETED
@@ -88,7 +88,7 @@ class InvestmentScreenViewModel : ViewModel() {
                 val transaction = Transaction(
                     id = "${_state.value.transactions.size + 1}",
                     type = TransactionType.WITHDRAWAL,
-                    amount = amount.toDouble(),
+                    amount = amount,
                     description = "Retiro de inversión",
                     timestamp = LocalDateTime.now(),
                     status = TransactionStatus.COMPLETED

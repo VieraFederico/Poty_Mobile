@@ -4,7 +4,7 @@ import hci.mobile.poty.data.network.model.NetworkCardPayment
 
 
 class CardPayment (
-    val amount: Double,
+    val amount: Float,
     val description: String,
     val type: String,
     val cardId: Int,

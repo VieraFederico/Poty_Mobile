@@ -4,7 +4,7 @@ package hci.mobile.poty.data.model
 import hci.mobile.poty.data.network.model.NetworkNewPaymentLink
 
 class NewPaymentLink  (
-    val amount: Double,
+    val amount: Float,
     val description: String,
     val type: String = "LINK"
 ) {

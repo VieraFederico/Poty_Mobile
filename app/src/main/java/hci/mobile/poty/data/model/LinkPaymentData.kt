@@ -11,4 +11,6 @@ class LinkPaymentData (
     val createdAt: String,
     val updatedAt: String,
     val card: Card?
-)
+) {
+
+}

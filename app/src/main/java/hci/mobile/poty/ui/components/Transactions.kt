@@ -29,7 +29,7 @@ fun TrasactionHistoryPreview(){
         Transaction(
             id = "1",
             type = TransactionType.DEPOSIT,
-            amount = 100.00,
+            amount = 100.00f,
             description = "Sandwich del Buen Libro",
             timestamp = LocalDateTime.now(),
             status = TransactionStatus.COMPLETED
@@ -37,7 +37,7 @@ fun TrasactionHistoryPreview(){
         Transaction(
             id = "2",
             type = TransactionType.WITHDRAWAL,
-            amount = 50.00,
+            amount = 50.00f,
             description = "Curso de Kotlin",
             timestamp = LocalDateTime.now().minusHours(2),
             status = TransactionStatus.COMPLETED

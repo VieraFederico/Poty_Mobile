@@ -2,33 +2,19 @@ package hci.mobile.poty.screens.payment
 
 import androidx.compose.runtime.mutableStateListOf
 import hci.mobile.poty.classes.CardDetails
-import hci.mobile.poty.classes.CardResponse
+import hci.mobile.poty.data.model.Card
 import hci.mobile.poty.classes.PaymentResponse
+import hci.mobile.poty.data.model.LinkPaymentType
 
 data class PaymentScreenState(
     val currentStep: Int = 1,
-    val balance: Float = 567.0f, //Llamada API?
-    val selectedCard: CardResponse? = null,
-    val creditCards: List<CardResponse> = mutableStateListOf(
-        CardResponse(
-            id = 1,
-            number = "1234567812345678",
-            type = "Crédito",
-            fullName = "James Bond",
-            expirationDate = "12/24"
-        ),
-        CardResponse(
-            id = 2,
-            number = "8765432187654321",
-            type = "Débito",
-            fullName = "James Bond",
-            expirationDate = "08/25"
-        )
-    ),
+    val balance: Float = 567.0f,
+    val selectedCard: Card? = null,
+    val creditCards: List<Card> = emptyList(),
     val email: String = "",
     val description: String,
-    val paymentLink: String = "",
-    val type: PaymentType = PaymentType.CARD,
+    var paymentLink: String = "",
+    val type: LinkPaymentType = LinkPaymentType.CARD,
     val request: PaymentRequest,
     val isLoading: Boolean = false,
     val errorMessage: String = "",
@@ -36,9 +22,9 @@ data class PaymentScreenState(
         PaymentResponse(
         id = 1,
         type = "CARD",
-        amount = 150.0,
-        balanceBefore = 0.0,
-        balanceAfter = 0.0,
+        amount = 150.0f,
+        balanceBefore = 0.0f,
+        balanceAfter = 0.0f,
         pending = true,
         linkUuid = null,
         createdAt = "2023-12-23",
@@ -54,9 +40,9 @@ data class PaymentScreenState(
         PaymentResponse(
             id = 1,
             type = "BALANCE",
-            amount = 4523.0,
-            balanceBefore = 0.0,
-            balanceAfter = 0.0,
+            amount = 4523.0f,
+            balanceBefore = 0.0f,
+            balanceAfter = 0.0f,
             pending = true,
             linkUuid = null,
             createdAt = "2023-12-23",
@@ -73,19 +59,19 @@ data class PaymentScreenState(
 )
 
 sealed class PaymentRequest(
-    open val amount: Double,
+    open var amount: Float,
     open val description: String,
     open val type: String
 ) {
     data class BalancePayment(
-        override val amount: Double,
+        override var amount: Float,
         override val description: String,
         override val type: String = "BALANCE",
         val receiverEmail: String
     ) : PaymentRequest(amount, description, type)
 
     data class CardPayment(
-        override val amount: Double,
+        override var amount: Float,
         override val description: String,
         override val type: String = "CARD",
         val cardId: Int,

@@ -1,5 +1,6 @@
 package hci.mobile.poty.ui.components
 
+import hci.mobile.poty.data.model.Card
 import hci.mobile.poty.classes.CardResponse
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -52,18 +53,20 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import hci.mobile.poty.data.model.CardType
 import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.utils.WindowSizeClass
 
 @Preview
 @Composable
 fun CreditCardViewPreview(){
-    val creditCard = CardResponse(
-        id = 7,
+    val creditCard = Card(
+        id = 1,
         number = "1234567812345678",
-        type = "Credito",
-        fullName = "James Bond",
-        expirationDate = "03/60",
+        type = CardType.DEBIT,
+        fullName = "Jason Bourne",
+        expirationDate = "09/26",
+        cvv = "123",
 
     )
     PotyTheme {
@@ -126,9 +129,9 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit) {
 }
 @Composable
 fun CreditCardView(
-    Card: CardResponse,
+    Card: Card,
     isSelected: Boolean = false,
-    onCardClick: (CardResponse) -> Unit,
+    onCardClick: (Card) -> Unit,
     onDeleteCard: (Int) -> Unit,
     isTiny: Boolean = false
 ) {
@@ -173,11 +176,7 @@ fun CreditCardView(
                     contentDescription = "Poty Logo",
                     modifier = Modifier.size(35.dp)
                 )
-                Text(
-                    text = Card.type,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+
 
                 Spacer(modifier = Modifier.width(
                     when (isTiny) {
@@ -238,7 +237,7 @@ fun CreditCardView(
                     text = { Text("Borrar Tarjeta") },
                     onClick = {
                         dropdownExpanded = false
-                        onDeleteCard(Card.id)
+                        Card.id?.let { onDeleteCard(it) }
                     }
                 )
             }
@@ -323,9 +322,9 @@ fun FullCreditCardView(creditCard: CreditCard) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PaymentCardsCarousel(
-    creditCards: List<CardResponse>,
-    selectedCard: CardResponse? = null,
-    onCardSelected: (CardResponse) -> Unit,
+    creditCards: List<Card>,
+    selectedCard: Card? = null,
+    onCardSelected: (Card) -> Unit,
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit,
     windowSizeClass: WindowSizeClass = WindowSizeClass.MediumPhone,
@@ -375,7 +374,7 @@ fun PaymentCardsCarousel(
                     Card = item,
                     isSelected = selectedCard?.id == item.id,
                     onCardClick = { onCardSelected(item) },
-                    onDeleteCard = {},
+                    onDeleteCard = { item.id?.let { it1 -> onDeleteCard(it1) } },
                     isTiny = isTiny
                 )
             } else {
@@ -390,9 +389,9 @@ fun PaymentCardsCarousel(
 
 @Composable
 fun CardsCarousel(
-    creditCards: List<CardResponse>,
-    selectedCard: CardResponse? = null,
-    onCardSelected: (CardResponse) -> Unit,
+    creditCards: List<Card>,
+    selectedCard: Card? = null,
+    onCardSelected: (Card) -> Unit,
     onNavigateToAddCard: () -> Unit,
     onDeleteCard: (Int) -> Unit
 ) {
@@ -427,19 +426,21 @@ fun CardsCarousel(
 @Composable
 fun CardsCarouselPreview() {
     val creditCards = listOf(
-        CardResponse(
+        Card(
             id = 1,
             number = "1234567812345678",
-            type = "Debito",
+            type = CardType.DEBIT,
             fullName = "Jason Bourne",
-            expirationDate = "09/26"
+            expirationDate = "09/26",
+            cvv = "123",
         ),
-        CardResponse(
+        Card(
             id = 2,
             number = "8765432187654321",
-            type = "Credito",
+            type = CardType.CREDIT,
             fullName = "Ethan Hunt",
-            expirationDate = "07/27"
+            expirationDate = "07/27",
+            cvv = "456",
         )
     )
     PotyTheme {

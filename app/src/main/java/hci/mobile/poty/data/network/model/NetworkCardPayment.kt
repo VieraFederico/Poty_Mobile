@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class NetworkCardPayment(
-    val amount: Double,
+    val amount: Float,
     val description: String,
     val type: String,
     val cardId: Int,

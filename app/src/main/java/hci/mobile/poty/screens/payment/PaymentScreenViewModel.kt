@@ -1,18 +1,20 @@
 package hci.mobile.poty.screens.payment
 
 import android.util.Log
-import hci.mobile.poty.classes.CardResponse
+import android.util.Patterns
+import hci.mobile.poty.data.model.Card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import hci.mobile.poty.MyApplication
 import hci.mobile.poty.data.model.BalancePayment
 import hci.mobile.poty.data.model.CardPayment
+import hci.mobile.poty.data.model.LinkPayment
+import hci.mobile.poty.data.model.LinkPaymentType
+import hci.mobile.poty.data.network.model.NetworkLinkPayment
 import hci.mobile.poty.data.repository.PaymentRepository
 import hci.mobile.poty.data.repository.WalletRepository
 import hci.mobile.poty.screens.dashboard.DashboardViewModel
-import hci.mobile.poty.screens.dashboard.DashboardViewModel.Companion
-import hci.mobile.poty.screens.register.RegistrationViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -27,7 +29,7 @@ class PaymentScreenViewModel(
         PaymentScreenState(
             currentStep = 1,
             request = PaymentRequest.BalancePayment(
-                amount = 0.0,
+                amount = 0.0f,
                 description = "",
                 receiverEmail = ""
             ),
@@ -40,6 +42,7 @@ class PaymentScreenViewModel(
     init{
         viewModelScope.launch {
             fetchBalance()
+            fetchCreditCards()
         }
     }
 
@@ -55,12 +58,27 @@ class PaymentScreenViewModel(
                 currentState.copy(balance = 0f) // Asume balance 0 en caso de error
             }
             // Loguea para depuración
-            android.util.Log.e(DashboardViewModel.TAG, "Error fetching balance", e)
+            Log.e(DashboardViewModel.TAG, "Error fetching balance", e)
+        }
+    }
+
+    private fun fetchCreditCards() {
+        viewModelScope.launch {
+            try {
+                val cards = walletRepository.getCards(refresh = true)
+                _state.update { currentState ->
+                    currentState.copy(creditCards = cards)
+                }
+            } catch (e: Exception) {
+                _state.update { currentState ->
+                    currentState.copy(errorMessage = "Error al cargar las tarjetas: ${e.message}")
+                }
+            }
         }
     }
 
     fun validateEmail(): Boolean {
-        return if (_state.value.email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches()) {
+        return if (_state.value.email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches()) {
             setErrorMessage("El correo electrónico es inválido o está vacío.")
             false
         } else {
@@ -70,7 +88,7 @@ class PaymentScreenViewModel(
     }
 
     fun validateBalance(): Boolean {
-        return if ( _state.value.type == PaymentType.BALANCE && (_state.value.request.amount <= 0 || _state.value.request.amount > _state.value.balance)) {
+        return if ( _state.value.type == LinkPaymentType.BALANCE && (_state.value.request.amount <= 0 || _state.value.request.amount > _state.value.balance)) {
             setErrorMessage("El monto debe ser mayor a 0 y menor al balance disponible.")
             false
         } else {
@@ -80,7 +98,7 @@ class PaymentScreenViewModel(
     }
 
     fun validateLink(): Boolean {
-        return if (_state.value.paymentLink.isEmpty() || _state.value.paymentLink.length != 35) {
+        return if (_state.value.paymentLink.isEmpty() || _state.value.paymentLink.length != 36) {
             setErrorMessage("El link proporcionado es inválido o está vacío.")
             false
         } else {
@@ -123,7 +141,7 @@ class PaymentScreenViewModel(
     }
 
 
-    fun updateAmount(amount: Double) {
+    fun updateAmount(amount: Float) {
         viewModelScope.launch {
             val currentRequest = _state.value.request
             _state.value = _state.value.copy(
@@ -135,20 +153,22 @@ class PaymentScreenViewModel(
         }
     }
 
-    fun selectCard(cardResponse: CardResponse) {
+    fun selectCard(Card: Card) {
         viewModelScope.launch {
             val currentRequest = _state.value.request
-            val cardId = cardResponse.id
+            val cardId = Card.id
             if (currentRequest is PaymentRequest.CardPayment) {
-                _state.value = _state.value.copy(
-                    request = currentRequest.copy(cardId = cardId)
-                )
+                _state.value = cardId?.let { currentRequest.copy(cardId = it) }?.let {
+                    _state.value.copy(
+                        request = it
+                    )
+                }!!
             }
         }
     }
 
 
-    fun onPaymentTypeChange(paymentType: PaymentType) {
+    fun onPaymentTypeChange(paymentType: LinkPaymentType) {
         viewModelScope.launch {
             _state.value = _state.value.copy(
                 type = paymentType
@@ -181,7 +201,7 @@ class PaymentScreenViewModel(
                 _state.update { it.copy(isLoading = true) } // Marca como cargando
 
 
-                if (state.type == PaymentType.BALANCE) {
+                if (state.type == LinkPaymentType.BALANCE) {
                     paymentRepository.payWithBalance(
                         BalancePayment(
                             description = state.description,
@@ -214,6 +234,48 @@ class PaymentScreenViewModel(
         }
     }
 
+    fun getPaymentData(linkUuid: String) {
+        viewModelScope.launch {
+            try {
+                _state.update { it.copy(isLoading = true) }
+                val response = paymentRepository.getPaymentData(linkUuid)
+
+                updateAmount(response.amount)
+
+                _state.value.paymentLink = linkUuid
+
+
+
+                _state.update { it.copy(isLoading = false) }
+                } catch (e: Exception) {
+                setErrorMessage(e.message ?: "Error desconocido al obtener datos de pago")
+            }
+        }
+    }
+
+
+
+
+    fun settlePayment(linkUuid: String) {
+        viewModelScope.launch {
+
+            _state.update { it.copy(isLoading = true) } // Inicia la carga
+            paymentRepository.settlePayment(
+                linkPayment = LinkPayment(
+                    type = _state.value.type,
+                    cardId = _state.value.selectedCard?.id ?: 0
+                ),
+                linkUuid = linkUuid
+            )
+
+            _state.update { it.copy(isLoading = false) }
+
+
+        }
+    }
+
+
+
 
     fun extractDataFromLink (link: String) {
         viewModelScope.launch {
@@ -224,7 +286,7 @@ class PaymentScreenViewModel(
             }
         }
     }
-    fun addCreditCard(newCard: CardResponse) {
+    fun addCreditCard(newCard: Card) {
         _state.update { currentState ->
             currentState.copy(creditCards = currentState.creditCards + newCard)
         }
