@@ -64,6 +64,7 @@ fun Dashboard(
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
     onNavigateToPayment: () -> Unit = {},
+    onNavigateToCvu: () -> Unit,
     mockWindowSizeClass: WindowSizeClass? = null
 ) {
     val state by viewModel.state.collectAsState()
@@ -116,7 +117,8 @@ fun Dashboard(
                             windowSizeClass = windowSizeClass,
                             showTransactionHistory = windowSizeClass != WindowSizeClass.MediumPhoneLandscape,
                             topStart = 30.dp,
-                            bottomStart =  30.dp
+                            bottomStart =  30.dp,
+                            onNavigateToCvu = onNavigateToCvu
 
                         )
                     }
@@ -149,7 +151,8 @@ fun Dashboard(
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             topStart = 30.dp,
-                            topEnd = 30.dp
+                            topEnd = 30.dp,
+                            onNavigateToCvu = onNavigateToCvu
                         )
                     }
                 }
@@ -277,6 +280,7 @@ fun ContentSection(
     onNavigateToDeposit: () -> Unit,
     onNavigateToAddCard: () -> Unit,
     onNavigateToPayment: () -> Unit,
+    onNavigateToCvu: () -> Unit,
     viewModel: DashboardViewModel,
     windowSizeClass: WindowSizeClass,
     showTransactionHistory: Boolean = true,
@@ -329,7 +333,7 @@ fun ContentSection(
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
-                    onClick = { /* TODO */ },
+                    onClick = { onNavigateToCvu() },
                     iconResId = R.drawable.user,
                     contentDescription = "CVU"
                 )

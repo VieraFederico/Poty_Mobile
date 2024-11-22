@@ -11,5 +11,5 @@ object Routes {
     const val PAYMENT_SCREEN = "payment_screen"
     const val EMAIL_SCREEN = "email_screen"
     const val LINK_SCREEN = "link_screen"
-
+    const val CVU_SCREEN = "cvu_screen"
 }
