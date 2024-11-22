@@ -103,7 +103,8 @@ fun AppNavGraph(navController: NavHostController, ) {
 
         composable(route = Routes.EMAIL_SCREEN) {
             PaymentWithEmailScreen(
-                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) }
+                onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) },
+                onNavigateToAddCard = {navController.navigate(Routes.ADD_CARD_SCREEN)}
             )
         }
 

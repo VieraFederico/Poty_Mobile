@@ -61,6 +61,7 @@ import hci.mobile.poty.utils.ReadOnlyNumberFieldWithLabel
 import hci.mobile.poty.utils.TextFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
+import hci.mobile.poty.utils.isLandscape
 
 @Composable
 fun PaymentWithLinkScreen(
@@ -476,10 +477,7 @@ fun ContentSection(
     state: PaymentScreenState,
     viewModel: PaymentScreenViewModel,
     windowSizeClass: WindowSizeClass,
-    topStart: Dp = 0.dp,
-    topEnd: Dp = 0.dp,
-    bottomStart: Dp = 0.dp,
-    bottomEnd: Dp = 0.dp,
+
     onNavigateToDashboard: () -> Unit,
     onNavigateToAddCard: () -> Unit
 ) {
@@ -488,20 +486,19 @@ fun ContentSection(
         WindowSizeClass.MediumTabletLandscape
     )
 
-    // Dynamically adjust corner radii based on orientation
-    val roundedCornerShape = RoundedCornerShape(
-        topStart = if (isLandscape) 30.dp else topStart,
-        topEnd = topEnd,
-        bottomStart = if (isLandscape) 30.dp else bottomStart,
-        bottomEnd = bottomEnd
-    )
+
 
     Card(
         modifier = Modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.onBackground,
         ),
-        shape = roundedCornerShape,
+        shape =  RoundedCornerShape(
+            topStart = 30.dp,
+            topEnd =     if (!windowSizeClass.isLandscape()) 30.dp else 0.dp,
+            bottomStart = if (windowSizeClass.isLandscape()) 30.dp else 0.dp,
+            bottomEnd =  0.dp,
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
