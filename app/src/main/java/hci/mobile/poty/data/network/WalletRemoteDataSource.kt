@@ -1,10 +1,12 @@
 package hci.mobile.poty.data.network
 
 import hci.mobile.poty.data.network.api.WalletApiService
+import hci.mobile.poty.data.network.model.NetworkAlias
 import hci.mobile.poty.data.network.model.NetworkBalance
 import hci.mobile.poty.data.network.model.NetworkCard
 import hci.mobile.poty.data.network.model.NetworkRechargeRequest
 import hci.mobile.poty.data.network.model.NetworkRechargeResponse
+import hci.mobile.poty.data.network.model.NetworkWalletDetails
 
 class WalletRemoteDataSource(
     private val walletApiService: WalletApiService
@@ -38,6 +40,17 @@ class WalletRemoteDataSource(
         return handleApiResponse {
             walletApiService.recharge(rechargeRequest)
         }
+    }
 
+    suspend fun getWalletDetails() : NetworkWalletDetails {
+        return handleApiResponse {
+            walletApiService.getWalletDetails()
+        }
+    }
+
+    suspend fun updateAlias(alias : NetworkAlias)  {
+        return handleApiResponse {
+            walletApiService.updateAlias(alias)
+        }
     }
 }
