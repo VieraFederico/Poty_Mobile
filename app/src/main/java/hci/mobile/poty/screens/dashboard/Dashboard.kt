@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
@@ -46,7 +45,6 @@ import hci.mobile.poty.ui.components.BalanceCard
 import java.time.LocalTime
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.MyApplication
-import hci.mobile.poty.screens.register.RegistrationViewModel
 import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.components.TransactionHistory
 import hci.mobile.poty.ui.components.spendingCard
@@ -66,10 +64,10 @@ fun Dashboard(
     onNavigateToAddCard: () -> Unit,
     onNavigateToPayment: () -> Unit = {},
     onNavigateToCvu: () -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null
+
 ) {
     val state by viewModel.state.collectAsState()
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =  calculateWindowSizeClass()
 
     val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
     val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
@@ -79,10 +77,7 @@ fun Dashboard(
 
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        ResponsiveNavBar(
-            onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass,
-        ) {
+        ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.secondary,

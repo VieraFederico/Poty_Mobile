@@ -14,26 +14,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
-import hci.mobile.poty.data.repository.UserRepository
 import hci.mobile.poty.navigation.LocalNavController
 import hci.mobile.poty.navigation.Routes
-import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.ui.theme.GreyLight
-import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
-import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.utils.isTablet
 
 @Composable
-fun SideNavBar(
-    onNavigate: (String) -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null // Optional for previews
-) {
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+fun SideNavBar() {
+    val windowSizeClass = calculateWindowSizeClass()
     val isTablet = windowSizeClass.isTablet()
 
     val navController = LocalNavController.current
@@ -109,7 +101,7 @@ fun SideNavBar(
                         { Text(stringResource(R.string.qr_scanner), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
-                    onClick = { onNavigate("qr_scanner") }
+                    onClick = { }
                 )
 
                 NavigationRailItem(
@@ -125,7 +117,7 @@ fun SideNavBar(
                         { Text(stringResource(R.string.investments), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
-                    onClick = { onNavigate("investments") }
+                    onClick = {  }
                 )
 
                 NavigationRailItem(
@@ -141,7 +133,7 @@ fun SideNavBar(
                         { Text(stringResource(R.string.settings), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
-                    onClick = { onNavigate("settings") }
+                    onClick = {  }
                 )
             }
         }

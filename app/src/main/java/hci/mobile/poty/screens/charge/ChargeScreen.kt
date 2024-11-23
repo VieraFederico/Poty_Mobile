@@ -4,14 +4,10 @@ import ChargeScreenState
 import ChargeScreenViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.ui.theme.PotyTheme
 import androidx.compose.runtime.*
@@ -23,8 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BackButton
-import hci.mobile.poty.ui.components.BottomNavBar
-import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.ErrorMessage
@@ -35,14 +29,9 @@ import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.utils.ReadOnlyTextFieldWithLabel
 import hci.mobile.poty.utils.isLandscape
 import hci.mobile.poty.utils.isTablet
-import android.content.Context
-import android.content.Intent
-import android.content.ClipData
-import android.content.ClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.MyApplication
-import hci.mobile.poty.screens.addCard.AddCardScreenViewModel
 
 @Composable
 fun ChargeScreen(
@@ -51,19 +40,16 @@ fun ChargeScreen(
         context = LocalContext.current
     )),
     onNavigateBack: () -> Unit = {},
-    mockWindowSizeClass: WindowSizeClass? = null
+
 ) {
     val state by viewModel.state.collectAsState()
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass = calculateWindowSizeClass()
 
     val isLandscape = windowSizeClass.isLandscape()
     val contentPadding = if (windowSizeClass.isTablet()) 32.dp else 16.dp
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        ResponsiveNavBar(
-            onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass
-        ) {
+        ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.secondary,

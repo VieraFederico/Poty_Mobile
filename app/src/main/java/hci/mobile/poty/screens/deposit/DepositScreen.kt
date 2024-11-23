@@ -2,10 +2,7 @@ package hci.mobile.poty.screens.deposit
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,10 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BackButton
-import hci.mobile.poty.screens.register.RegistrationViewModel
-import hci.mobile.poty.ui.components.BottomNavBar
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
-import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.NumberFieldWithLabel
@@ -44,10 +38,10 @@ fun DepositScreen(
     )),
     onNavigateToAddCard: () -> Unit = {},
     onNavigateToDashboard: () -> Unit = {},
-    mockWindowSizeClass: WindowSizeClass? = null
+
 ) {
     val state by viewModel.state.collectAsState()
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =  calculateWindowSizeClass()
 
     val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
     val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
@@ -55,10 +49,7 @@ fun DepositScreen(
     viewModel.onDepositSuccess = onNavigateToDashboard
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        ResponsiveNavBar(
-            onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass
-        ) {
+        ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.secondary,
@@ -291,59 +282,3 @@ fun DepositContentSection(
 }
 
 
-
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun DepositScreenMediumPhonePortraitPreview() {
-    DepositScreen(
-        onNavigateToAddCard = {},
-        onNavigateToDashboard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun DepositScreenMediumPhoneLandscapePreview() {
-    DepositScreen(
-        onNavigateToAddCard = {},
-        onNavigateToDashboard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun DepositScreenMediumTabletPortraitPreview() {
-    DepositScreen(
-        onNavigateToAddCard = {},
-        onNavigateToDashboard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun DepositScreenMediumTabletLandscapePreview() {
-    DepositScreen(
-        onNavigateToAddCard = {},
-        onNavigateToDashboard = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
-    )
-}

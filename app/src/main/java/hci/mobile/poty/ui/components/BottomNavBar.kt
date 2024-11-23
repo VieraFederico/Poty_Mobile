@@ -27,10 +27,10 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 
 @Composable
 fun BottomNavBar(
-    onNavigate: (String) -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null
+
+
 ) {
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =  calculateWindowSizeClass()
     val navController = LocalNavController.current
     val isTablet = when (windowSizeClass) {
         WindowSizeClass.MediumTablet,
@@ -86,7 +86,7 @@ fun BottomNavBar(
                 }
             },
             selected = false,
-            onClick = { onNavigate("qr_scanner") }
+            onClick = {  }
         )
 
         NavigationBarItem(
@@ -99,7 +99,7 @@ fun BottomNavBar(
                 )
             },
             selected = false,
-            onClick = { onNavigate("investments") }
+            onClick = { }
         )
 
         NavigationBarItem(
@@ -112,7 +112,7 @@ fun BottomNavBar(
                 )
             },
             selected = false,
-            onClick = { onNavigate("settings") }
+            onClick = { }
         )
     }
 }

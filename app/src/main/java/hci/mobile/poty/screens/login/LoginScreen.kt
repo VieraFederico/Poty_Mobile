@@ -35,10 +35,9 @@ fun LoginScreen(
     )),
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null
 ) {
     val state by viewModel.state.collectAsState()
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =  calculateWindowSizeClass()
     val isLandscape = windowSizeClass.isLandscape()
     val isTablet = windowSizeClass.isTablet()
     val contentPadding = if (isTablet) 32.dp else 16.dp

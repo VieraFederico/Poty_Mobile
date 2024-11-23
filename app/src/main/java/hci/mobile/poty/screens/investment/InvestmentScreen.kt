@@ -27,7 +27,7 @@ fun InvestmentScreenWithChart(viewModel: InvestmentScreenViewModel = androidx.li
 
     PotyTheme {
         Scaffold(
-            bottomBar = { BottomNavBar(onNavigate = { }) },
+            bottomBar = { BottomNavBar() },
             containerColor = MaterialTheme.colorScheme.secondary
         ) { innerPadding ->
             Column(

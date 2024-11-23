@@ -45,7 +45,7 @@ fun CVUScreen(
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar(onNavigate = { }) }
+            bottomBar = { BottomNavBar() }
         ) { innerPadding ->
             if (isLandscape) {
                 Row(

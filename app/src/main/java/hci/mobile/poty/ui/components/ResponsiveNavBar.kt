@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,11 +17,9 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ResponsiveNavBar(
-    onNavigate: (String) -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null,
     content: @Composable () -> Unit
 ) {
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =calculateWindowSizeClass()
 
     val isLandscape = when (windowSizeClass) {
         WindowSizeClass.MediumPhoneLandscape,
@@ -33,8 +30,6 @@ fun ResponsiveNavBar(
     if (isLandscape) {
         Row {
             SideNavBar(
-                onNavigate = onNavigate,
-                mockWindowSizeClass = mockWindowSizeClass
             )
             // Content of the screen
             Box(
@@ -46,7 +41,7 @@ fun ResponsiveNavBar(
     } else {
         Scaffold(
             bottomBar = {
-                BottomNavBar(onNavigate = onNavigate, mockWindowSizeClass = windowSizeClass)
+                BottomNavBar()
             },
             content = {
                 Box(

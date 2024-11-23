@@ -1,5 +1,4 @@
 package hci.mobile.poty.screens.payment.link
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.ui.theme.PotyTheme
 import androidx.compose.runtime.*
@@ -37,10 +35,8 @@ import hci.mobile.poty.MyApplication
 import hci.mobile.poty.R
 import hci.mobile.poty.data.model.Card
 import hci.mobile.poty.data.model.LinkPaymentType
-import hci.mobile.poty.data.network.model.NetworkLinkPayment
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
-import hci.mobile.poty.screens.payment.PaymentType
 import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
@@ -48,7 +44,6 @@ import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.GreenLight
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
-import hci.mobile.poty.ui.theme.titleMediumLite
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.ReadOnlyNumberFieldWithLabel
@@ -57,7 +52,6 @@ import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.utils.isLandscape
 import hci.mobile.poty.utils.isTablet
-import hci.mobile.poty.utils.isValidDate
 
 @Composable
 fun PaymentWithLinkScreen(
@@ -83,10 +77,7 @@ fun PaymentWithLinkScreen(
     )
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        ResponsiveNavBar(
-            onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass,
-        ) {
+        ResponsiveNavBar {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,

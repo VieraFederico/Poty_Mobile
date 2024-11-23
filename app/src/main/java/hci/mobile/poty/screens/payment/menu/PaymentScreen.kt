@@ -11,24 +11,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.ui.theme.PotyTheme
 import androidx.compose.runtime.*
@@ -45,10 +37,8 @@ import hci.mobile.poty.R
 import hci.mobile.poty.screens.payment.PaymentHistory
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
-import hci.mobile.poty.screens.register.RegistrationViewModel
 import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.ResponsiveNavBar
-import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.GreyDark
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.labelLargeLite
@@ -61,13 +51,12 @@ fun PaymentScreen(
     viewModel: PaymentScreenViewModel = viewModel(factory = PaymentScreenViewModel.provideFactory(
         LocalContext.current.applicationContext as MyApplication
     )),
-    mockWindowSizeClass: WindowSizeClass? = null,
     onNavigateToDashboard: () -> Unit = {},
     onNavigateToEmail: () -> Unit = {},
     onNavigateToLink: () -> Unit = {}
 ) {
     val state by viewModel.state.collectAsState()
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =  calculateWindowSizeClass()
 
     val contentPadding = when (windowSizeClass) {
         WindowSizeClass.MediumTablet, WindowSizeClass.MediumTabletLandscape -> 32.dp
@@ -78,10 +67,7 @@ fun PaymentScreen(
             windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        ResponsiveNavBar(
-            onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass
-        ) {
+        ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 containerColor = MaterialTheme.colorScheme.secondary,

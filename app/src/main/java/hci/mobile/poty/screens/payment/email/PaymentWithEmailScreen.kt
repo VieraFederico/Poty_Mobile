@@ -39,7 +39,6 @@ import hci.mobile.poty.R
 import hci.mobile.poty.data.model.LinkPaymentType
 import hci.mobile.poty.screens.payment.PaymentScreenState
 import hci.mobile.poty.screens.payment.PaymentScreenViewModel
-import hci.mobile.poty.screens.payment.PaymentType
 import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.PaymentBalanceCard
 import hci.mobile.poty.ui.components.PaymentCardsCarousel
@@ -47,7 +46,6 @@ import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.GreenLight
 import hci.mobile.poty.ui.theme.GreyLight
 import hci.mobile.poty.ui.theme.White
-import hci.mobile.poty.ui.theme.titleMediumLite
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.NumberFieldWithLabel
@@ -63,12 +61,11 @@ fun PaymentWithEmailScreen(
     viewModel: PaymentScreenViewModel = viewModel(factory = PaymentScreenViewModel.provideFactory(
         LocalContext.current.applicationContext as MyApplication
     )),
-    mockWindowSizeClass: WindowSizeClass? = null,
     onNavigateToDashboard: () -> Unit = {},
     onNavigateToAddCard: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =calculateWindowSizeClass()
 
     val contentPadding = when (windowSizeClass) {
         WindowSizeClass.MediumTablet,
@@ -82,10 +79,7 @@ fun PaymentWithEmailScreen(
     )
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        ResponsiveNavBar(
-            onNavigate = { /* Handle navigation */ },
-            mockWindowSizeClass = mockWindowSizeClass,
-        ) {
+        ResponsiveNavBar {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.secondary,

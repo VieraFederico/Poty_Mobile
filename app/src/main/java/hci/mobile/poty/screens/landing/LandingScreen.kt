@@ -26,9 +26,9 @@ import hci.mobile.poty.utils.isTablet
 fun LandingScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToRegister: () -> Unit,
-    mockWindowSizeClass: WindowSizeClass? = null
+
 ) {
-    val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
+    val windowSizeClass =  calculateWindowSizeClass()
     val isLandscape = windowSizeClass.isLandscape()
     val isTablet = windowSizeClass.isTablet()
 
@@ -207,59 +207,4 @@ fun LandingContentSection(
     }
 }
 
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun LandingScreenMediumPhonePortraitPreview() {
-    LandingScreen(
-        onNavigateToLogin = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun LandingScreenMediumPhoneLandscapePreview() {
-    LandingScreen(
-        onNavigateToLogin = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun LandingScreenMediumTabletPortraitPreview() {
-    LandingScreen(
-        onNavigateToLogin = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun LandingScreenMediumTabletLandscapePreview() {
-    LandingScreen(
-        onNavigateToLogin = {},
-        onNavigateToRegister = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
-    )
-}
 
