@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCbrt
@@ -189,7 +190,7 @@ fun ContentSection(
             ) {
 
                 DataTab(
-                    key = "Alias",
+                    key = stringResource(id = R.string.alias),
                     value = state.alias,
                     onCopyClick = { value ->
                         viewModel.copyToClipboard(context, value)
@@ -198,7 +199,7 @@ fun ContentSection(
                     firstRow = false
                 )
                 DataTab(
-                    key = "Correo Electrónico",
+                    key = stringResource(id = R.string.email),
                     value = state.email,
                     onCopyClick = { value ->
                         viewModel.copyToClipboard(context, value)
@@ -206,7 +207,7 @@ fun ContentSection(
                     windowSizeClass = windowSizeClass
                 )
                 DataTab(
-                    key = "CBU",
+                    key = stringResource(id = R.string.cbu),
                     value = state.cbu,
                     onCopyClick = { value ->
                         viewModel.copyToClipboard(context, value)
