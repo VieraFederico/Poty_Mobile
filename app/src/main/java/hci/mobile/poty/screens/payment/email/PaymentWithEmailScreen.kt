@@ -306,6 +306,7 @@ fun StepTwo(
                         }
                     )
 
+
                     when (localPaymentMethod) {
                         LinkPaymentType.CARD -> {
                             PaymentCardsCarousel(
@@ -317,7 +318,6 @@ fun StepTwo(
                                 isTiny = true
                             )
                         }
-
                         LinkPaymentType.BALANCE -> {
                             PaymentBalanceCard(balance)
                         }
@@ -383,10 +383,16 @@ fun StepTwo(
                     }
 
                     LinkPaymentType.BALANCE -> {
-                        PaymentBalanceCard(balance)
+
+                            Box(modifier = Modifier.fillMaxHeight(0.5f)){
+                                PaymentBalanceCard(balance)
+
+                            }
+
+
                     }
 
-                    LinkPaymentType.LINK -> TODO()
+                    LinkPaymentType.LINK -> {}
                 }
 
                 Button(

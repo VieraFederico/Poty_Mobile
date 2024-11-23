@@ -9,7 +9,7 @@ import hci.mobile.poty.data.model.LinkPaymentType
 data class PaymentScreenState(
     var amount: Float = 0f,
     val currentStep: Int = 1,
-    val balance: Float = 567.0f,
+    val balance: Float = 0f,
     val selectedCard: Card? = null,
     val creditCards: List<Card> = emptyList(),
     val email: String = "",

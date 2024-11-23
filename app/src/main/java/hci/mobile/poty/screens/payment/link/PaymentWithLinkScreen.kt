@@ -366,6 +366,7 @@ fun StepTwo(
                     label = stringResource(R.string.amount_to_send),
                     value = number
                 )
+                val height = 0.5f
 
                 when (windowSizeClass) {
                     WindowSizeClass.MediumTabletLandscape -> Spacer(modifier = Modifier.height(0.dp))
@@ -406,7 +407,10 @@ fun StepTwo(
                     }
 
                     LinkPaymentType.BALANCE -> {
-                        PaymentBalanceCard(balance)
+                        Box(modifier = Modifier.fillMaxHeight(height)){
+                            PaymentBalanceCard(balance)
+
+                        }
                     }
 
                     LinkPaymentType.LINK -> {}

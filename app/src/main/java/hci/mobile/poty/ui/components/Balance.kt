@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -48,7 +49,8 @@ fun BalanceCard(balance: Float, isVisible: Boolean, onToggleVisibility: () -> Un
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun PaymentBalanceCard(balance: Float){
+fun PaymentBalanceCard(balance: Float, smallerHeight: Boolean = false){
+    val height = if(smallerHeight) 0.5f else 1f
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
@@ -57,7 +59,7 @@ fun PaymentBalanceCard(balance: Float){
                 elevation = 8.dp,
                 shape = RoundedCornerShape(12.dp)
             )
-            .fillMaxWidth(),
+            .fillMaxWidth().fillMaxHeight(height),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
