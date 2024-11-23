@@ -40,10 +40,15 @@ import android.content.Intent
 import android.content.ClipData
 import android.content.ClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import hci.mobile.poty.MyApplication
+import hci.mobile.poty.screens.addCard.AddCardScreenViewModel
 
 @Composable
 fun ChargeScreen(
-    viewModel: ChargeScreenViewModel = remember { ChargeScreenViewModel() },
+    viewModel: ChargeScreenViewModel = viewModel(factory = ChargeScreenViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
     onNavigateBack: () -> Unit = {},
     mockWindowSizeClass: WindowSizeClass? = null
 ) {
@@ -204,7 +209,8 @@ fun ChargeContentSection(
                 nextStep = { viewModel.onEvent(ChargeScreenEvent.NextStep) },
                 errorMessage = state.errorMessage,
                 contentPadding = contentPadding,
-                windowSizeClass = windowSizeClass
+                windowSizeClass = windowSizeClass,
+                generatePaymentLink = { viewModel.onEvent(ChargeScreenEvent.GenerateNewLink) }
             )
             2 -> StepTwo(
                 link = state.generatedLink,
@@ -232,7 +238,8 @@ fun StepOne(
     nextStep: () -> Unit,
     errorMessage: String,
     contentPadding: Dp,
-    windowSizeClass: WindowSizeClass
+    windowSizeClass: WindowSizeClass,
+    generatePaymentLink: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -249,7 +256,9 @@ fun StepOne(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { nextStep() },
+            onClick = {
+                generatePaymentLink()
+                nextStep() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)

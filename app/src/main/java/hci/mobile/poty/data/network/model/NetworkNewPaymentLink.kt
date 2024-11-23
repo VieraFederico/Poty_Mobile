@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 class NetworkNewPaymentLink(
     val amount: Float,
     val description: String,
-    val type: String = "LINK"
+    val type: String
 )

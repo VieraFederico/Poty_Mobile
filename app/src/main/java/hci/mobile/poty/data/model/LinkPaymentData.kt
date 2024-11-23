@@ -1,7 +1,7 @@
 package hci.mobile.poty.data.model
 
 class LinkPaymentData (
-    val id: Int,
+    val id: Int? = null,
     val type: LinkPaymentType,
     val amount: Float,
     val balanceBefore: Float,

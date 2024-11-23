@@ -1,4 +1,5 @@
 package hci.mobile.poty.screens.payment.link
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -102,39 +103,6 @@ fun PaymentWithLinkScreen(
                             .padding(contentPadding)
                     ) {
 
-                        Box(
-                            modifier = Modifier
-
-                                .fillMaxHeight()
-                        ) {
-                            HeaderSection(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = contentPadding,
-                                state = state,
-                                windowSizeClass = windowSizeClass
-                            )
-                        }
-
-                        Box(
-                            modifier = Modifier
-
-                                .fillMaxHeight()
-                        ) {
-                            ContentSection(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = contentPadding,
-                                state = state,
-                                viewModel = viewModel,
-                                windowSizeClass = windowSizeClass,
-                                topStart = 30.dp,
-                                bottomStart = 30.dp,
-                                onNavigateToDashboard = onNavigateToDashboard,
-                                onNavigateToAddaCard = {},
-                                topEnd = TODO(),
-                                bottomEnd = TODO()
-                            )
-                        }
-
                         HeaderSection(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = contentPadding,
@@ -157,11 +125,8 @@ fun PaymentWithLinkScreen(
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             onNavigateToDashboard = onNavigateToDashboard,
-                            topStart = TODO(),
-                            topEnd = TODO(),
-                            bottomStart = TODO(),
-                            bottomEnd = TODO(),
-                            onNavigateToAddaCard = TODO()
+
+                            onNavigateToAddCard = onNavigateToAddCard
                         )
                     }
                 }
@@ -184,29 +149,6 @@ fun PaymentWithLinkScreen(
                             windowSizeClass = windowSizeClass
                         )
                     }
-
-
-                        Box(
-                            modifier = Modifier
-                                .weight(3f)
-                                .fillMaxWidth()
-                        ) {
-                            ContentSection(
-                                modifier = Modifier.fillMaxSize(),
-                                contentPadding = contentPadding,
-                                state = state,
-                                viewModel = viewModel,
-                                windowSizeClass = windowSizeClass,
-                                topStart = 30.dp,
-                                bottomStart = 30.dp,
-                                onNavigateToDashboard = onNavigateToDashboard,
-                                onNavigateToAddaCard = {},
-                                topEnd = TODO(),
-                                bottomEnd = TODO()
-
-                            )
-                        }
-
                     Box(
                         modifier = Modifier
                             .weight(3.5f)
@@ -220,11 +162,7 @@ fun PaymentWithLinkScreen(
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             onNavigateToDashboard = onNavigateToDashboard,
-                            topStart = TODO(),
-                            topEnd = TODO(),
-                            bottomStart = TODO(),
-                            bottomEnd = TODO(),
-                            onNavigateToAddaCard = TODO()
+                            onNavigateToAddCard = onNavigateToAddCard
                         )
 
                     }
@@ -243,9 +181,10 @@ fun StepOne(
     onLinkChange: (String) -> Unit,
     onNext: () -> Unit,
     errorMessage: String,
-    validateLink: () -> Boolean, // Validación para el link
+    validateLink: () -> Boolean,
     windowSizeClass: WindowSizeClass,
-    fetchPaymentData: (String) -> Unit, // Agregado para llamar al método
+    fetchPaymentData: (String) -> Unit,
+    onNumberChange: (Float) -> Unit,
 
 ) {
     var localLink by remember { mutableStateOf(link) }
@@ -274,6 +213,7 @@ fun StepOne(
             onClick = {
                 if (validateLink()) {
                     fetchPaymentData(localLink)
+
                     onNext()
                 }
 
@@ -313,7 +253,7 @@ fun StepTwo(
     onNavigateToDashboard: () -> Unit
 
     ) {
-    var localNumber by remember { mutableStateOf(number) }
+
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
     var localPaymentMethod by remember { mutableStateOf(paymentMethod) }
     when(windowSizeClass) {
@@ -333,11 +273,8 @@ fun StepTwo(
                 ) {
                     ReadOnlyNumberFieldWithLabel(
 
-
-
                         label = stringResource(R.string.amount_to_send),
-                        value = localNumber.toFloat(),
-
+                        value = number
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -404,7 +341,7 @@ fun StepTwo(
                             PaymentBalanceCard(balance)
                         }
 
-                        LinkPaymentType.LINK -> TODO()
+                        LinkPaymentType.LINK -> {}
                     }
                 }
             }
@@ -431,7 +368,7 @@ fun StepTwo(
             ) {
                 ReadOnlyNumberFieldWithLabel(
                     label = stringResource(R.string.amount_to_send),
-                    value = localNumber.toFloat(),
+                    value = number
                 )
 
                 when (windowSizeClass) {
@@ -476,7 +413,7 @@ fun StepTwo(
                         PaymentBalanceCard(balance)
                     }
 
-                    LinkPaymentType.LINK -> TODO()
+                    LinkPaymentType.LINK -> {}
                 }
 
                 Button(
@@ -578,12 +515,9 @@ fun ContentSection(
     viewModel: PaymentScreenViewModel,
     windowSizeClass: WindowSizeClass,
 
-    topStart: Dp = 0.dp,
-    topEnd: Dp = 0.dp,
-    bottomStart: Dp = 0.dp,
-    bottomEnd: Dp = 0.dp,
+
     onNavigateToDashboard: () -> Unit,
-    onNavigateToAddaCard: () -> Unit
+    onNavigateToAddCard: () -> Unit
 
 ) {
     val isLandscape = windowSizeClass in listOf(
@@ -617,36 +551,30 @@ fun ContentSection(
                     onNext = { viewModel.nextStep() },
                     errorMessage = state.errorMessage,
                     windowSizeClass = windowSizeClass,
-
                     validateLink = { viewModel.validateLink() },
-                    fetchPaymentData = { viewModel.getPaymentData(it) }
+                    fetchPaymentData = { viewModel.getPaymentData(it) },
+                    onNumberChange = { viewModel.updateAmount(it) },
 
 
-                )
+                    )
                 2 -> StepTwo(
-                    number = state.request.amount,
+                    number = state.amount,
                     balance = state.balance,
                     creditCards = state.creditCards,
                     selectedCard = state.selectedCard,
                     onCardSelected = { viewModel.selectCard(it) },
                     paymentMethod = state.type,
-
                     onPaymentTypeChange = {viewModel.onPaymentTypeChange(it)},
-                    onNavigateToAddCard = { onNavigateToAddaCard()  },
-
-
+                    onNavigateToAddCard = { onNavigateToAddCard()  },
                     onDeleteCard = { viewModel.onDeleteCard(it) },
                     onSubmit = { viewModel.onSubmitPayment() },
                     errorMessage = state.errorMessage,
                     description = state.description,
-
                     onDescriptionChange = {viewModel.onDescriptionChange(it)},
                     windowSizeClass = windowSizeClass,
                     onSettlePayment = { linkUuid -> viewModel.settlePayment(linkUuid) },
                     linkUuid = state.paymentLink,
                     onNavigateToDashboard = { onNavigateToDashboard() }
-
-
                     )
 
 

@@ -9,8 +9,15 @@ import android.content.Intent
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import androidx.lifecycle.ViewModelProvider
+import hci.mobile.poty.MyApplication
+import hci.mobile.poty.data.model.NewPaymentLink
+import hci.mobile.poty.data.repository.PaymentRepository
+import hci.mobile.poty.screens.addCard.AddCardScreenViewModel
 
-class ChargeScreenViewModel : ViewModel() {
+class ChargeScreenViewModel(
+    private val paymentRepository: PaymentRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow(ChargeScreenState())
     val state = _state.asStateFlow()
@@ -61,11 +68,17 @@ class ChargeScreenViewModel : ViewModel() {
                 val amount = _state.value.amount
                 require(amount.isNotEmpty() && amount.toDouble() > 0) { "Por favor, ingrese un monto válido." }
 
-                val generatedLink = "poty.app/pay/${UUID.randomUUID()}?amount=$amount"
+                val generatedLink = paymentRepository.generateLink(
+                    linkPayment = NewPaymentLink(
+                        amount = amount.toFloat(),
+                        description = "t",
+                        type = "LINK"
+                    )
+                )
 
                 _state.update {
                     it.copy(
-                        generatedLink = generatedLink,
+                        generatedLink = generatedLink.linkUuid,
                         isLoading = false,
                         errorMessage = ""
                     )
@@ -104,6 +117,21 @@ class ChargeScreenViewModel : ViewModel() {
             _state.update { it.copy(errorMessage = "Enlace copiado al portapapeles") }
         } else {
             _state.update { it.copy(errorMessage = "No hay enlace para copiar") }
+        }
+    }
+
+    companion object {
+        const val TAG = "UI Layer"
+
+        fun provideFactory(
+            app: MyApplication
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ChargeScreenViewModel(
+                    app.paymentRepository
+                ) as T
+            }
         }
     }
 }

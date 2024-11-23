@@ -7,6 +7,7 @@ import hci.mobile.poty.classes.PaymentResponse
 import hci.mobile.poty.data.model.LinkPaymentType
 
 data class PaymentScreenState(
+    var amount: Float = 0f,
     val currentStep: Int = 1,
     val balance: Float = 567.0f,
     val selectedCard: Card? = null,
@@ -76,6 +77,13 @@ sealed class PaymentRequest(
         override val type: String = "CARD",
         val cardId: Int,
         val receiverEmail: String
+    ) : PaymentRequest(amount, description, type)
+
+    data class linkPayment(
+        override var amount: Float,
+        override val description: String,
+        override val type: String = "LINK",
+        val linkUuid: String
     ) : PaymentRequest(amount, description, type)
 }
 

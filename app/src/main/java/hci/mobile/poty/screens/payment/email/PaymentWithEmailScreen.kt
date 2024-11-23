@@ -234,7 +234,8 @@ fun StepTwo(
     description: String,
     onDescriptionChange: (String) -> Unit,
     windowSizeClass: WindowSizeClass,
-    onNavigateToDashboard: () -> Unit
+    onNavigateToDashboard: () -> Unit,
+    validateDescription: () -> Boolean
 ) {
     var localNumber by remember { mutableStateOf(number) }
     var localSelectedCard by remember { mutableStateOf(selectedCard) }
@@ -257,7 +258,7 @@ fun StepTwo(
                 ) {
                     NumberFieldWithLabel(
                         label = stringResource(R.string.amount_to_send),
-                        value = localNumber.toFloat(),
+                        value = localNumber,
                         onValueChange = {
                             localNumber = it
                             onNumberChange(it)
@@ -395,8 +396,10 @@ fun StepTwo(
 
                 Button(
                     onClick = {
-                        if (validateBalance()) onSubmit()
-                        onNavigateToDashboard()
+                        if (validateBalance() && validateDescription()) {
+                            onSubmit()
+                            onNavigateToDashboard()
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -609,7 +612,8 @@ fun ContentSection(
                     onDescriptionChange = {viewModel.onDescriptionChange(it)},
                     windowSizeClass = windowSizeClass,
                     validateBalance = { viewModel.validateBalance() },
-                    onNavigateToDashboard = onNavigateToDashboard
+                    onNavigateToDashboard = onNavigateToDashboard,
+                    validateDescription = { viewModel.validateDescription() }
                 )
             }
         }
