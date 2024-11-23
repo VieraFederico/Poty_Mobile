@@ -104,7 +104,7 @@ fun PaymentWithLinkScreen(
 
                         Box(
                             modifier = Modifier
-                                .weight(1f)
+
                                 .fillMaxHeight()
                         ) {
                             HeaderSection(
@@ -117,7 +117,7 @@ fun PaymentWithLinkScreen(
 
                         Box(
                             modifier = Modifier
-                                .weight(2f)
+
                                 .fillMaxHeight()
                         ) {
                             ContentSection(
@@ -129,8 +129,9 @@ fun PaymentWithLinkScreen(
                                 topStart = 30.dp,
                                 bottomStart = 30.dp,
                                 onNavigateToDashboard = onNavigateToDashboard,
-                                onNavigateToAddaCard = {}
-
+                                onNavigateToAddaCard = {},
+                                topEnd = TODO(),
+                                bottomEnd = TODO()
                             )
                         }
 
@@ -156,7 +157,11 @@ fun PaymentWithLinkScreen(
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             onNavigateToDashboard = onNavigateToDashboard,
-                            onNavigateToAddCard = onNavigateToAddCard
+                            topStart = TODO(),
+                            topEnd = TODO(),
+                            bottomStart = TODO(),
+                            bottomEnd = TODO(),
+                            onNavigateToAddaCard = TODO()
                         )
                     }
                 }
@@ -195,7 +200,9 @@ fun PaymentWithLinkScreen(
                                 topStart = 30.dp,
                                 bottomStart = 30.dp,
                                 onNavigateToDashboard = onNavigateToDashboard,
-                                onNavigateToAddaCard = {}
+                                onNavigateToAddaCard = {},
+                                topEnd = TODO(),
+                                bottomEnd = TODO()
 
                             )
                         }
@@ -213,7 +220,11 @@ fun PaymentWithLinkScreen(
                             viewModel = viewModel,
                             windowSizeClass = windowSizeClass,
                             onNavigateToDashboard = onNavigateToDashboard,
-                            onNavigateToAddCard = onNavigateToAddCard
+                            topStart = TODO(),
+                            topEnd = TODO(),
+                            bottomStart = TODO(),
+                            bottomEnd = TODO(),
+                            onNavigateToAddaCard = TODO()
                         )
 
                     }
@@ -322,8 +333,7 @@ fun StepTwo(
                 ) {
                     ReadOnlyNumberFieldWithLabel(
 
-                        label = "Monto a Enviar",
-                        value = localNumber,
+
 
                         label = stringResource(R.string.amount_to_send),
                         value = localNumber.toFloat(),
@@ -575,10 +585,6 @@ fun ContentSection(
     onNavigateToDashboard: () -> Unit,
     onNavigateToAddaCard: () -> Unit
 
-
-    onNavigateToDashboard: () -> Unit,
-    onNavigateToAddCard: () -> Unit
-
 ) {
     val isLandscape = windowSizeClass in listOf(
         WindowSizeClass.MediumPhoneLandscape,
@@ -616,8 +622,6 @@ fun ContentSection(
                     fetchPaymentData = { viewModel.getPaymentData(it) }
 
 
-                    validateLink = { viewModel.validateLink() }
-
                 )
                 2 -> StepTwo(
                     number = state.request.amount,
@@ -630,8 +634,6 @@ fun ContentSection(
                     onPaymentTypeChange = {viewModel.onPaymentTypeChange(it)},
                     onNavigateToAddCard = { onNavigateToAddaCard()  },
 
-                    onPaymentTypeChange = { viewModel.onPaymentTypeChange(it) },
-                    onNavigateToAddCard = { onNavigateToAddCard() },
 
                     onDeleteCard = { viewModel.onDeleteCard(it) },
                     onSubmit = { viewModel.onSubmitPayment() },
@@ -647,9 +649,7 @@ fun ContentSection(
 
                     )
 
-                    onDescriptionChange = { viewModel.onDescriptionChange(it) },
-                    windowSizeClass = windowSizeClass
-                )
+
 
             }
         }

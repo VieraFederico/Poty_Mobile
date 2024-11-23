@@ -47,14 +47,14 @@ fun BottomNavBar(
         NavigationBarItem(
             icon = {
                 Icon(
-                    Icons.Default.Notifications,
+                    Icons.Default.Logout,
                     contentDescription = stringResource(R.string.notifications),
                     modifier = Modifier.size(25.dp),
                     tint = GreyDark
                 )
             },
             selected = false,
-            onClick = { onNavigate("notifications") }
+            onClick = {  }
         )
 
         NavigationBarItem(

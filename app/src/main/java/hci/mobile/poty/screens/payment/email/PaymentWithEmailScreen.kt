@@ -438,8 +438,7 @@ fun SelectOptionTextButton(
                 text = "Tarjeta",
                 color = if (selectedOption == LinkPaymentType.CARD) GreenLight else GreyLight
 
-                text = stringResource(R.string.card),
-                color = if (selectedOption == PaymentType.CARD) GreenLight else GreyLight
+
 
             )
         }
@@ -453,8 +452,7 @@ fun SelectOptionTextButton(
                 text = "Balance",
                 color = if (selectedOption == LinkPaymentType.BALANCE) GreenLight else GreyLight
 
-                text = stringResource(R.string.balance),
-                color = if (selectedOption == PaymentType.BALANCE) GreenLight else GreyLight
+
 
             )
         }

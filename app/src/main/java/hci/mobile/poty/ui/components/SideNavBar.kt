@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hci.mobile.poty.R
+import hci.mobile.poty.data.repository.UserRepository
 import hci.mobile.poty.navigation.LocalNavController
 import hci.mobile.poty.navigation.Routes
 import hci.mobile.poty.ui.theme.Black
@@ -60,7 +61,7 @@ fun SideNavBar(
                 NavigationRailItem(
                     icon = {
                         Icon(
-                            Icons.Default.Notifications,
+                            Icons.Default.Logout,
                             contentDescription = stringResource(R.string.notifications),
                             modifier = Modifier.size(25.dp),
                             tint = Color.DarkGray
@@ -70,7 +71,7 @@ fun SideNavBar(
                         { Text(stringResource(R.string.notifications), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
-                    onClick = { onNavigate("notifications") }
+                    onClick = {  }
                 )
 
                 NavigationRailItem(

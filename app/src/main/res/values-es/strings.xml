@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Poty</string>
     <string name="balance">Balance</string>
-    <string name="notifications">Notificaciones</string>
+    <string name="notifications">Log out</string>
     <string name="qr_scanner">Scanner de QR</string>
     <string name="home">Principal</string>
     <string name="investments">Inversiones</string>

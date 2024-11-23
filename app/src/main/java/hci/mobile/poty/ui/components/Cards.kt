@@ -53,6 +53,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.graphics.Color
 
 import hci.mobile.poty.data.model.CardType
 
@@ -171,7 +172,7 @@ fun CreditCardView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically,
-            ){
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.poty),
                     contentDescription = "Poty Logo",
@@ -179,12 +180,13 @@ fun CreditCardView(
                 )
 
 
-                Spacer(modifier = Modifier.width(
-                    when (isTiny) {
-                        true -> 110.dp
-                        else -> 180.dp
-                    }
-                )
+                Spacer(
+                    modifier = Modifier.width(
+                        when (isTiny) {
+                            true -> 110.dp
+                            else -> 180.dp
+                        }
+                    )
                 )
 
                 IconButton(onClick = { dropdownExpanded = true }) {
@@ -203,7 +205,7 @@ fun CreditCardView(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
-            ){
+            ) {
                 Text(
                     text = Card.number,
                     style = MaterialTheme.typography.labelLarge,
@@ -216,7 +218,7 @@ fun CreditCardView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-            ){
+            ) {
                 Text(
                     text = Card.fullName,
                     style = MaterialTheme.typography.bodyLarge,
@@ -229,13 +231,17 @@ fun CreditCardView(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
-
             DropdownMenu(
                 expanded = dropdownExpanded,
                 onDismissRequest = { dropdownExpanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { stringResource(R.string.delete_card) },
+                    text = {
+                        Text(
+                            text = stringResource(R.string.delete_card),
+                            color = Color.White // Cambiar el color del texto a blanco
+                        )
+                    },
                     onClick = {
                         dropdownExpanded = false
                         Card.id?.let { onDeleteCard(it) }
