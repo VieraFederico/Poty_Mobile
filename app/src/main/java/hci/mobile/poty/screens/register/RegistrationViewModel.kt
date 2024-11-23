@@ -12,6 +12,7 @@ import hci.mobile.poty.data.model.Code
 import hci.mobile.poty.data.model.RegistrationUser
 import hci.mobile.poty.data.model.User
 import hci.mobile.poty.data.repository.UserRepository
+import hci.mobile.poty.screens.dashboard.DashboardViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -295,11 +296,15 @@ private fun isValidDate(date: String): Boolean {
             }
         }
     }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
+        return email.matches(emailRegex.toRegex())
+    }
+
 }
 
-private fun isValidEmail(email: String): Boolean {
-    val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"
-    return email.matches(emailRegex.toRegex())
-}
+
+
 
 

@@ -54,6 +54,7 @@ import androidx.compose.ui.graphics.Color
 import hci.mobile.poty.data.model.CardType
 
 import androidx.compose.ui.res.stringResource
+import hci.mobile.poty.ui.theme.Black
 
 import hci.mobile.poty.utils.WindowSizeClass
 
@@ -141,7 +142,7 @@ fun CreditCardView(
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
 
-    val contentColor = if (useWhite) Color.Black else MaterialTheme.colorScheme.onSurface
+    val contentColor = if (useWhite) Black else MaterialTheme.colorScheme.onSurface
 
             Card(
         modifier = Modifier

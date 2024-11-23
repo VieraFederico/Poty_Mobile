@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Poty</string>
     <string name="balance">Balance</string>
-    <string name="notifications">Log out</string>
+    <string name="notifications">Notifications</string>
     <string name="qr_scanner">QR Scanner</string>
     <string name="home">Home</string>
     <string name="investments">Investments</string>
@@ -92,5 +92,6 @@
     <string name="error_loading_cards">Error laoding cards: %s</string>
     <string name="amount_must_be_greater_than_zero">Amount must be grater than zero.</string>
     <string name="select_card_to_continue">Must select a card to continue.</string>
+    <string name="log_out">Log Out</string>
 
 </resources>

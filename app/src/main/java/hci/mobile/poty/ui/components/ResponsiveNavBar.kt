@@ -17,8 +17,9 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ResponsiveNavBar(
-    content: @Composable () -> Unit
-) {
+    content: @Composable () -> Unit,
+
+    ) {
     val windowSizeClass =calculateWindowSizeClass()
 
     val isLandscape = when (windowSizeClass) {
@@ -41,7 +42,8 @@ fun ResponsiveNavBar(
     } else {
         Scaffold(
             bottomBar = {
-                BottomNavBar()
+                BottomNavBar(
+                )
             },
             content = {
                 Box(

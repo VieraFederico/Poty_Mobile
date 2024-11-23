@@ -1,6 +1,7 @@
 package hci.mobile.poty.navigation
 
 
+import SettingsScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavHostController
@@ -113,6 +114,12 @@ fun AppNavGraph(navController: NavHostController, ) {
                 onNavigateToDashboard = { navController.navigate(Routes.DASHBOARD) },
                 onNavigateToAddCard = {navController.navigate(Routes.ADD_CARD_SCREEN)}
 
+            )
+        }
+
+        composable(route = Routes.SETTINGS_SCREEN) {
+            SettingsScreen(
+                onNavigateToLanding = { navController.navigate(Routes.LANDING) },
             )
         }
 

@@ -24,7 +24,8 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.utils.isTablet
 
 @Composable
-fun SideNavBar() {
+fun SideNavBar(
+    ) {
     val windowSizeClass = calculateWindowSizeClass()
     val isTablet = windowSizeClass.isTablet()
 
@@ -53,7 +54,7 @@ fun SideNavBar() {
                 NavigationRailItem(
                     icon = {
                         Icon(
-                            Icons.Default.Logout,
+                            Icons.Default.Notifications,
                             contentDescription = stringResource(R.string.notifications),
                             modifier = Modifier.size(25.dp),
                             tint = Color.DarkGray
@@ -133,7 +134,7 @@ fun SideNavBar() {
                         { Text(stringResource(R.string.settings), color = Color.Black) } // Text color updated
                     } else null,
                     selected = false,
-                    onClick = {  }
+                    onClick = { navController.navigate(Routes.SETTINGS_SCREEN) }
                 )
             }
         }

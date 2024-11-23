@@ -27,8 +27,6 @@ import hci.mobile.poty.utils.calculateWindowSizeClass
 
 @Composable
 fun BottomNavBar(
-
-
 ) {
     val windowSizeClass =  calculateWindowSizeClass()
     val navController = LocalNavController.current
@@ -47,7 +45,7 @@ fun BottomNavBar(
         NavigationBarItem(
             icon = {
                 Icon(
-                    Icons.Default.Logout,
+                    Icons.Default.Notifications,
                     contentDescription = stringResource(R.string.notifications),
                     modifier = Modifier.size(25.dp),
                     tint = GreyDark
@@ -112,7 +110,7 @@ fun BottomNavBar(
                 )
             },
             selected = false,
-            onClick = { }
+            onClick = {navController.navigate(Routes.SETTINGS_SCREEN) }
         )
     }
 }

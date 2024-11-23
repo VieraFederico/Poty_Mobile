@@ -12,4 +12,5 @@ object Routes {
     const val EMAIL_SCREEN = "email_screen"
     const val LINK_SCREEN = "link_screen"
     const val CVU_SCREEN = "cvu_screen"
+    const val SETTINGS_SCREEN = "settings_screen"
 }
