@@ -1,5 +1,6 @@
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,6 +31,7 @@ import hci.mobile.poty.screens.cvu.CVUViewModel
 import hci.mobile.poty.screens.settings.SettingsViewModel
 import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
+import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.utils.WindowSizeClass
@@ -52,55 +54,57 @@ fun SettingsScreen(
     val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar() }
-        ) { innerPadding ->
-            if (isLandscape) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    HeaderSection(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(0.5f),
-                    )
-                    ContentSection(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .padding(horizontal = 15.dp),
-                        context = context,
-                        windowSizeClass = windowSizeClass,
-                        viewModel = viewModel,
-                        onNavigateToLanding = onNavigateToLanding
+        ResponsiveNavBar {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.secondary,
 
-                    )
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    HeaderSection(
+            ) { innerPadding ->
+                if (isLandscape) {
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.3f),
-                    )
-                    ContentSection(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        context = context,
-                        windowSizeClass = windowSizeClass,
-                        viewModel = viewModel,
-                        onNavigateToLanding = onNavigateToLanding
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(0.5f),
+                        )
+                        ContentSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .padding(horizontal = 15.dp),
+                            context = context,
+                            windowSizeClass = windowSizeClass,
+                            viewModel = viewModel,
+                            onNavigateToLanding = onNavigateToLanding
 
-                    )
+                        )
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.3f),
+                        )
+                        ContentSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            context = context,
+                            windowSizeClass = windowSizeClass,
+                            viewModel = viewModel,
+                            onNavigateToLanding = onNavigateToLanding
+
+                        )
+                    }
                 }
             }
         }
@@ -269,7 +273,8 @@ fun SettingTab(
             contentDescription = "Action",
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier
-                .size(40.dp) // Icon size
+                .size(40.dp)
+                .clickable(onClick = onSettingsClick)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(

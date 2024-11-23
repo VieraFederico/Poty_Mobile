@@ -55,7 +55,7 @@ fun RegistrationScreen(
     onRegisterSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit,
 
-) {
+    ) {
 
     val state: RegistrationState
     var isRegistrationSuccessful: Boolean
@@ -124,14 +124,25 @@ fun RegistrationScreen(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    LoginRegisterImageSection(
-                        modifier = Modifier,
-                        windowSizeClass = windowSizeClass
-                    )
+                    var title: String? = null
+                    if (windowSizeClass.isLandscape() && !windowSizeClass.isTablet()) {
+                        title = when (state.currentStep) {
+                            1, 2 -> stringResource(R.string.sign_up)
+                            3 ->  stringResource(R.string.almost_there)
+                            else -> null
+                        }
+                    }
 
+                    LoginRegisterImageSection(
+                        modifier = Modifier
+                            .weight(1f),
+                        windowSizeClass = windowSizeClass,
+                        title = title
+                    )
                     RegistrationContentSection(
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .weight(1f)
+                            .fillMaxSize(),
                         state = state,
                         onEvent = onEvent,
                         onNavigateToLogin = onNavigateToLogin,
@@ -238,15 +249,15 @@ fun RegistrationContentSection(
                         errorMessage = state.errorMessage,
                         email = state.email,
                         onEmailChange =  { onEvent(RegistrationEvent.UpdateEmail(it)) },
-                        )
+                    )
                 }
                 2 ->  SubStepTwo(
-                        onNext = { onEvent(RegistrationEvent.NextSubStep) },
-                        onBackClick = { onEvent(RegistrationEvent.PreviousSubStep) },
-                        password = state.password,
-                        onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
-                        errorMessage = state.errorMessage,
-                    )
+                    onNext = { onEvent(RegistrationEvent.NextSubStep) },
+                    onBackClick = { onEvent(RegistrationEvent.PreviousSubStep) },
+                    password = state.password,
+                    onPasswordChange = { onEvent(RegistrationEvent.UpdatePassword(it)) },
+                    errorMessage = state.errorMessage,
+                )
 
 
                 3 -> StepThree(
@@ -411,7 +422,7 @@ fun SubStepOnePartTwo(
         )
         Spacer(modifier = Modifier.height(4.dp))
         ErrorMessage(message = errorMessage)
-    
+
     }
 }
 
@@ -775,5 +786,3 @@ fun RegistrationTitle(
             .padding(top = 20.dp, bottom = 10.dp)
     )
 }
-
-

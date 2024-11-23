@@ -21,6 +21,7 @@ import androidx.compose.ui.util.fastCbrt
 import hci.mobile.poty.R
 import hci.mobile.poty.ui.components.BackButton
 import hci.mobile.poty.ui.components.BottomNavBar
+import hci.mobile.poty.ui.components.ResponsiveNavBar
 import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.utils.WindowSizeClass
@@ -42,53 +43,54 @@ fun CVUScreen(
     }
 
     PotyTheme(darkTheme = true, dynamicColor = false) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.secondary,
-            bottomBar = { BottomNavBar() }
-        ) { innerPadding ->
-            if (isLandscape) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    HeaderSection(
+        ResponsiveNavBar {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.secondary,
+            ) { innerPadding ->
+                if (isLandscape) {
+                    Row(
                         modifier = Modifier
-                            .fillMaxHeight().fillMaxWidth(0.3f)
-                            .weight(1f),
-                    )
-                    ContentSection(
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxHeight().fillMaxWidth(0.3f)
+                                .weight(1f),
+                        )
+                        ContentSection(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                                .padding(horizontal = 15.dp),
+                            state = state,
+                            viewModel = viewModel,
+                            context = context,
+                            windowSizeClass = windowSizeClass
+                        )
+                    }
+                } else {
+                    Column(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1f)
-                            .padding(horizontal = 15.dp),
-                        state = state,
-                        viewModel = viewModel,
-                        context = context,
-                        windowSizeClass = windowSizeClass
-                    )
-                }
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    HeaderSection(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.3f),
-                    )
-                    ContentSection(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        state = state,
-                        viewModel = viewModel,
-                        context = context,
-                        windowSizeClass = windowSizeClass
-                    )
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    ) {
+                        HeaderSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.3f),
+                        )
+                        ContentSection(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            state = state,
+                            viewModel = viewModel,
+                            context = context,
+                            windowSizeClass = windowSizeClass
+                        )
+                    }
                 }
             }
         }

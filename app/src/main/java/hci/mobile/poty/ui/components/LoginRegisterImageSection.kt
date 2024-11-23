@@ -62,7 +62,9 @@ fun LoginRegisterImageSection(
     }
 
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.primary)
+            .clip(shape),
         contentAlignment = Alignment.Center
     ) {
         if (!isLandscape) {
@@ -95,6 +97,6 @@ fun LoginRegisterImageSection(
                 modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
 
             )
-    }
+        }
     }
 }
