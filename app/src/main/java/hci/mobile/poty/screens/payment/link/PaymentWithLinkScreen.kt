@@ -57,6 +57,7 @@ import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
 import hci.mobile.poty.utils.isLandscape
 import hci.mobile.poty.utils.isTablet
+import hci.mobile.poty.utils.isValidDate
 
 @Composable
 fun PaymentWithLinkScreen(
@@ -250,7 +251,9 @@ fun StepTwo(
     windowSizeClass: WindowSizeClass,
     onSettlePayment: (String) -> Unit,
     linkUuid: String,
-    onNavigateToDashboard: () -> Unit
+    onNavigateToDashboard: () -> Unit,
+    validateBalance: () -> Boolean,
+    validateDescription: () -> Boolean,
 
     ) {
 
@@ -418,8 +421,10 @@ fun StepTwo(
 
                 Button(
                     onClick = {
-                        onSettlePayment(linkUuid)
-                        onNavigateToDashboard()
+                        if(validateBalance() && validateDescription()) {
+                            onSettlePayment(linkUuid)
+                            onNavigateToDashboard()
+                        }
                         },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -574,7 +579,9 @@ fun ContentSection(
                     windowSizeClass = windowSizeClass,
                     onSettlePayment = { linkUuid -> viewModel.settlePayment(linkUuid) },
                     linkUuid = state.paymentLink,
-                    onNavigateToDashboard = { onNavigateToDashboard() }
+                    onNavigateToDashboard = { onNavigateToDashboard() },
+                    validateBalance = { viewModel.validateBalance() },
+                    validateDescription = { viewModel.validateDescription() }
                     )
 
 

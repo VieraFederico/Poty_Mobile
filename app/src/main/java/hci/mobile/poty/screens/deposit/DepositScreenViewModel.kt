@@ -82,14 +82,13 @@ class DepositScreenViewModel(
         _state.value = _state.value.copy(selectedCard = card)
     }
 
-    fun addCreditCard(newCard: Card) {
-        _state.update { currentState ->
-            currentState.copy(creditCards = currentState.creditCards + newCard)
-        }
-    }
+
     fun deleteCreditCard(cardId: Int) {
         _state.update { currentState ->
             currentState.copy(creditCards = currentState.creditCards.filter { it.id != cardId })
+        }
+        viewModelScope.launch {
+            walletRepository.deleteCard(cardId)
         }
     }
 
