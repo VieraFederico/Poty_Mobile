@@ -134,15 +134,12 @@ fun RegistrationScreen(
                     }
 
                     LoginRegisterImageSection(
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier,
                         windowSizeClass = windowSizeClass,
                         title = title
                     )
                     RegistrationContentSection(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxSize(),
+                        modifier = Modifier,
                         state = state,
                         onEvent = onEvent,
                         onNavigateToLogin = onNavigateToLogin,

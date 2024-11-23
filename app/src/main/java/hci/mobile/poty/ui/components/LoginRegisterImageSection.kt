@@ -31,6 +31,7 @@ fun LoginRegisterImageSection(
     modifier: Modifier = Modifier,
     windowSizeClass: WindowSizeClass,
     title: String? = null,
+    isRegistration: Boolean = false
 ) {
     val isLandscape = windowSizeClass.isLandscape()
     val shape = if (isLandscape) {
@@ -63,12 +64,11 @@ fun LoginRegisterImageSection(
 
     Box(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.primary)
             .clip(shape),
         contentAlignment = Alignment.Center
     ) {
         if (!isLandscape) {
-            val height = if (windowSizeClass.isTablet()) 1f else 0.4f
+            val height = if (windowSizeClass.isTablet()) 0.4f else 0.4f
 
             Image(
                 painter = painterResource(id = R.drawable.login2),
