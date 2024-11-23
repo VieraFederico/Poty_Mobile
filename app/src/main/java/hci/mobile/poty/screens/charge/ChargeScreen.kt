@@ -47,13 +47,12 @@ import hci.mobile.poty.screens.addCard.AddCardScreenViewModel
 @Composable
 fun ChargeScreen(
     viewModel: ChargeScreenViewModel = viewModel(factory = ChargeScreenViewModel.provideFactory(
-        LocalContext.current.applicationContext as MyApplication
+        LocalContext.current.applicationContext as MyApplication,
+        context = LocalContext.current
     )),
     onNavigateBack: () -> Unit = {},
     mockWindowSizeClass: WindowSizeClass? = null
 ) {
-    val context = LocalContext.current
-    val viewModel = remember { ChargeScreenViewModel(context)}
     val state by viewModel.state.collectAsState()
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
 
@@ -314,56 +313,3 @@ fun StepTwo(
 }
 
 
-
-
-@Preview(
-    name = "Medium Phone Portrait",
-    device = "spec:width=411dp,height=914dp",
-    showBackground = true
-)
-@Composable
-fun ChargeScreenMediumPhonePortraitPreview() {
-    ChargeScreen(
-        onNavigateBack = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhone
-    )
-}
-
-@Preview(
-    name = "Medium Phone Landscape",
-    device = "spec:width=914dp,height=411dp",
-    showBackground = true
-)
-@Composable
-fun ChargeScreenMediumPhoneLandscapePreview() {
-    ChargeScreen(
-        onNavigateBack = {},
-        mockWindowSizeClass = WindowSizeClass.MediumPhoneLandscape
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Portrait",
-    device = "spec:width=800dp,height=1280dp",
-    showBackground = true
-)
-@Composable
-fun ChargeScreenMediumTabletPortraitPreview() {
-    ChargeScreen(
-        onNavigateBack = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTablet
-    )
-}
-
-@Preview(
-    name = "Medium Tablet Landscape",
-    device = "spec:width=1280dp,height=800dp",
-    showBackground = true
-)
-@Composable
-fun ChargeScreenMediumTabletLandscapePreview() {
-    ChargeScreen(
-        onNavigateBack = {},
-        mockWindowSizeClass = WindowSizeClass.MediumTabletLandscape
-    )
-}
