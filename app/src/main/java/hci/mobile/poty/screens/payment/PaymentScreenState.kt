@@ -21,24 +21,6 @@ data class PaymentScreenState(
     val errorMessage: String = "",
     val paymentHistory: List<PaymentResponse> = mutableStateListOf(
         PaymentResponse(
-        id = 1,
-        type = "CARD",
-        amount = 150.0f,
-        balanceBefore = 0.0f,
-        balanceAfter = 0.0f,
-        pending = true,
-        linkUuid = null,
-        createdAt = "2023-12-23",
-        updatedAt = "2023-12-23",
-        card = CardDetails(
-            id = 1,
-            number = "1234567890123452",
-            expirationDate = "04/28",
-            fullName = "John Doe",
-            type = "CREDIT"
-            )
-        ),
-        PaymentResponse(
             id = 1,
             type = "BALANCE",
             amount = 4523.0f,

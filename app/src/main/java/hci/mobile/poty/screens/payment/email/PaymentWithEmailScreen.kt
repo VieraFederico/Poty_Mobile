@@ -383,13 +383,10 @@ fun StepTwo(
                     }
 
                     LinkPaymentType.BALANCE -> {
-
-                            Box(modifier = Modifier.fillMaxHeight(0.5f)){
+                            Box(modifier = Modifier.fillMaxHeight(0.5f ), contentAlignment = Alignment.Center
+                            ){
                                 PaymentBalanceCard(balance)
-
                             }
-
-
                     }
 
                     LinkPaymentType.LINK -> {}

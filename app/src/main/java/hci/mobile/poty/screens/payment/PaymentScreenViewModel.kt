@@ -29,7 +29,7 @@ class PaymentScreenViewModel(
         PaymentScreenState(
             currentStep = 1,
             request = PaymentRequest.linkPayment(
-                amount = 10f,
+                amount = 0f,
                 description = "",
                 type = "LINK",
                 linkUuid = ""
