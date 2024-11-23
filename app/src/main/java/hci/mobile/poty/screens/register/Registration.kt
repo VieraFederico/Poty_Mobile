@@ -180,6 +180,7 @@ fun LoginNavigationText(
                 Text(
                     text = buildAnnotatedString {
                         append(stringResource(R.string.already_have_an_account))
+                        append(" ")
                         withStyle(
                             style = SpanStyle(
                                 textDecoration = TextDecoration.Underline,
