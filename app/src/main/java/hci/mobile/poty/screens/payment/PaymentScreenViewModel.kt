@@ -78,6 +78,7 @@ class PaymentScreenViewModel(
             }
         }
     }
+//   
 
     fun validateEmail(): Boolean {
         val email = _state.value.email
