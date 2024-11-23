@@ -11,7 +11,9 @@ import hci.mobile.poty.data.network.model.NetworkCard
 import hci.mobile.poty.data.network.model.NetworkCardPayment
 import hci.mobile.poty.data.network.model.NetworkLinkPayment
 import hci.mobile.poty.data.network.model.NetworkLinkPaymentData
+import hci.mobile.poty.data.network.model.NetworkLinkPaymentObject
 import hci.mobile.poty.data.network.model.NetworkLinkPaymentResponse
+import hci.mobile.poty.data.network.model.NetworkLinkUuid
 import hci.mobile.poty.data.network.model.NetworkNewPaymentLink
 import hci.mobile.poty.data.network.model.NetworkPayment
 
@@ -31,7 +33,7 @@ class PaymentRemoteDataSource (
         }
     }
 
-    suspend fun generateLink(linkPayment: NetworkNewPaymentLink){
+    suspend fun generateLink(linkPayment: NetworkNewPaymentLink): NetworkLinkUuid{
         return handleApiResponse {
             paymentApiService.generateLink(linkPayment)
         }
@@ -49,7 +51,7 @@ class PaymentRemoteDataSource (
         }
     }
 
-    suspend fun getPaymentData(linkUuid: String): NetworkLinkPaymentData {
+    suspend fun getPaymentData(linkUuid: String): NetworkLinkPaymentObject {
         return handleApiResponse {
             paymentApiService.getPaymentData(linkUuid)
         }

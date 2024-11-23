@@ -28,10 +28,12 @@ class PaymentScreenViewModel(
     private val _state = MutableStateFlow(
         PaymentScreenState(
             currentStep = 1,
-            request = PaymentRequest.BalancePayment(
-                amount = 0.0f,
+            request = PaymentRequest.linkPayment(
+                amount = 10f,
                 description = "",
-                receiverEmail = ""
+                type = "LINK",
+                linkUuid = ""
+
             ),
             description = "",
         )
@@ -78,14 +80,16 @@ class PaymentScreenViewModel(
     }
 
     fun validateEmail(): Boolean {
-        return if (_state.value.email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(_state.value.email).matches()) {
-            setErrorMessage("El correo electrónico es inválido o está vacío.")
+        val email = _state.value.email
+        return if ( !email.contains('@')) {
+            setErrorMessage("El correo electrónico es inválido. Asegúrate de que no esté vacío y contenga una '@'.")
             false
         } else {
-            setErrorMessage("")
+            setErrorMessage("") // Limpia el mensaje de error si es válido
             true
         }
     }
+
 
     fun validateBalance(): Boolean {
         return if ( _state.value.type == LinkPaymentType.BALANCE && (_state.value.request.amount <= 0 || _state.value.request.amount > _state.value.balance)) {
@@ -96,6 +100,17 @@ class PaymentScreenViewModel(
             true
         }
     }
+
+    fun validateDescription(): Boolean {
+        return if (_state.value.description.isBlank()) {
+            setErrorMessage("La descripción no puede estar vacía.")
+            false
+        } else {
+            setErrorMessage("")
+            true
+        }
+    }
+
 
     fun validateLink(): Boolean {
         return if (_state.value.paymentLink.isEmpty() || _state.value.paymentLink.length != 36) {
@@ -126,6 +141,9 @@ class PaymentScreenViewModel(
     fun updateEmail(email: String) {
         viewModelScope.launch {
             val currentRequest = _state.value.request
+
+            _state.value = _state.value.copy(email = email)
+
             if (currentRequest is PaymentRequest.BalancePayment) {
                 _state.value = _state.value.copy(
                     email = email,
@@ -148,15 +166,17 @@ class PaymentScreenViewModel(
                 request = when (currentRequest) {
                     is PaymentRequest.BalancePayment -> currentRequest.copy(amount = amount)
                     is PaymentRequest.CardPayment -> currentRequest.copy(amount = amount)
+                    is PaymentRequest.linkPayment -> currentRequest.copy(amount = amount)
+
                 }
             )
         }
     }
 
-    fun selectCard(Card: Card) {
+    fun selectCard(card: Card) {
         viewModelScope.launch {
             val currentRequest = _state.value.request
-            val cardId = Card.id
+            val cardId = card.id
             if (currentRequest is PaymentRequest.CardPayment) {
                 _state.value = cardId?.let { currentRequest.copy(cardId = it) }?.let {
                     _state.value.copy(
@@ -198,8 +218,7 @@ class PaymentScreenViewModel(
 
 
             try {
-                _state.update { it.copy(isLoading = true) } // Marca como cargando
-
+                _state.update { it.copy(isLoading = true) }
 
                 if (state.type == LinkPaymentType.BALANCE) {
                     paymentRepository.payWithBalance(
@@ -234,63 +253,48 @@ class PaymentScreenViewModel(
         }
     }
 
+
     fun getPaymentData(linkUuid: String) {
         viewModelScope.launch {
             try {
-                _state.update { it.copy(isLoading = true) }
+                _state.update { it.copy(isLoading = true, errorMessage = "") }
+
                 val response = paymentRepository.getPaymentData(linkUuid)
 
-                updateAmount(response.amount)
-
-                _state.value.paymentLink = linkUuid
-
-
-
-                _state.update { it.copy(isLoading = false) }
-                } catch (e: Exception) {
-                setErrorMessage(e.message ?: "Error desconocido al obtener datos de pago")
+                _state.update { it.copy(amount = response.amount, isLoading = false) }
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoading = false, errorMessage = "Error al obtener datos de pago: ${e.message}") }
             }
         }
     }
-
-
-
 
     fun settlePayment(linkUuid: String) {
         viewModelScope.launch {
-
-            _state.update { it.copy(isLoading = true) } // Inicia la carga
-            paymentRepository.settlePayment(
-                linkPayment = LinkPayment(
-                    type = _state.value.type,
-                    cardId = _state.value.selectedCard?.id ?: 0
-                ),
-                linkUuid = linkUuid
-            )
-
-            _state.update { it.copy(isLoading = false) }
-
-
-        }
-    }
-
-
-
-
-    fun extractDataFromLink (link: String) {
-        viewModelScope.launch {
             try {
-                //Copiar Valores xd
+                // Marca el inicio de la carga
+                _state.update { it.copy(isLoading = true, errorMessage = "") }
+
+                // Llama al repositorio para procesar el pago
+                paymentRepository.settlePayment(
+                    linkPayment = LinkPayment(
+                        type = _state.value.type,
+                        cardId = _state.value.selectedCard?.id
+                    ),
+                    linkUuid = linkUuid
+                )
+
+                // Finaliza la carga y limpia mensajes de error
+                _state.update { it.copy(isLoading = false, errorMessage = "") }
             } catch (e: Exception) {
-                setErrorMessage(e.message ?: "Failed to extract payment details from the link")
+                // Maneja el error actualizando el estado con un mensaje de error
+                _state.update { it.copy(isLoading = false, errorMessage = "Error al procesar el pago: ${e.message}") }
             }
         }
     }
-    fun addCreditCard(newCard: Card) {
-        _state.update { currentState ->
-            currentState.copy(creditCards = currentState.creditCards + newCard)
-        }
-    }
+
+
+
+
     fun onDeleteCard(cardId: Int) {
         _state.update { currentState ->
             currentState.copy(creditCards = currentState.creditCards.filter { it.id != cardId })

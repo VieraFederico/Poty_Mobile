@@ -14,6 +14,7 @@ import hci.mobile.poty.data.model.CardPayment
 import hci.mobile.poty.data.model.LinkPayment
 import hci.mobile.poty.data.model.LinkPaymentData
 import hci.mobile.poty.data.model.LinkPaymentResponse
+import hci.mobile.poty.data.model.LinkUuid
 import hci.mobile.poty.data.model.NewPaymentLink
 import hci.mobile.poty.data.network.model.NetworkBalancePayment
 import hci.mobile.poty.data.network.model.NetworkCardPayment
@@ -51,8 +52,8 @@ class PaymentRepository (
         remoteDataSource.payWithCard(cardPayment.asNetworkModel())
     }
 
-    suspend fun generateLink(linkPayment: NewPaymentLink){
-        remoteDataSource.generateLink(linkPayment.asNetworkModel())
+    suspend fun generateLink(linkPayment: NewPaymentLink): LinkUuid{
+        return remoteDataSource.generateLink(linkPayment.asNetworkModel()).asModel()
     }
 
     suspend fun settlePayment(linkPayment: LinkPayment, linkUuid: String): LinkPaymentResponse {
