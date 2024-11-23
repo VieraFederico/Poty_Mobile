@@ -16,6 +16,7 @@ class WalletRepository(
     // Cache of the latest sports got from the network.
     private var cards: List<Card> = emptyList()
 
+
     suspend fun getCards(refresh: Boolean = false): List<Card> {
         if (refresh || cards.isEmpty()) {
             val result = remoteDataSource.getCards()

@@ -73,7 +73,7 @@
     <string name="selectec_option">Selected Option:&#32;</string>
     <string name="card">Card</string>
     <string name="using_email">Using Email</string>
-    <string name="link_generated_correctly">Link generated Successfully!</string>
+    <string name="link_generated_correctly">Link generated sccessfully!</string>
     <string name="copy_link">Copy Link</string>
     <string name="share_link">Share Link</string>
     <string name="transactions_history">Movements History</string>
@@ -83,5 +83,14 @@
     <string name="expired_card">The card is invalid. The expiry date must be in the future.</string>
     <string name="error_message_complete_fields">Please, complete all the fields</string>
     <string name="error_message_add_card">Error adding the card: %s</string>
+    <string name="error_invalid_amount">Please enter a valid amount.</string>
+    <string name="validation_error">Validation error</string>
+    <string name="error_generating_link">Error generating the link. %s</string>
+    <string name="no_link_to_share">There is no link to share</string>
+    <string name="link_copied">Link copied to clipboard</string>
+    <string name="no_link_to_copy">No link is available to copy</string>
+    <string name="error_loading_cards">Error laoding cards: %s</string>
+    <string name="amount_must_be_greater_than_zero">Amount must be grater than zero.</string>
+    <string name="select_card_to_continue">Must select a card to continue.</string>
 
 </resources>

@@ -131,7 +131,7 @@ fun HeaderSection(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
-                        text = "Datos de cuenta",
+                        text =  stringResource(id = R.string.account_details),
                         style = MaterialTheme.typography.titleMedium,
                         color = White
                     )
@@ -255,12 +255,12 @@ fun DataTab(
             Text(
                 text = key,
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
+                color = Color.Black
             )
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color =  Color.Black
             )
         }
 

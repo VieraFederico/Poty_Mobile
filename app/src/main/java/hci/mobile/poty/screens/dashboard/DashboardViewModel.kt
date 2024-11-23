@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import hci.mobile.poty.MyApplication
 import hci.mobile.poty.classes.Transaction
 import hci.mobile.poty.data.model.Card
+import hci.mobile.poty.data.repository.UserRepository
 import hci.mobile.poty.data.repository.WalletRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class DashboardViewModel(
     private val walletRepository: WalletRepository,
+    private val userRepository: UserRepository
 
 ) : ViewModel() {
     // MutableStateFlow for state management
@@ -24,6 +26,7 @@ class DashboardViewModel(
         viewModelScope.launch {
             fetchBalance()
             fetchCreditCards()
+            fetchUser()
         }
     }
 
@@ -42,6 +45,25 @@ class DashboardViewModel(
             android.util.Log.e(TAG, "Error fetching balance", e)
         }
     }
+
+    private suspend fun fetchUser() {
+        try {
+            val userResponse = userRepository.getCurrentUser(true) // Puede lanzar excepciones
+            if (userResponse != null) {
+                _state.update { currentState ->
+                    currentState.copy(userName = userResponse.firstName )
+                }
+            }
+        } catch (e: Exception) {
+            // Manejo de error: Actualiza el estado con un mensaje o loguea el error
+            _state.update { currentState ->
+                currentState.copy(userName = "") // Asume balance 0 en caso de error
+            }
+            // Loguea para depuración
+            android.util.Log.e(TAG, "Error fetching user", e)
+        }
+    }
+
 
 
     private fun fetchCreditCards() {
@@ -95,7 +117,7 @@ class DashboardViewModel(
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return DashboardViewModel(
-                    app.walletRepository
+                    app.walletRepository, app.userRepository
                 ) as T
             }
         }

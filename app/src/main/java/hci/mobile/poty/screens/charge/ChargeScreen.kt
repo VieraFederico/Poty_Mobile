@@ -43,10 +43,11 @@ import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ChargeScreen(
-    viewModel: ChargeScreenViewModel = remember { ChargeScreenViewModel() },
     onNavigateBack: () -> Unit = {},
     mockWindowSizeClass: WindowSizeClass? = null
 ) {
+    val context = LocalContext.current
+    val viewModel = remember { ChargeScreenViewModel(context)}
     val state by viewModel.state.collectAsState()
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
 

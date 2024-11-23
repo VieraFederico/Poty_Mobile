@@ -40,7 +40,7 @@ import hci.mobile.poty.utils.isTablet
 @Composable
 fun DepositScreen(
     viewModel: DepositScreenViewModel = viewModel(factory = DepositScreenViewModel.provideFactory(
-        LocalContext.current.applicationContext as MyApplication
+        LocalContext.current.applicationContext as MyApplication, LocalContext.current
     )),
     onNavigateToAddCard: () -> Unit = {},
     onNavigateToDashboard: () -> Unit = {},
@@ -191,7 +191,8 @@ fun DepositHeaderSection(
                         onCardSelected = { card -> viewModel.onCardSelect(card) },
                         onNavigateToAddCard = { onNavigateToAddCard() },
                         onDeleteCard = { cardId -> viewModel.deleteCreditCard(cardId) },
-                        windowSizeClass = windowSizeClass
+                        windowSizeClass = windowSizeClass,
+                        useWhite = true
                     )
                 }
             }

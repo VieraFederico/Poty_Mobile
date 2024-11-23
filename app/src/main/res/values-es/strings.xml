@@ -83,5 +83,14 @@
     <string name="expired_card">Tarjeta expirada.</string>
     <string name="error_message_complete_fields">Por favor, complete todos los campos</string>
     <string name="error_message_add_card">Error al agregar la tarjeta: %s</string>
+    <string name="error_invalid_amount">Por favor, ingrese un monto válido.</string>
+    <string name="validation_error">Error de validación</string>
+    <string name="error_generating_link">Error al generar el enlace. %s</string>
+    <string name="no_link_to_share">No hay enlace para compartir</string>
+    <string name="link_copied">Enlace copiado al portapapeles</string>
+    <string name="no_link_to_copy">No hay enlace disponible para copiar</string>
+    <string name="error_loading_cards">Error al cargar las tarjetas: %s</string>
+    <string name="amount_must_be_greater_than_zero">La cantidad a ingresar debe ser mayor a 0.</string>
+    <string name="select_card_to_continue">Debe seleccionar una tarjeta para continuar.</string>
 
 </resources>

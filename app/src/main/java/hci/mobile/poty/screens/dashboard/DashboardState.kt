@@ -9,9 +9,9 @@ import hci.mobile.poty.data.model.Card
 import java.time.LocalDateTime
 
 data class DashboardState(
-    val userName: String = "James Bond",
-    val balance: Float = 2000f,
-    val spent: Float = 6451f,
+    val userName: String = "",
+    val balance: Float = 0f,
+    val spent: Float = 0f,
     val isBalanceVisible: Boolean = true,
     val creditCards: List<Card> = emptyList(),
     val errorMessage: String? = null,
