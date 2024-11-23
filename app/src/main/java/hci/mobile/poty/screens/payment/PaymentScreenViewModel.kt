@@ -92,6 +92,7 @@ class PaymentScreenViewModel(
 
 
     fun validateBalance(): Boolean {
+        Log.d(TAG, "Validating balance: ${_state.value.balance}")
         return if ( _state.value.type == LinkPaymentType.BALANCE && (_state.value.request.amount <= 0 || _state.value.request.amount > _state.value.balance)) {
             setErrorMessage("El monto debe ser mayor a 0 y menor al balance disponible.")
             false
