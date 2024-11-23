@@ -43,14 +43,14 @@
     <string name="deposit_money">Ingresar Dinero</string>
     <string name="amount_to_deposit">Monto a ingresar</string>
     <string name="with_Poty">Con Poty</string>
-    <string name="you_can_rest_easy">Ahora podés confiar,</string>
+    <string name="you_can_rest_easy">ahora podés confiar,</string>
     <string name="your_money_is_in">tu dinero está seguro.</string>
     <string name="the_">la </string>
     <string name="pot">Urna</string>
     <string name="log_in">Iniciar Sesión</string>
     <string name="sign_up">Registrarse</string>
     <string name="password">Contraseña</string>
-    <string name="i_forgor_my_password">Olvidé mi Contraseña</string>
+    <string name="i_forgor_my_password">Olvidé mi contraseña</string>
     <string name="almost_there">¡Ya Casi!</string>
     <string name="go_back">Volver para atrás</string>
     <string name="already_have_an_account">¿Ya tenés una cuenta?&#32;</string>
@@ -77,4 +77,11 @@
     <string name="copy_link">Copiar Link</string>
     <string name="share_link">Compartir Link</string>
     <string name="transactions_history">Historial de Movimientos</string>
+    <string name="invalid_card_number">Número de tarjeta inválido. Debe tener 16 dígitos.</string>
+    <string name="invalid_cvv">CVV inválido. Debe tener 3 dígitos.</string>
+    <string name="invalid_exp_date">Fecha de vencimiento inválida. Usa el formato MM/AA.</string>
+    <string name="expired_card">Tarjeta expirada.</string>
+    <string name="error_message_complete_fields">Por favor, complete todos los campos</string>
+    <string name="error_message_add_card">Error al agregar la tarjeta: %s</string>
+
 </resources>

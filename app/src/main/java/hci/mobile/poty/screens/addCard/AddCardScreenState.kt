@@ -9,6 +9,6 @@ data class AddCardScreenState(
     val cvv: String = "",
     val exp: String = "",
     val isValid: Boolean = false,
-    val errorMessage: String? = null,
+    val errorMessage: String = "",
     val type: CardType = CardType.DEBIT
 )

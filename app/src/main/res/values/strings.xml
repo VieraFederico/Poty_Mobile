@@ -43,14 +43,14 @@
     <string name="deposit_money">Deposit Money</string>
     <string name="amount_to_deposit">Amount to Deposit</string>
     <string name="with_Poty">With Poty</string>
-    <string name="you_can_rest_easy">You can rest easy,</string>
+    <string name="you_can_rest_easy">you can rest easy,</string>
     <string name="your_money_is_in">your money is safe.</string>
     <string name="the_">the </string>
     <string name="pot">Pot</string>
-    <string name="log_in">Log In</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log in</string>
+    <string name="sign_up">Sign up</string>
     <string name="password">Password</string>
-    <string name="i_forgor_my_password">Forgot my Password</string>
+    <string name="i_forgor_my_password">Forgot my password</string>
     <string name="almost_there">Almost There!</string>
     <string name="go_back">Go Back</string>
     <string name="already_have_an_account">Already have an account?&#32;</string>
@@ -77,5 +77,11 @@
     <string name="copy_link">Copy Link</string>
     <string name="share_link">Share Link</string>
     <string name="transactions_history">Movements History</string>
+    <string name="invalid_card_number">Invalid card number. It must have 16 digits.</string>
+    <string name="invalid_cvv">Invalid CVV. It must have 3 digits.</string>
+    <string name="invalid_exp_date">Invalid expiration date. Use the MM/YY format.</string>
+    <string name="expired_card">The card is invalid. The expiry date must be in the future.</string>
+    <string name="error_message_complete_fields">Please, complete all the fields</string>
+    <string name="error_message_add_card">Error adding the card: %s</string>
 
 </resources>

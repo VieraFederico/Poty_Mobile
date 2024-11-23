@@ -135,8 +135,8 @@ fun PaymentWithEmailScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
+
+                            .fillMaxWidth().fillMaxHeight()
                             .padding(contentPadding)
                     ) {
                             HeaderSection(
@@ -149,8 +149,8 @@ fun PaymentWithEmailScreen(
 
                     Box(
                         modifier = Modifier
-                            .weight(3.5f)
-                            .fillMaxWidth()
+
+                            .fillMaxWidth(0.3f).fillMaxHeight()
                             .padding(contentPadding)
                     ) {
                         ContentSection(

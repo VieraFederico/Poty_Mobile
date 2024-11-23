@@ -75,7 +75,8 @@ fun LoginScreen(
                 ){
                     LoginContentSection(
                         modifier = Modifier
-                            .fillMaxHeight().fillMaxWidth(),
+                            .fillMaxHeight()
+                            .fillMaxWidth(),
                         state = state,
                         viewModel = viewModel,
                         onNavigateToRegister = onNavigateToRegister,
@@ -103,7 +104,8 @@ fun LoginScreen(
                     }else{
                         LoginRegisterImageSection(
                             modifier = Modifier
-                                .fillMaxWidth().fillMaxHeight(0.5f),
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.5f),
                             windowSizeClass = windowSizeClass
                         )
                     }
@@ -176,7 +178,7 @@ fun LoginContentSection(
 
         if(windowSizeClass.isTablet() || !windowSizeClass.isTablet() && !windowSizeClass.isLandscape()){
             TextButton(
-                onClick = onNavigateToRegister,
+                onClick = {},
                 modifier = Modifier.align(Alignment.Start)
             ) {
                 Text(
@@ -201,7 +203,7 @@ fun LoginContentSection(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(
-                        onClick = onNavigateToRegister,
+                        onClick = { } ,
                         modifier = Modifier.align(Alignment.CenterVertically)
                     ) {
                         Text(

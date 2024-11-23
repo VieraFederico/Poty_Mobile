@@ -39,6 +39,7 @@ import hci.mobile.poty.ui.theme.PotyTheme
 import hci.mobile.poty.ui.theme.White
 import hci.mobile.poty.ui.theme.titleSmallSemiBold
 import hci.mobile.poty.utils.CompactDateFieldWithLabel
+import hci.mobile.poty.utils.ErrorMessage
 import hci.mobile.poty.utils.TextFieldWithLabel
 import hci.mobile.poty.utils.WindowSizeClass
 import hci.mobile.poty.utils.calculateWindowSizeClass
@@ -57,7 +58,7 @@ fun AddCardScreen(
     val state by viewModel.state.collectAsState()
     viewModel.onAddCardSuccess = onNavigateToDashboard
     val windowSizeClass = mockWindowSizeClass ?: calculateWindowSizeClass()
-
+    val context = LocalContext.current
     val contentPadding = if (windowSizeClass == WindowSizeClass.MediumTablet || windowSizeClass == WindowSizeClass.MediumTabletLandscape) 32.dp else 16.dp
     val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape || windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
@@ -98,7 +99,9 @@ fun AddCardScreen(
                             onOwnerChange = viewModel::onOwnerChange,
                             onExpDateChange = viewModel::onExpDateChange,
                             onCVVChange = viewModel::onCVVChange,
-                            onAddCardClick = viewModel::onAddCardClick,
+                            onAddCardClick =  {
+                                viewModel.onAddCardClick(context = context)
+                            },
                             shape = RoundedCornerShape(topStart = 30.dp, bottomStart = 30.dp)
                         )
                     }
@@ -130,7 +133,9 @@ fun AddCardScreen(
                             onOwnerChange = viewModel::onOwnerChange,
                             onExpDateChange = viewModel::onExpDateChange,
                             onCVVChange = viewModel::onCVVChange,
-                            onAddCardClick = viewModel::onAddCardClick,
+                            onAddCardClick =  {
+                                viewModel.onAddCardClick(context = context)
+                            },
                             shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
                         )
                     }
@@ -248,7 +253,8 @@ fun FormSection(
             TextFieldWithLabel(
                 label = stringResource(R.string.cardholder_name),
                 value = state.owner,
-                onValueChange = onOwnerChange
+                onValueChange = onOwnerChange,
+                maxLength = 15
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -261,7 +267,8 @@ fun FormSection(
                     CompactDateFieldWithLabel(
                         label = stringResource(R.string.exp_date),
                         value = state.exp,
-                        onValueChange = onExpDateChange
+                        onValueChange = onExpDateChange,
+                        showCal = false
                     )
                 }
 
@@ -275,21 +282,25 @@ fun FormSection(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = onAddCardClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.add_card),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+            Spacer(modifier = Modifier.height(4.dp))
+            if(state.errorMessage.isEmpty()){
+                Button(
+                    onClick = onAddCardClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.add_card),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            } else {
+                ErrorMessage(message = state.errorMessage)
             }
 
         }
     }
 }
+

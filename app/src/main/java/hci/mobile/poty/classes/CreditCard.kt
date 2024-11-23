@@ -1,5 +1,6 @@
 package hci.mobile.poty.classes
 
+import java.util.Calendar
 import java.util.UUID
 import java.util.regex.Pattern
 
@@ -36,6 +37,18 @@ data class CreditCard(
     fun isValidExpDate(): Boolean {
         val pattern = Pattern.compile("(0[1-9]|1[0-2])/([0-9]{2})")
         return pattern.matcher(exp).matches()
+    }
+    fun dateNotExpired(): Boolean {
+        val parts = exp.split("/")
+        if (parts.size != 2) return false
+
+        val month = parts[0].toIntOrNull() ?: return false
+        val year = parts[1].toIntOrNull() ?: return false
+
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100
+        val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
+
+        return (year > currentYear) || (year == currentYear && month >= currentMonth)
     }
 }
 

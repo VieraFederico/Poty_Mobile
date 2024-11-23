@@ -69,39 +69,40 @@ fun TextFieldWithLabel(
     maxLength: Int? = null,
     regex: Regex? = null,
 ) {
-    Text(
-        text = label,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = modifier.padding(bottom = 8.dp)
-    )
-    OutlinedTextField(
-        value = value,
-        onValueChange = { newValue ->
-            if ((regex == null || regex.matches(newValue)) && (maxLength == null || newValue.length <= maxLength)) {
-                onValueChange(newValue)
-            }
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(50.dp))
-            .height(50.dp)
-            .border(
-                BorderStroke(1.dp, Black),
-                RoundedCornerShape(50.dp)
-            ),
-        singleLine = true,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = Black,
-            unfocusedTextColor = Black,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            cursorColor = Black
-        ),
-        textStyle = LocalTextStyle.current.copy(color = Black),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-    )
-}
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = modifier.padding(start = 15.dp, bottom = 4.dp)
+        )
+        OutlinedTextField(
+            value = value,
+            onValueChange = { newValue ->
+                if ((regex == null || regex.matches(newValue)) && (maxLength == null || newValue.length <= maxLength)) {
+                    onValueChange(newValue)
+                }
+            },
 
+            modifier = modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(50.dp))
+                .defaultMinSize(minHeight = 50.dp).border(
+                    BorderStroke(1.dp, Black),
+                    RoundedCornerShape(50.dp)
+                ),
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Black,
+                unfocusedTextColor = Black,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                cursorColor = Black
+            ),
+            textStyle = LocalTextStyle.current.copy(color = Black),
+            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        )
+    }
+}
 
 
 fun isValidDate(input: String): Boolean {
@@ -138,8 +139,8 @@ fun CompactDateFieldWithLabel(
         Column {
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 15.dp, bottom = 4.dp)
             )
 
             OutlinedTextField(
@@ -243,8 +244,8 @@ fun CompactDateFieldWithLabel(
         Column {
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(start = 15.dp, bottom = 4.dp)
             )
 
             OutlinedTextField(
@@ -264,6 +265,13 @@ fun CompactDateFieldWithLabel(
                         BorderStroke(1.dp, Color.Black),
                         RoundedCornerShape(50.dp)
                     ),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    cursorColor = Color.Black
+                ),
                 singleLine = true
             )
         }
@@ -337,8 +345,8 @@ fun NumberFieldWithLabel(
 ) {
     Text(
         text = label,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.padding(bottom = 8.dp)
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.padding(start = 15.dp, bottom = 4.dp)
     )
 
 
@@ -422,8 +430,8 @@ fun ReadOnlyNumberFieldWithLabel(
     Column {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(start = 15.dp, bottom = 4.dp)
         )
         Box(
             modifier = Modifier
@@ -454,8 +462,8 @@ fun ReadOnlyTextFieldWithLabel(
 ) {
     Text(
         text = label,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = modifier.padding(bottom = 8.dp)
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.padding(start = 15.dp, bottom = 4.dp)
     )
     OutlinedTextField(
         value = value,
