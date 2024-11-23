@@ -9,7 +9,7 @@ import hci.mobile.poty.data.model.LinkPaymentType
 data class PaymentScreenState(
     var amount: Float = 0f,
     val currentStep: Int = 1,
-    val balance: Float = 567.0f,
+    val balance: Float = 0f,
     val selectedCard: Card? = null,
     val creditCards: List<Card> = emptyList(),
     val email: String = "",
@@ -20,24 +20,6 @@ data class PaymentScreenState(
     val isLoading: Boolean = false,
     val errorMessage: String = "",
     val paymentHistory: List<PaymentResponse> = mutableStateListOf(
-        PaymentResponse(
-        id = 1,
-        type = "CARD",
-        amount = 150.0f,
-        balanceBefore = 0.0f,
-        balanceAfter = 0.0f,
-        pending = true,
-        linkUuid = null,
-        createdAt = "2023-12-23",
-        updatedAt = "2023-12-23",
-        card = CardDetails(
-            id = 1,
-            number = "1234567890123452",
-            expirationDate = "04/28",
-            fullName = "John Doe",
-            type = "CREDIT"
-            )
-        ),
         PaymentResponse(
             id = 1,
             type = "BALANCE",

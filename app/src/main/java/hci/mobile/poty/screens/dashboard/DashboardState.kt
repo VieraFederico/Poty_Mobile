@@ -22,18 +22,10 @@ data class DashboardState(
             id = "1",
             type = TransactionType.DEPOSIT,
             amount = 100.00f,
-            description = "Sandwich del Buen Libro",
+            description = "Sandwich",
             timestamp = LocalDateTime.now(),
             status = TransactionStatus.COMPLETED
-        ),
-        Transaction(
-            id = "2",
-            type = TransactionType.WITHDRAWAL,
-            amount = 50.00f,
-            description = "Curso de Kotlin",
-            timestamp = LocalDateTime.now().minusHours(2),
-            status = TransactionStatus.COMPLETED
-        ),
+        )
     ),
 )
 

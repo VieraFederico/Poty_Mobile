@@ -83,6 +83,8 @@ fun PaymentWithLinkScreen(
             containerColor = MaterialTheme.colorScheme.secondary,
         ) { innerPadding ->
             if (isLandscape) {
+                var weight1  = if(windowSizeClass.isTablet()) 1f else 0.53f
+
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -90,7 +92,7 @@ fun PaymentWithLinkScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .weight(0.53f)
+                            .weight(weight1)
                             .fillMaxHeight()
                             .padding(contentPadding)
                     ) {
@@ -364,6 +366,7 @@ fun StepTwo(
                     label = stringResource(R.string.amount_to_send),
                     value = number
                 )
+                val height = 0.5f
 
                 when (windowSizeClass) {
                     WindowSizeClass.MediumTabletLandscape -> Spacer(modifier = Modifier.height(0.dp))
@@ -404,7 +407,10 @@ fun StepTwo(
                     }
 
                     LinkPaymentType.BALANCE -> {
-                        PaymentBalanceCard(balance)
+                        Box(modifier = Modifier.fillMaxHeight(height)){
+                            PaymentBalanceCard(balance)
+
+                        }
                     }
 
                     LinkPaymentType.LINK -> {}

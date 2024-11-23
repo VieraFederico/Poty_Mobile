@@ -85,6 +85,7 @@ fun PaymentWithEmailScreen(
             containerColor = MaterialTheme.colorScheme.secondary,
         ) { innerPadding ->
             if (isLandscape) {
+                var weight1  = if(windowSizeClass.isTablet()) 1f else 0.53f
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
@@ -92,7 +93,7 @@ fun PaymentWithEmailScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .weight(0.53f)
+                            .weight(weight1)
                             .fillMaxHeight()
                             .padding(contentPadding)
                     ) {
@@ -305,6 +306,7 @@ fun StepTwo(
                         }
                     )
 
+
                     when (localPaymentMethod) {
                         LinkPaymentType.CARD -> {
                             PaymentCardsCarousel(
@@ -316,7 +318,6 @@ fun StepTwo(
                                 isTiny = true
                             )
                         }
-
                         LinkPaymentType.BALANCE -> {
                             PaymentBalanceCard(balance)
                         }
@@ -382,10 +383,13 @@ fun StepTwo(
                     }
 
                     LinkPaymentType.BALANCE -> {
-                        PaymentBalanceCard(balance)
+                            Box(modifier = Modifier.fillMaxHeight(0.5f ), contentAlignment = Alignment.Center
+                            ){
+                                PaymentBalanceCard(balance)
+                            }
                     }
 
-                    LinkPaymentType.LINK -> TODO()
+                    LinkPaymentType.LINK -> {}
                 }
 
                 Button(

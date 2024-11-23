@@ -3,9 +3,13 @@ package hci.mobile.poty.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,7 +32,9 @@ import hci.mobile.poty.ui.theme.White
 
 @Composable
 fun BalanceCard(balance: Float, isVisible: Boolean, onToggleVisibility: () -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(10.dp)) {
         Text(text = stringResource(R.string.balance), color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             if (isVisible) {
@@ -46,9 +52,12 @@ fun BalanceCard(balance: Float, isVisible: Boolean, onToggleVisibility: () -> Un
     }
 }
 
+
 @SuppressLint("DefaultLocale")
 @Composable
-fun PaymentBalanceCard(balance: Float){
+fun PaymentBalanceCard(balance: Float, smallerHeight: Boolean = false) {
+    val height = if (smallerHeight) 0.5f else 1f
+
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
@@ -56,18 +65,32 @@ fun PaymentBalanceCard(balance: Float){
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(12.dp)
-            )
-            .fillMaxWidth(),
+            ),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
+                .fillMaxWidth().fillMaxHeight(height),
+            contentAlignment = Alignment.Center
         ) {
-            Text(text = stringResource(R.string.balance), color = White, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 3.dp))
-            Text(text = "$ ${String.format("%.2f", balance)}", color = White, style = MaterialTheme.typography.titleLarge)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.balance),
+                    color = White,
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(bottom = 3.dp)
+                )
+                Text(
+                    text = "$ ${String.format("%.2f", balance)}",
+                    color = White,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
         }
     }
 }
+
