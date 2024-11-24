@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -33,7 +34,7 @@ fun BackButton(
     ) {
         Surface(
             shape = CircleShape,
-            color = GreenDark,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(35.dp)
         ) {
             Icon(

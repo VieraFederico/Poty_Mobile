@@ -1,5 +1,6 @@
 package hci.mobile.poty.ui.components
 
+import android.annotation.SuppressLint
 import hci.mobile.poty.data.model.Card
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -92,11 +93,11 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit, isTiny: Boolean = false, use
     Card(
         modifier = Modifier
             .aspectRatio(1.6f)
-            .padding(16.dp)
+            .padding(10.dp)
             .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp)),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = containerColor,
+            containerColor = MaterialTheme.colorScheme.primary,
         ),
     ) {
         Column(
@@ -114,7 +115,7 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit, isTiny: Boolean = false, use
                 Icon(
                     imageVector = Icons.Outlined.AddCircle,
                     contentDescription = "Add a new card",
-                    tint = contentColor,
+                    tint = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.size(80.dp)
                 )
             }
@@ -123,7 +124,7 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit, isTiny: Boolean = false, use
                     text = stringResource(R.string.add_card),
                     modifier = Modifier.padding(top = 10.dp),
                     style = MaterialTheme.typography.labelLarge,
-                    color = contentColor,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
         }
@@ -131,6 +132,7 @@ fun EmptyCreditCardView(onAddCardClick: () -> Unit, isTiny: Boolean = false, use
 }
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun CreditCardView(
     card: Card,
@@ -144,7 +146,7 @@ fun CreditCardView(
 
     val contentColor = if (useWhite) Black else MaterialTheme.colorScheme.onSurface
 
-            Card(
+        Card(
         modifier = Modifier
             .aspectRatio(1.6f)
             .padding(

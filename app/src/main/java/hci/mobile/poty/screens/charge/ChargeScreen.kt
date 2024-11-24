@@ -48,7 +48,7 @@ fun ChargeScreen(
     val isLandscape = windowSizeClass.isLandscape()
     val contentPadding = if (windowSizeClass.isTablet()) 32.dp else 16.dp
 
-    PotyTheme(darkTheme = true, dynamicColor = false) {
+    PotyTheme() {
         ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

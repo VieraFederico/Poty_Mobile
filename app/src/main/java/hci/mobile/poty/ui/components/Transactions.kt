@@ -19,8 +19,10 @@ import hci.mobile.poty.R
 import hci.mobile.poty.classes.Transaction
 import hci.mobile.poty.classes.TransactionStatus
 import hci.mobile.poty.classes.TransactionType
+import hci.mobile.poty.ui.theme.Black
 import hci.mobile.poty.ui.theme.GreenDark
 import hci.mobile.poty.ui.theme.PotyTheme
+import hci.mobile.poty.ui.theme.White
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -66,13 +68,13 @@ fun TransactionHistory(
                 .padding(start=16.dp,end=16.dp,bottom=8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             colors = CardDefaults.cardColors(
-            containerColor = containerColor
+            containerColor = MaterialTheme.colorScheme.primary
             )
         ) {
             Text(
                 text = stringResource(R.string.transactions_history),
                 style = MaterialTheme.typography.bodyLarge,
-                color = textColor,
+                color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -96,14 +98,13 @@ fun TransactionHistory(
 fun TransactionCard(transaction: Transaction,
     useWhite: Boolean = false
     ) {
-    val containerColor = if(useWhite) Color.White else GreenDark
-    val textColor = if(useWhite) Color.Black else Color.White
-    // Use your GreenDark color for the card background
+    val containerColor = if(useWhite) White else MaterialTheme.colorScheme.primary
+    val textColor = if(useWhite) Black else White
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = containerColor
+            containerColor = MaterialTheme.colorScheme.primary
         )
     ) {
         Row(
@@ -157,7 +158,7 @@ fun TransactionCard(transaction: Transaction,
                 Text(
                     text = "${if (transaction.type == TransactionType.DEPOSIT) "+" else "-"}$${String.format("%.2f", transaction.amount)}",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White, // Text color set to white
+                    color = White, // Text color set to white
                     fontWeight = FontWeight.Bold
                 )
 

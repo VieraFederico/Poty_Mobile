@@ -77,7 +77,7 @@ fun RegistrationScreen(
         }
     }
 
-    PotyTheme(darkTheme = true, dynamicColor = false) {
+    PotyTheme() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.onBackground,

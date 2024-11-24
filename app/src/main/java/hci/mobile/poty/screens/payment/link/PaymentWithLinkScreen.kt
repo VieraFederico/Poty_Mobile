@@ -76,7 +76,7 @@ fun PaymentWithLinkScreen(
         WindowSizeClass.MediumTabletLandscape
     )
 
-    PotyTheme(darkTheme = true, dynamicColor = false) {
+    PotyTheme() {
         ResponsiveNavBar {
         Scaffold(
             modifier = Modifier.fillMaxSize(),

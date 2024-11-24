@@ -48,7 +48,7 @@ fun DepositScreen(
 
     viewModel.onDepositSuccess = onNavigateToDashboard
 
-    PotyTheme(darkTheme = true, dynamicColor = false) {
+    PotyTheme() {
         ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

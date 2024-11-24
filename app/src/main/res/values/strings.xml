@@ -93,5 +93,6 @@
     <string name="amount_must_be_greater_than_zero">Amount must be grater than zero.</string>
     <string name="select_card_to_continue">Must select a card to continue.</string>
     <string name="log_out">Log Out</string>
+    <string name="new_alias">Please enter your new Alias:</string>
 
 </resources>

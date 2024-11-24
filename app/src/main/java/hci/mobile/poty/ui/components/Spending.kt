@@ -42,7 +42,7 @@ fun spendingCard(spent: Float){
                 .shadow(elevation = 8.dp, shape = RoundedCornerShape(12.dp)),
             shape = RoundedCornerShape(12.dp),
             colors = CardDefaults.cardColors(
-                containerColor = GreenDark,
+                containerColor = MaterialTheme.colorScheme.primary,
             ),
         ) {
             Text(

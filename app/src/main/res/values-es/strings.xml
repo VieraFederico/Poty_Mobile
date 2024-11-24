@@ -93,5 +93,6 @@
     <string name="amount_must_be_greater_than_zero">La cantidad a ingresar debe ser mayor a 0.</string>
     <string name="select_card_to_continue">Debe seleccionar una tarjeta para continuar.</string>
     <string name="log_out">Cerrar Sesión</string>
+    <string name="new_alias">Por favor, ingrese su nuevo alias:</string>
 
 </resources>

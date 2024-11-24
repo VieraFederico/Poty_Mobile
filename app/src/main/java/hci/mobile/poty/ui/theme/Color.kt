@@ -2,7 +2,7 @@ package hci.mobile.poty.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val GreenLight = Color(0xFF025939)
+val GreenLight = Color(0xFF00392E)
 val GreenMedium = Color(0xFF001E18)
 val GreenDark = Color(0xFF001713)
 val GreyLight = Color(0xFFDFDFDF)

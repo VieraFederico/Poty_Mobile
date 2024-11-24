@@ -32,7 +32,7 @@ fun LandingScreen(
     val isLandscape = windowSizeClass.isLandscape()
     val isTablet = windowSizeClass.isTablet()
 
-    PotyTheme(darkTheme = true, dynamicColor = false) {
+    PotyTheme() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             containerColor = MaterialTheme.colorScheme.background,

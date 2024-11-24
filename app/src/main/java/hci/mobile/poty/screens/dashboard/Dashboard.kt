@@ -76,7 +76,7 @@ fun Dashboard(
     val isPhonePortrait = windowSizeClass == WindowSizeClass.MediumPhone
 
 
-    PotyTheme(darkTheme = true, dynamicColor = false) {
+    PotyTheme() {
         ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
@@ -315,25 +315,25 @@ fun ContentSection(
                 DashboardButton(
                     onClick = onNavigateToDeposit,
                     iconResId = R.drawable.corner_right_down,
-                    contentDescription = stringResource(R.string.deposit)
+                    contentDescription = stringResource(R.string.deposit),
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick = onNavigateToCharge,
                     iconResId = R.drawable.dollar_sign,
-                    contentDescription = stringResource(R.string.charge)
+                    contentDescription = stringResource(R.string.charge),
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick =  onNavigateToPayment,
                     iconResId = R.drawable.corner_right_up,
-                    contentDescription = stringResource(R.string.pay)
+                    contentDescription = stringResource(R.string.pay),
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 DashboardButton(
                     onClick = { onNavigateToCvu() },
                     iconResId = R.drawable.user,
-                    contentDescription = stringResource(R.string.cbu)
+                    contentDescription = stringResource(R.string.cbu),
                 )
             }
             if(windowSizeClass.isTablet()){
@@ -360,7 +360,8 @@ fun ContentSection(
 fun DashboardButton(
     onClick: () -> Unit,
     iconResId: Int,
-    contentDescription: String
+    contentDescription: String,
+    bigScreen: Boolean = false
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -370,13 +371,25 @@ fun DashboardButton(
             onClick = onClick,
             containerColor = MaterialTheme.colorScheme.primary,
             shape = CircleShape,
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier
+                .padding(10.dp)
+                .then(
+                    when (bigScreen) {
+                        true -> Modifier.size(80.dp)
+                        false -> Modifier.size(56.dp)
+                    }
+                )
         ) {
             Icon(
                 painter = painterResource(id = iconResId),
                 contentDescription = contentDescription,
                 tint = White,
-                modifier = Modifier.size(35.dp)
+                modifier = Modifier.then(
+                    when (bigScreen) {
+                        true -> Modifier.size(45.dp)
+                        false -> Modifier.size(35.dp)
+                    }
+                )
             )
         }
         Text(

@@ -66,7 +66,7 @@ fun PaymentScreen(
     val isLandscape = windowSizeClass == WindowSizeClass.MediumPhoneLandscape ||
             windowSizeClass == WindowSizeClass.MediumTabletLandscape
 
-    PotyTheme(darkTheme = true, dynamicColor = false) {
+    PotyTheme() {
         ResponsiveNavBar {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
