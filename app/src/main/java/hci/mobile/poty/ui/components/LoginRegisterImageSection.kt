@@ -68,8 +68,10 @@ fun LoginRegisterImageSection(
         contentAlignment = Alignment.Center
     ) {
         if (!isLandscape) {
-            val height = if (windowSizeClass.isTablet()) 0.4f else 0.4f
-
+            var height = if (windowSizeClass.isTablet()) 0.4f else 0.4f
+            if(!isRegistration && windowSizeClass.isTablet()){
+                height = 0.8f
+            }
             Image(
                 painter = painterResource(id = R.drawable.login2),
                 contentDescription = "Login Image",

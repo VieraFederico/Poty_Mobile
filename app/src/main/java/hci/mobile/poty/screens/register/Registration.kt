@@ -102,7 +102,8 @@ fun RegistrationScreen(
                         modifier = Modifier
                             .fillMaxHeight(),
                         windowSizeClass = windowSizeClass,
-                        title = title
+                        title = title,
+                        isRegistration = true
                     )
 
                     RegistrationContentSection(
@@ -136,7 +137,8 @@ fun RegistrationScreen(
                     LoginRegisterImageSection(
                         modifier = Modifier,
                         windowSizeClass = windowSizeClass,
-                        title = title
+                        title = title,
+                        isRegistration = true
                     )
                     RegistrationContentSection(
                         modifier = Modifier,
