@@ -203,7 +203,7 @@ fun CreditCardView(
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "More Options",
-                        tint = contentColor
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }

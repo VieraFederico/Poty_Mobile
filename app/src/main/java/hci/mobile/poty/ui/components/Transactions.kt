@@ -104,7 +104,7 @@ fun TransactionCard(transaction: Transaction,
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = containerColor
         )
     ) {
         Row(
@@ -134,7 +134,6 @@ fun TransactionCard(transaction: Transaction,
                 )
 
                 Column {
-                    // Set all text to white
                     Text(
                         text = transaction.description,
                         style = MaterialTheme.typography.bodyLarge,
@@ -146,7 +145,7 @@ fun TransactionCard(transaction: Transaction,
                             DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm")
                         ),
                         style = MaterialTheme.typography.bodySmall,
-                        color = textColor
+                        color =textColor
                     )
                 }
             }
