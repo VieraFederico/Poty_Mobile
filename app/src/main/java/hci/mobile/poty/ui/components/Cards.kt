@@ -144,7 +144,7 @@ fun CreditCardView(
 ) {
     var dropdownExpanded by remember { mutableStateOf(false) }
 
-    val contentColor = if (useWhite) Black else MaterialTheme.colorScheme.onSurface
+    val contentColor = if (useWhite) Black else MaterialTheme.colorScheme.onBackground
 
         Card(
         modifier = Modifier
